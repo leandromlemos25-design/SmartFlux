@@ -1,0 +1,2338 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#05070d">
+<title>SmartFlux V14 — Diagnóstico, implantação e operação Kommo</title>
+<meta name="description" content="A SmartFlux diagnostica sua operação antes de indicar plano Kommo. WhatsApp, CRM, automação, IA, canais e implantação para pequenos e médios negócios.">
+<meta property="og:title" content="SmartFlux — Diagnóstico antes da licença Kommo">
+<meta property="og:description" content="Antes de empurrar plano, descobrimos o que sua operação realmente precisa. WhatsApp, CRM, automação e IA com método.">
+<meta property="og:type" content="website">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800;900&family=Geist+Mono:wght@400;500;600&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+
+<script>
+  // Persisted tweaks
+  const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+    "accent": "cyan",
+    "density": "comfortable",
+    "displaySerif": true,
+    "grain": true
+  }/*EDITMODE-END*/;
+</script>
+
+<style>
+:root{
+  /* Palette — dark editorial */
+  --bg:#06080d;
+  --bg-2:#0a0e16;
+  --ink:#f4f6fb;
+  --ink-2:#c2cad6;
+  --ink-3:#8590a3;
+  --ink-4:#5a6478;
+  --line:rgba(255,255,255,.08);
+  --line-2:rgba(255,255,255,.14);
+  --surface:rgba(255,255,255,.035);
+  --surface-2:rgba(255,255,255,.06);
+
+  /* Accent — overridden by tweaks */
+  --a1:#00e5b8;   /* primary */
+  --a2:#37d3ff;   /* secondary */
+  --a3:#7c5cff;   /* tertiary */
+  --accent-ink:#04221b; /* contrast text on accent */
+
+  /* Type scale */
+  --f-sans:'Geist',ui-sans-serif,system-ui,-apple-system,sans-serif;
+  --f-mono:'Geist Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+  --f-display:'Instrument Serif',Georgia,serif;
+
+  /* Geometry */
+  --r-sm:10px; --r-md:16px; --r-lg:22px; --r-xl:32px; --r-2xl:44px;
+  --max:1280px;
+  --pad-section:120px;
+
+  /* Easing */
+  --ease-out:cubic-bezier(.16,1,.3,1);
+  --spring:cubic-bezier(.34,1.56,.64,1);
+}
+
+/* Accent themes via tweak */
+[data-accent="cyan"]   { --a1:#00e5b8; --a2:#37d3ff; --a3:#7c5cff; --accent-ink:#04221b; }
+[data-accent="emerald"]{ --a1:#3ee083; --a2:#7cf2c0; --a3:#37d3ff; --accent-ink:#062314; }
+[data-accent="amber"]  { --a1:#ffcc66; --a2:#ff9a55; --a3:#ff6b6b; --accent-ink:#241704; }
+[data-accent="violet"] { --a1:#b794ff; --a2:#7c5cff; --a3:#37d3ff; --accent-ink:#1a0a3a; }
+
+[data-density="compact"]      { --pad-section:88px; }
+[data-density="comfortable"]  { --pad-section:120px; }
+[data-density="spacious"]     { --pad-section:160px; }
+
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{
+  margin:0;color:var(--ink);
+  font-family:var(--f-sans);
+  font-feature-settings:"ss01","cv11";
+  background:var(--bg);
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+  overflow-x:hidden;
+  line-height:1.5;
+}
+
+/* Ambient background — fixed, multi-layer */
+.ambient{
+  position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;
+}
+.ambient::before{
+  content:"";position:absolute;inset:-10%;
+  background:
+    radial-gradient(60% 50% at 12% 0%, color-mix(in oklab, var(--a2) 22%, transparent), transparent 60%),
+    radial-gradient(50% 40% at 92% 8%, color-mix(in oklab, var(--a1) 18%, transparent), transparent 60%),
+    radial-gradient(70% 50% at 50% 100%, color-mix(in oklab, var(--a3) 14%, transparent), transparent 60%);
+  filter:blur(20px);
+}
+.ambient::after{
+  content:"";position:absolute;inset:0;
+  background-image:
+    linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px);
+  background-size: 80px 80px;
+  mask-image: radial-gradient(ellipse at 50% 30%, #000 0%, transparent 70%);
+  -webkit-mask-image: radial-gradient(ellipse at 50% 30%, #000 0%, transparent 70%);
+}
+
+/* === AURORA BLOBS — big luminous moving shapes === */
+.aurora{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;filter:blur(80px);opacity:.5}
+.aurora .blob{
+  position:absolute;border-radius:50%;
+  will-change:transform;
+}
+.aurora .b1{
+  width:600px;height:600px;top:-10%;left:-5%;
+  background:radial-gradient(circle, color-mix(in oklab, var(--a1) 55%, transparent), transparent 70%);
+  animation:auroraA 14s ease-in-out infinite;
+}
+.aurora .b2{
+  width:500px;height:500px;top:30%;right:-10%;
+  background:radial-gradient(circle, color-mix(in oklab, var(--a2) 45%, transparent), transparent 70%);
+  animation:auroraB 18s ease-in-out infinite;
+}
+.aurora .b3{
+  width:700px;height:700px;bottom:-20%;left:30%;
+  background:radial-gradient(circle, color-mix(in oklab, var(--a3) 35%, transparent), transparent 70%);
+  animation:auroraC 20s ease-in-out infinite;
+}
+@keyframes auroraA{
+  0%,100%{transform:translate(0,0) scale(1)}
+  33%{transform:translate(15vw, 12vh) scale(1.15)}
+  66%{transform:translate(-8vw, 5vh) scale(.9)}
+}
+@keyframes auroraB{
+  0%,100%{transform:translate(0,0) scale(1)}
+  33%{transform:translate(-12vw, -10vh) scale(1.2)}
+  66%{transform:translate(6vw, 14vh) scale(.85)}
+}
+@keyframes auroraC{
+  0%,100%{transform:translate(0,0) scale(1)}
+  33%{transform:translate(10vw, -16vh) scale(.95)}
+  66%{transform:translate(-14vw, 8vh) scale(1.1)}
+}
+
+/* === CURSOR GLOW — follows mouse === */
+.cursor-glow{
+  position:fixed;width:400px;height:400px;border-radius:50%;pointer-events:none;z-index:1;
+  background:radial-gradient(circle, color-mix(in oklab, var(--a1) 25%, transparent), transparent 70%);
+  transform:translate(-50%,-50%);
+  transition:left .08s linear, top .08s linear, opacity .4s;
+  opacity:0;mix-blend-mode:screen;
+  filter:blur(30px);
+}
+.cursor-glow.active{opacity:.6}
+
+/* === PARTICLES CANVAS === */
+#particles{position:fixed;inset:0;z-index:1;pointer-events:none}
+.grain{
+  position:fixed;inset:0;z-index:1;pointer-events:none;opacity:.05;mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+[data-grain="false"] .grain{display:none}
+
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+img,svg{display:block;max-width:100%}
+
+.container{max-width:var(--max);margin:0 auto;padding:0 24px;position:relative;z-index:2}
+.skip-link{position:absolute;left:16px;top:-80px;background:var(--ink);color:var(--bg);padding:12px 16px;border-radius:12px;font-weight:700;z-index:1000;transition:.2s}
+.skip-link:focus{top:16px}
+
+/* ===== TYPE ===== */
+h1,h2,h3,h4{font-family:var(--f-sans);font-weight:700;letter-spacing:-0.04em;line-height:1.02;margin:0}
+h1{font-size:clamp(44px, 7vw, 96px); letter-spacing:-0.045em; font-weight:600}
+h2{font-size:clamp(34px, 4.6vw, 64px); letter-spacing:-0.038em; font-weight:600}
+h3{font-size:clamp(22px, 2.2vw, 28px); letter-spacing:-0.025em; font-weight:600}
+p{margin:0;color:var(--ink-2)}
+.serif{font-family:var(--f-display);font-weight:400;font-style:italic;letter-spacing:-0.02em}
+[data-serif="false"] .serif{font-family:var(--f-sans);font-style:normal;font-weight:600}
+.mono{font-family:var(--f-mono);font-feature-settings:"ss01"}
+.eyebrow{
+  display:inline-flex;align-items:center;gap:10px;
+  font-family:var(--f-mono);font-size:12px;font-weight:500;
+  color:var(--a1);text-transform:uppercase;letter-spacing:.14em;
+}
+.eyebrow::before{
+  content:"";width:6px;height:6px;border-radius:50%;background:var(--a1);
+  box-shadow:0 0 0 4px color-mix(in oklab, var(--a1) 20%, transparent);
+}
+
+.gradient-text{
+  background:linear-gradient(95deg, var(--a1) 0%, var(--a2) 55%, var(--a3) 100%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  background-size:200% 100%;
+  animation:gradientShift 8s ease-in-out infinite;
+}
+@keyframes gradientShift{
+  0%,100%{background-position:0% 50%}
+  50%{background-position:100% 50%}
+}
+
+/* ===== BUTTONS ===== */
+.btn{
+  position:relative;display:inline-flex;align-items:center;justify-content:center;gap:10px;
+  height:52px;padding:0 24px;border-radius:999px;
+  font-family:var(--f-sans);font-size:14.5px;font-weight:600;letter-spacing:-0.01em;
+  white-space:nowrap;cursor:pointer;
+  transition:transform .3s var(--spring), background .3s ease, box-shadow .3s ease, color .3s ease;
+  will-change:transform;
+}
+.btn--primary{
+  background:linear-gradient(135deg, var(--a1), var(--a2));
+  color:var(--accent-ink);
+  box-shadow:0 1px 0 rgba(255,255,255,.3) inset, 0 18px 40px -10px color-mix(in oklab, var(--a1) 60%, transparent);
+}
+.btn--primary:hover{
+  transform:translateY(-2px);
+  box-shadow:0 1px 0 rgba(255,255,255,.4) inset, 0 24px 50px -10px color-mix(in oklab, var(--a1) 70%, transparent);
+}
+.btn--ghost{
+  background:var(--surface);
+  color:var(--ink);
+  border:1px solid var(--line-2);
+  backdrop-filter:blur(12px);
+}
+.btn--ghost:hover{
+  background:var(--surface-2);
+  border-color:rgba(255,255,255,.22);
+  transform:translateY(-2px);
+}
+.btn--sm{height:42px;padding:0 18px;font-size:13.5px}
+.btn .arrow{width:16px;height:16px;transition:transform .3s var(--spring)}
+.btn:hover .arrow{transform:translateX(4px)}
+
+/* ===== NAV ===== */
+.nav{
+  position:sticky;top:0;z-index:50;
+  background:color-mix(in oklab, var(--bg) 70%, transparent);
+  backdrop-filter:saturate(160%) blur(18px);
+  -webkit-backdrop-filter:saturate(160%) blur(18px);
+  border-bottom:1px solid transparent;
+  transition:border-color .3s, background .3s;
+}
+.nav.scrolled{border-bottom-color:var(--line)}
+.nav-inner{height:72px;display:flex;align-items:center;justify-content:space-between;gap:24px}
+.brand{display:flex;align-items:center;gap:12px}
+.brand-mark{
+  width:36px;height:36px;border-radius:11px;display:grid;place-items:center;
+  background:linear-gradient(135deg, var(--a1), var(--a2));
+  color:var(--accent-ink);font-weight:800;font-size:16px;
+  box-shadow:0 8px 20px -6px color-mix(in oklab, var(--a1) 60%, transparent);
+  position:relative;overflow:hidden;
+}
+.brand-mark::before{
+  content:"";position:absolute;inset:0;
+  background:linear-gradient(120deg, transparent 40%, rgba(255,255,255,.5), transparent 60%);
+  transform:translateX(-100%);
+  animation:sheen 5s ease-in-out infinite;
+}
+@keyframes sheen{ 0%,60%{transform:translateX(-100%)} 80%,100%{transform:translateX(100%)} }
+.brand-name{font-weight:700;font-size:18px;letter-spacing:-0.025em;line-height:1}
+.brand-sub{font-family:var(--f-mono);font-size:10px;color:var(--ink-3);text-transform:uppercase;letter-spacing:.14em;margin-top:3px}
+.nav-links{display:flex;gap:8px}
+.nav-links a{
+  font-size:14px;color:var(--ink-2);padding:8px 14px;border-radius:99px;
+  transition:.2s;font-weight:500;
+}
+.nav-links a:hover{color:var(--ink);background:var(--surface)}
+
+/* ===== HERO ===== */
+.hero{
+  position:relative;
+  padding:80px 0 100px;
+  min-height:calc(100vh - 72px);
+  display:flex;align-items:center;
+}
+.hero-grid{
+  display:grid;
+  grid-template-columns:minmax(0, 1fr);
+  gap:60px;align-items:center;width:100%;
+}
+.hero-tag{
+  display:inline-flex;align-items:center;gap:12px;
+  padding:8px 8px 8px 16px;border-radius:99px;
+  background:var(--surface);border:1px solid var(--line);
+  font-size:13px;color:var(--ink-2);font-weight:500;
+  margin-bottom:28px;
+}
+.hero-tag .pill{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:4px 10px;border-radius:99px;
+  background:color-mix(in oklab, var(--a1) 18%, transparent);
+  color:var(--a1);font-size:11.5px;font-weight:600;
+  font-family:var(--f-mono);text-transform:uppercase;letter-spacing:.08em;
+}
+.hero-tag .dot{width:6px;height:6px;border-radius:50%;background:var(--a1);box-shadow:0 0 0 4px color-mix(in oklab, var(--a1) 20%, transparent);animation:heartbeat 2s ease-in-out infinite}
+@keyframes heartbeat{ 0%,100%{opacity:1} 50%{opacity:.4} }
+
+.hero h1{max-width:18ch}
+.hero h1 .word{display:inline-block;will-change:transform,opacity}
+.hero-copy{
+  margin:30px 0 36px;max-width:54ch;font-size:clamp(16px,1.3vw,19px);
+  line-height:1.6;color:var(--ink-2);
+}
+.actions{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+.actions-trust{
+  margin-top:36px;display:flex;align-items:center;gap:24px;flex-wrap:wrap;
+  font-size:13.5px;color:var(--ink-3);
+}
+.actions-trust .check{
+  display:inline-flex;align-items:center;gap:8px;
+}
+.actions-trust .check svg{width:14px;height:14px;color:var(--a1)}
+
+/* Hero stage — refined */
+.stage{
+  margin-top:60px;
+  position:relative;perspective:2400px;
+  --tilt-x:0deg;--tilt-y:0deg;
+}
+.stage-shell{
+  position:relative;border-radius:var(--r-2xl);
+  background:linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.02));
+  padding:1px;
+  transform-style:preserve-3d;
+  transform:rotateX(var(--tilt-x)) rotateY(var(--tilt-y));
+  transition:transform .4s var(--ease-out);
+  box-shadow:
+    0 60px 140px -40px rgba(0,0,0,.7),
+    0 0 0 1px rgba(255,255,255,.04) inset,
+    0 80px 120px -60px color-mix(in oklab, var(--a2) 35%, transparent);
+}
+.stage-shell::before{
+  content:"";position:absolute;inset:-1px;border-radius:inherit;pointer-events:none;
+  background:conic-gradient(from var(--ang,0deg) at 50% 50%,
+    transparent 0deg, color-mix(in oklab, var(--a1) 50%, transparent) 60deg,
+    transparent 120deg, color-mix(in oklab, var(--a2) 50%, transparent) 200deg,
+    transparent 280deg, color-mix(in oklab, var(--a3) 50%, transparent) 320deg, transparent 360deg);
+  filter:blur(14px);opacity:.4;z-index:-1;
+  animation:rot 12s linear infinite;
+}
+@keyframes rot{ to{ --ang:360deg } }
+@property --ang{ syntax:'<angle>'; initial-value:0deg; inherits:false }
+
+.stage-inner{
+  position:relative;border-radius:calc(var(--r-2xl) - 2px);
+  background:linear-gradient(180deg, #0b1220, #06090f);
+  overflow:hidden;
+}
+.stage-bar{
+  height:42px;display:flex;align-items:center;gap:8px;padding:0 16px;
+  border-bottom:1px solid var(--line);
+  background:linear-gradient(180deg, rgba(255,255,255,.04), transparent);
+}
+.stage-bar .dot{width:11px;height:11px;border-radius:50%}
+.stage-bar .dot.r{background:#ff5f57}.stage-bar .dot.y{background:#febc2e}.stage-bar .dot.g{background:#28c840}
+.stage-bar .url{
+  margin:0 auto;font-family:var(--f-mono);font-size:11.5px;color:var(--ink-3);
+  display:inline-flex;align-items:center;gap:8px;
+  background:var(--surface);padding:5px 14px;border-radius:99px;border:1px solid var(--line);
+}
+.stage-bar .url::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--a1);box-shadow:0 0 8px var(--a1)}
+.stage-bar .live{
+  display:inline-flex;align-items:center;gap:6px;
+  font-family:var(--f-mono);font-size:10.5px;color:var(--a1);text-transform:uppercase;letter-spacing:.1em;
+}
+.stage-bar .live::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--a1);box-shadow:0 0 0 0 currentColor;animation:ping 2s infinite}
+@keyframes ping{
+  0%{box-shadow:0 0 0 0 color-mix(in oklab, var(--a1) 60%, transparent)}
+  100%{box-shadow:0 0 0 12px transparent}
+}
+
+.stage-body{
+  display:grid;grid-template-columns:1fr;gap:1px;
+  background:var(--line);
+  min-height:520px;
+}
+@media(min-width:980px){
+  .stage-body{grid-template-columns: 340px 1fr 320px}
+}
+.stage-pane{background:#070b13;padding:18px;min-width:0;display:flex;flex-direction:column;gap:14px}
+.pane-head{
+  display:flex;align-items:center;justify-content:space-between;
+  font-family:var(--f-mono);font-size:10.5px;color:var(--ink-3);
+  text-transform:uppercase;letter-spacing:.11em;
+}
+.pane-head .badge{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:4px 8px;border-radius:6px;background:var(--surface);border:1px solid var(--line);
+  color:var(--a1);
+}
+.pane-head .badge::before{content:"";width:5px;height:5px;border-radius:50%;background:currentColor}
+
+/* Console pane */
+.prompt{
+  padding:14px;border-radius:var(--r-md);
+  background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.01));
+  border:1px solid var(--line);
+}
+.prompt-label{font-family:var(--f-mono);font-size:10px;color:var(--ink-4);text-transform:uppercase;letter-spacing:.12em;margin-bottom:8px}
+.typing{font-size:14.5px;line-height:1.5;color:var(--ink);min-height:74px}
+.caret{display:inline-block;width:8px;height:1.15em;background:var(--a1);vertical-align:-2px;margin-left:2px;animation:blink 1s steps(2,start) infinite;box-shadow:0 0 10px var(--a1)}
+@keyframes blink{50%{opacity:0}}
+
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{
+  font-size:11.5px;padding:6px 10px;border-radius:99px;
+  background:var(--surface);border:1px solid var(--line);color:var(--ink-2);
+}
+
+.analysis{display:flex;flex-direction:column;gap:6px;margin-top:auto}
+.a-item{
+  display:grid;grid-template-columns:24px 1fr auto;align-items:center;gap:10px;
+  padding:10px 12px;border-radius:var(--r-md);
+  background:linear-gradient(180deg, rgba(255,255,255,.035), rgba(255,255,255,.01));
+  border:1px solid var(--line);
+  opacity:0;transform:translateY(8px);
+  animation:aIn 8s ease infinite;
+}
+.a-item:nth-child(1){animation-delay:.0s}
+.a-item:nth-child(2){animation-delay:.6s}
+.a-item:nth-child(3){animation-delay:1.2s}
+.a-item:nth-child(4){animation-delay:1.8s}
+.a-item:nth-child(5){animation-delay:2.4s}
+@keyframes aIn{
+  0%,3%{opacity:0;transform:translateY(8px)}
+  10%,90%{opacity:1;transform:translateY(0)}
+  100%{opacity:0;transform:translateY(-2px)}
+}
+.a-icon{
+  width:24px;height:24px;border-radius:7px;display:grid;place-items:center;
+  background:color-mix(in oklab, var(--a2) 14%, transparent);
+  color:var(--a2);font-size:12px;
+}
+.a-item b{display:block;font-size:12.5px;font-weight:600;letter-spacing:-0.01em}
+.a-item small{display:block;font-size:11px;color:var(--ink-3);margin-top:2px;font-family:var(--f-mono)}
+.a-tag{
+  font-family:var(--f-mono);font-size:9.5px;font-weight:500;
+  padding:3px 7px;border-radius:6px;text-transform:uppercase;letter-spacing:.08em;
+  background:color-mix(in oklab, var(--a2) 12%, transparent);color:var(--a2);
+  border:1px solid color-mix(in oklab, var(--a2) 25%, transparent);
+}
+.a-tag.ok{background:color-mix(in oklab, var(--a1) 12%, transparent);color:var(--a1);border-color:color-mix(in oklab, var(--a1) 25%, transparent)}
+.a-tag.warn{background:rgba(255,204,102,.12);color:#ffcc66;border-color:rgba(255,204,102,.25)}
+
+/* Center pane — network / flow */
+.flow{
+  position:relative;background:#060a11;padding:24px;
+  display:grid;place-items:center;overflow:hidden;
+}
+.flow::before{
+  content:"";position:absolute;inset:0;
+  background:
+    radial-gradient(circle at 50% 50%, color-mix(in oklab, var(--a2) 10%, transparent), transparent 50%),
+    repeating-linear-gradient(90deg, transparent 0 60px, rgba(255,255,255,.02) 60px 61px),
+    repeating-linear-gradient(0deg, transparent 0 60px, rgba(255,255,255,.02) 60px 61px);
+}
+.hub{
+  position:relative;z-index:3;
+  width:160px;height:160px;border-radius:30px;
+  display:grid;place-items:center;gap:6px;
+  background:
+    radial-gradient(circle at 30% 20%, rgba(255,255,255,.18), transparent 50%),
+    linear-gradient(135deg, color-mix(in oklab, var(--a1) 28%, #0a1424), #0a1424);
+  border:1px solid color-mix(in oklab, var(--a1) 30%, var(--line-2));
+  box-shadow:
+    0 30px 70px -10px rgba(0,0,0,.6),
+    0 0 60px -10px color-mix(in oklab, var(--a1) 40%, transparent),
+    inset 0 1px 1px rgba(255,255,255,.2);
+  text-align:center;padding:10px;
+  font-weight:600;font-size:14px;letter-spacing:-0.02em;
+}
+.hub small{display:block;font-family:var(--f-mono);font-size:9.5px;color:var(--ink-3);text-transform:uppercase;letter-spacing:.12em;font-weight:500;margin-top:4px}
+.hub::after{
+  content:"";position:absolute;inset:-20px;border-radius:inherit;
+  border:1px dashed color-mix(in oklab, var(--a1) 30%, transparent);
+  animation:hubRing 14s linear infinite;
+}
+@keyframes hubRing{to{transform:rotate(360deg)}}
+/* Hub breathing glow */
+.hub{animation:hubBreathe 3s ease-in-out infinite}
+@keyframes hubBreathe{
+  0%,100%{box-shadow:0 30px 70px -10px rgba(0,0,0,.6),0 0 60px -10px color-mix(in oklab, var(--a1) 40%, transparent),inset 0 1px 1px rgba(255,255,255,.2)}
+  50%{box-shadow:0 30px 70px -10px rgba(0,0,0,.6),0 0 100px -5px color-mix(in oklab, var(--a1) 65%, transparent),inset 0 1px 1px rgba(255,255,255,.3),0 0 40px 8px color-mix(in oklab, var(--a2) 30%, transparent)}
+}
+
+/* Orbital rings around hub */
+.hub-orbit{
+  position:absolute;border-radius:50%;pointer-events:none;
+  border:1px solid color-mix(in oklab, var(--a1) 20%, transparent);
+}
+.hub-orbit.r1{width:240px;height:240px;top:50%;left:50%;transform:translate(-50%,-50%);animation:orbitSpin 20s linear infinite}
+.hub-orbit.r2{width:320px;height:320px;top:50%;left:50%;transform:translate(-50%,-50%);animation:orbitSpin 30s linear infinite reverse;border-style:dashed;opacity:.5}
+.hub-orbit.r3{width:400px;height:400px;top:50%;left:50%;transform:translate(-50%,-50%);animation:orbitSpin 25s linear infinite;opacity:.3}
+@keyframes orbitSpin{to{transform:translate(-50%,-50%) rotate(360deg)}}
+/* Orbit dots */
+.hub-orbit::before{
+  content:"";position:absolute;width:8px;height:8px;border-radius:50%;
+  background:var(--a1);box-shadow:0 0 12px var(--a1);
+  top:-4px;left:50%;margin-left:-4px;
+}
+.hub-orbit.r2::before{background:var(--a2);box-shadow:0 0 12px var(--a2);width:6px;height:6px;top:auto;bottom:-3px;margin-left:-3px}
+.hub-orbit.r3::before{background:var(--a3);box-shadow:0 0 12px var(--a3);width:5px;height:5px;left:auto;right:-2.5px;top:50%;margin-top:-2.5px}
+
+/* Energy pulse from hub */
+.energy-pulse{
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  width:160px;height:160px;border-radius:50%;pointer-events:none;
+  border:2px solid var(--a1);opacity:0;
+  animation:energyPulse 3s ease-out infinite;
+}
+.energy-pulse.ep2{animation-delay:1s;border-color:var(--a2)}
+.energy-pulse.ep3{animation-delay:2s;border-color:var(--a3)}
+@keyframes energyPulse{
+  0%{width:160px;height:160px;opacity:.6;border-width:2px}
+  100%{width:500px;height:500px;opacity:0;border-width:.5px}
+}
+
+/* Radial grid behind hub */
+.flow::after{
+  content:"";position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  width:500px;height:500px;
+  background:
+    repeating-radial-gradient(circle at center, transparent 0px, transparent 38px, rgba(255,255,255,.03) 40px);
+  border-radius:50%;pointer-events:none;z-index:0;
+  mask-image:radial-gradient(circle,#000 30%,transparent 70%);
+  -webkit-mask-image:radial-gradient(circle,#000 30%,transparent 70%);
+}
+
+/* Diagnostic progress bar */
+.diag-progress{
+  position:absolute;top:0;left:0;right:0;height:3px;z-index:12;
+  background:rgba(255,255,255,.05);
+  overflow:hidden;
+}
+.diag-progress i{
+  display:block;height:100%;width:0%;
+  background:linear-gradient(90deg, var(--a1), var(--a2), var(--a3));
+  box-shadow:0 0 12px var(--a1);
+  animation:diagFill 8s ease-in-out infinite;
+}
+@keyframes diagFill{
+  0%{width:0%}60%{width:92%}70%{width:92%}90%{width:100%}100%{width:0%}
+}
+
+/* Notification toasts */
+.toast-area{
+  position:absolute;bottom:12px;left:12px;right:12px;z-index:15;
+  display:flex;flex-direction:column;gap:6px;pointer-events:none;
+}
+.toast{
+  display:flex;align-items:center;gap:8px;
+  padding:8px 12px;border-radius:10px;
+  background:color-mix(in oklab, var(--bg) 85%, transparent);
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  border:1px solid var(--line);
+  font-size:11.5px;font-weight:500;
+  opacity:0;transform:translateY(10px) scale(.95);
+  transition:opacity .5s var(--ease-out), transform .5s var(--ease-out);
+}
+.toast.show{opacity:1;transform:none}
+.toast .t-dot{width:6px;height:6px;border-radius:50%;background:var(--a1);box-shadow:0 0 8px var(--a1);flex-shrink:0}
+.toast .t-dot.t-warn{background:#ffcc66;box-shadow:0 0 8px #ffcc66}
+.toast .t-dot.t-blue{background:var(--a2);box-shadow:0 0 8px var(--a2)}
+.toast .t-time{margin-left:auto;font-family:var(--f-mono);font-size:9px;color:var(--ink-4);letter-spacing:.06em}
+
+/* Enhanced packet glow trail */
+.flow svg .packet{r:5;opacity:.9}
+.flow svg .trail{
+  r:3;opacity:.4;
+}
+.flow svg .trail.t2{r:2;opacity:.2}
+
+/* Node sequential highlight */
+.node{transition:border-color .4s, box-shadow .4s}
+.node.active{
+  border-color:var(--a1);
+  box-shadow:0 10px 30px -8px rgba(0,0,0,.6), 0 0 20px -4px color-mix(in oklab, var(--a1) 50%, transparent);
+}
+.node.active .ico{transform:scale(1.4);box-shadow:0 0 14px var(--a1)}
+.node .ico{transition:transform .3s var(--spring), box-shadow .3s}
+
+/* SVG data packets */
+.flow svg .packet{
+  r:4;fill:var(--a1);
+  filter:url(#packetGlow);
+}
+.flow svg .packet.p2{fill:var(--a2)}
+.flow svg .packet.p3{fill:var(--a3)}
+
+/* Connection line pulse */
+.flow svg .conn-line{
+  fill:none;stroke:url(#flowGrad);stroke-width:1.2;
+  stroke-dasharray:4 6;opacity:.6;
+  animation:dashMove 3s linear infinite;
+}
+.flow svg .conn-active{
+  fill:none;stroke:var(--a1);stroke-width:2;
+  stroke-dasharray:1000;stroke-dashoffset:1000;
+  opacity:0;stroke-linecap:round;
+}
+.flow svg .conn-active.fire{
+  animation:connFire 1.5s ease-out forwards;
+}
+@keyframes connFire{
+  0%{stroke-dashoffset:1000;opacity:.8}
+  60%{stroke-dashoffset:0;opacity:.6}
+  100%{stroke-dashoffset:0;opacity:0}
+}
+
+/* Mini CRM Pipeline */
+.pipeline{display:flex;flex-direction:column;gap:6px}
+.pipeline-head{
+  font-family:var(--f-mono);font-size:10px;color:var(--ink-4);
+  text-transform:uppercase;letter-spacing:.12em;margin-bottom:4px;
+}
+.pipeline-stages{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:4px;
+  font-family:var(--f-mono);font-size:9px;color:var(--ink-4);
+  text-transform:uppercase;letter-spacing:.08em;text-align:center;
+  margin-bottom:6px;
+}
+.pipeline-stage{padding:4px 2px;border-radius:4px;background:var(--surface);border-bottom:2px solid var(--line)}
+.pipeline-stage.active{border-bottom-color:var(--a1);color:var(--a1)}
+.pipeline-track{position:relative;min-height:110px;overflow:hidden}
+.lead-card{
+  position:absolute;left:0;right:0;
+  display:flex;align-items:center;gap:8px;
+  padding:8px 10px;border-radius:10px;
+  background:linear-gradient(135deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
+  border:1px solid var(--line);
+  font-size:11.5px;font-weight:500;
+  opacity:0;transform:translateX(-20px);
+  transition:all .8s var(--ease-out);
+}
+.lead-card.visible{opacity:1;transform:translateX(0)}
+.lead-card .avatar{
+  width:22px;height:22px;border-radius:6px;display:grid;place-items:center;
+  font-size:9px;font-weight:700;color:var(--accent-ink);
+  background:linear-gradient(135deg,var(--a1),var(--a2));flex-shrink:0;
+}
+.lead-card .lead-info{min-width:0}
+.lead-card .lead-name{font-weight:600;font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lead-card .lead-stage{
+  font-family:var(--f-mono);font-size:9px;color:var(--ink-4);
+  text-transform:uppercase;letter-spacing:.06em;margin-top:1px;
+}
+.lead-card .lead-status{
+  margin-left:auto;width:6px;height:6px;border-radius:50%;flex-shrink:0;
+  background:var(--a1);box-shadow:0 0 8px var(--a1);
+}
+
+.node{
+  position:absolute;z-index:4;
+  display:flex;align-items:center;gap:8px;
+  padding:8px 12px;border-radius:99px;
+  background:color-mix(in oklab, #0a1220 80%, transparent);
+  border:1px solid var(--line-2);
+  backdrop-filter:blur(8px);
+  font-size:12px;font-weight:500;letter-spacing:-0.01em;
+  box-shadow:0 10px 30px -8px rgba(0,0,0,.6);
+}
+.node .ico{width:8px;height:8px;border-radius:50%;background:var(--a1);box-shadow:0 0 8px var(--a1)}
+.node.n1{top:14%;left:8%;animation:float1 6s ease-in-out infinite}
+.node.n2{top:10%;right:8%;animation:float2 7s ease-in-out infinite}
+.node.n3{bottom:14%;left:6%;animation:float2 5.5s ease-in-out infinite}
+.node.n4{bottom:10%;right:8%;animation:float1 6.5s ease-in-out infinite}
+.node.n5{top:50%;left:0%;transform:translateY(-50%);animation:float3 6s ease-in-out infinite}
+.node.n6{top:50%;right:0%;transform:translateY(-50%);animation:float3 7s ease-in-out infinite}
+@keyframes float1{50%{transform:translateY(-8px)}}
+@keyframes float2{50%{transform:translateY(8px)}}
+@keyframes float3{50%{transform:translateY(calc(-50% + -6px))}}
+
+.flow svg.lines{position:absolute;inset:0;width:100%;height:100%;z-index:2;pointer-events:none}
+.flow svg.lines path{
+  fill:none;stroke:url(#flowGrad);stroke-width:1.2;
+  stroke-dasharray:4 6;
+  opacity:.6;
+  animation:dashMove 3s linear infinite;
+}
+@keyframes dashMove{ to { stroke-dashoffset:-100 } }
+
+/* Right pane — KPI */
+.kpi-grid{display:flex;flex-direction:column;gap:10px}
+.kpi{
+  padding:14px;border-radius:var(--r-md);
+  background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.015));
+  border:1px solid var(--line);
+}
+.kpi b{display:block;font-family:var(--f-mono);font-size:10px;color:var(--ink-4);text-transform:uppercase;letter-spacing:.12em;margin-bottom:8px}
+.kpi .num{font-size:34px;letter-spacing:-0.04em;font-weight:600;line-height:1;font-feature-settings:"tnum"}
+.kpi .num .unit{font-size:18px;color:var(--ink-3);margin-left:2px}
+.kpi .sub{font-size:11.5px;color:var(--ink-3);margin-top:6px;font-family:var(--f-mono)}
+.bar{height:6px;border-radius:99px;background:var(--surface);overflow:hidden;margin-top:10px}
+.bar i{display:block;height:100%;background:linear-gradient(90deg, var(--a1), var(--a2));border-radius:inherit;width:0%;animation:fillBar 4s ease-in-out infinite alternate}
+.bar.warn i{background:linear-gradient(90deg, #ffcc66, #ff9a55);width:72%;animation-name:fillBarWarn}
+@keyframes fillBar{from{width:30%}to{width:88%}}
+@keyframes fillBarWarn{from{width:60%}to{width:78%}}
+
+.spark{position:relative;height:60px;margin-top:6px}
+.spark svg{position:absolute;inset:0;width:100%;height:100%}
+.spark .area{fill:url(#sparkA);opacity:.3}
+.spark .line{fill:none;stroke:url(#sparkL);stroke-width:2;stroke-linecap:round;stroke-dasharray:500;stroke-dashoffset:500;animation:draw 4s ease infinite}
+@keyframes draw{0%{stroke-dashoffset:500}45%,100%{stroke-dashoffset:0}}
+
+.seal{
+  display:flex;align-items:center;gap:12px;
+  padding:14px;border-radius:var(--r-md);
+  background:linear-gradient(135deg, color-mix(in oklab, var(--a3) 14%, transparent), rgba(255,255,255,.02));
+  border:1px solid color-mix(in oklab, var(--a3) 25%, var(--line-2));
+}
+.seal-mark{
+  width:40px;height:40px;border-radius:11px;display:grid;place-items:center;flex-shrink:0;
+  background:linear-gradient(135deg, var(--a1), var(--a2));
+  color:var(--accent-ink);font-weight:800;font-size:14px;
+}
+.seal b{display:block;font-size:13px;letter-spacing:-0.01em}
+.seal span{display:block;font-size:11px;color:var(--ink-3);font-family:var(--f-mono);margin-top:2px}
+
+/* ===== SECTIONS ===== */
+section{padding:var(--pad-section) 0;position:relative;z-index:2}
+.section-head{max-width:760px;margin:0 auto 64px;text-align:center}
+.section-head h2{margin:14px 0 16px}
+.section-head p{font-size:clamp(16px,1.3vw,18.5px);color:var(--ink-3);max-width:60ch;margin:0 auto;line-height:1.55}
+
+/* Logo strip */
+.logos{
+  padding:40px 0;
+  border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+  background:color-mix(in oklab, var(--bg) 60%, transparent);
+}
+.logos-row{
+  display:flex;align-items:center;justify-content:space-between;gap:48px;flex-wrap:wrap;
+  font-family:var(--f-mono);font-size:11.5px;color:var(--ink-4);text-transform:uppercase;letter-spacing:.14em;
+}
+.logos-row .label{color:var(--ink-3);min-width:max-content}
+.logos-row .marquee{
+  flex:1;overflow:hidden;mask-image:linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent);
+  -webkit-mask-image:linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent);
+}
+.marquee-track{
+  display:flex;gap:64px;width:max-content;
+  animation:marquee 32s linear infinite;
+}
+@keyframes marquee{ from{transform:translateX(0)} to{transform:translateX(-50%)} }
+.marquee-item{
+  display:inline-flex;align-items:center;gap:10px;font-weight:600;color:var(--ink-2);
+  font-size:18px;letter-spacing:-0.02em;font-family:var(--f-sans);text-transform:none;
+  white-space:nowrap;
+}
+.marquee-item::before{content:"";display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--ink-4)}
+
+/* Pain grid */
+.pain-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.pain{
+  position:relative;overflow:hidden;
+  padding:28px;border-radius:var(--r-xl);min-height:240px;
+  background:linear-gradient(180deg, rgba(255,255,255,.045), rgba(255,255,255,.015));
+  border:1px solid var(--line);
+  display:flex;flex-direction:column;gap:14px;
+  transition:transform .5s var(--ease-out), border-color .3s, background .3s;
+}
+.pain::before{
+  content:"";position:absolute;inset:-1px;border-radius:inherit;
+  background:linear-gradient(135deg, transparent 60%, color-mix(in oklab, var(--a1) 20%, transparent));
+  opacity:0;transition:opacity .4s;
+  pointer-events:none;
+}
+.pain:hover{transform:translateY(-6px);border-color:var(--line-2)}
+.pain:hover::before{opacity:1}
+.pain-num{
+  font-family:var(--f-mono);font-size:11px;color:var(--ink-4);
+  letter-spacing:.14em;text-transform:uppercase;
+}
+.pain h3{font-size:22px;font-weight:600;letter-spacing:-0.03em}
+.pain p{color:var(--ink-3);font-size:14.5px;line-height:1.55}
+.pain-icon{
+  width:36px;height:36px;border-radius:10px;display:grid;place-items:center;
+  background:var(--surface-2);border:1px solid var(--line);
+  color:var(--a1);
+}
+
+/* Method */
+.method-wrap{
+  display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start;
+}
+.method-card{
+  padding:36px;border-radius:var(--r-xl);
+  background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
+  border:1px solid var(--line);position:relative;overflow:hidden;
+}
+.method-card h3{font-size:clamp(26px,2.2vw,34px);margin-bottom:14px;letter-spacing:-0.035em;font-weight:600}
+.steps{display:flex;flex-direction:column;gap:0;margin-top:24px;position:relative}
+.step{
+  display:grid;grid-template-columns:36px 1fr;gap:16px;align-items:start;
+  padding:18px 0;
+  border-top:1px solid var(--line);
+  position:relative;
+}
+.step:first-child{border-top:0}
+.step-num{
+  width:36px;height:36px;border-radius:10px;display:grid;place-items:center;
+  font-family:var(--f-mono);font-weight:600;font-size:13px;
+  background:var(--surface-2);border:1px solid var(--line);
+  color:var(--a1);
+}
+.step b{display:block;font-size:16px;font-weight:600;letter-spacing:-0.02em;margin-bottom:4px}
+.step p{font-size:14px;color:var(--ink-3);line-height:1.55}
+
+/* Diagnostic table */
+.table-card{
+  padding:18px;border-radius:var(--r-xl);
+  background:linear-gradient(180deg, rgba(255,255,255,.045), rgba(255,255,255,.02));
+  border:1px solid var(--line);
+}
+.filters{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px}
+.filter{
+  font-family:var(--f-mono);font-size:11px;
+  padding:7px 11px;border-radius:99px;
+  background:var(--surface);border:1px solid var(--line);color:var(--ink-2);
+  cursor:pointer;transition:.2s;font-weight:500;letter-spacing:.04em;text-transform:uppercase;
+}
+.filter:hover{color:var(--ink);border-color:var(--line-2)}
+.filter.on{background:color-mix(in oklab, var(--a1) 14%, transparent);color:var(--a1);border-color:color-mix(in oklab, var(--a1) 30%, transparent)}
+.table-wrap{overflow-x:auto;border-radius:var(--r-lg);border:1px solid var(--line)}
+table{width:100%;border-collapse:collapse;min-width:640px;background:#070b13}
+th,td{padding:14px 16px;text-align:left;border-bottom:1px solid var(--line);font-size:13.5px;vertical-align:middle}
+tbody tr:last-child td{border-bottom:0}
+tbody tr{transition:background .2s}
+tbody tr:hover{background:rgba(255,255,255,.025)}
+th{
+  font-family:var(--f-mono);font-size:10.5px;color:var(--ink-4);
+  text-transform:uppercase;letter-spacing:.12em;font-weight:500;
+  background:#050811;
+}
+td{color:var(--ink-2)}
+td b{color:var(--ink);font-weight:600}
+.tag{
+  display:inline-flex;align-items:center;gap:6px;
+  font-family:var(--f-mono);font-size:10.5px;font-weight:500;
+  padding:4px 8px;border-radius:6px;letter-spacing:.06em;text-transform:uppercase;
+}
+.tag::before{content:"";width:5px;height:5px;border-radius:50%;background:currentColor}
+.tag.ok{background:color-mix(in oklab, var(--a1) 12%, transparent);color:var(--a1)}
+.tag.warn{background:rgba(255,204,102,.12);color:#ffcc66}
+.tag.alert{background:rgba(255,107,107,.12);color:#ff8a8a}
+.tag.info{background:color-mix(in oklab, var(--a2) 12%, transparent);color:var(--a2)}
+
+/* Pricing */
+.pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.price{
+  position:relative;overflow:hidden;
+  padding:32px;border-radius:var(--r-xl);
+  background:linear-gradient(180deg, rgba(255,255,255,.045), rgba(255,255,255,.015));
+  border:1px solid var(--line);
+  display:flex;flex-direction:column;
+  transition:.4s var(--ease-out);
+}
+.price:hover{transform:translateY(-6px);border-color:var(--line-2)}
+.price.featured{
+  background:
+    radial-gradient(80% 60% at 50% 0%, color-mix(in oklab, var(--a1) 20%, transparent), transparent 70%),
+    linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.015));
+  border-color:color-mix(in oklab, var(--a1) 35%, var(--line-2));
+  box-shadow:0 40px 100px -30px color-mix(in oklab, var(--a1) 30%, transparent);
+}
+.price-tag{
+  display:inline-flex;align-self:flex-start;align-items:center;gap:6px;
+  font-family:var(--f-mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;
+  padding:5px 9px;border-radius:6px;margin-bottom:18px;
+  background:color-mix(in oklab, var(--a1) 18%, transparent);color:var(--a1);
+  border:1px solid color-mix(in oklab, var(--a1) 30%, transparent);
+}
+.price-tag.subtle{background:var(--surface);color:var(--ink-3);border-color:var(--line)}
+.price h3{font-size:24px;font-weight:600;letter-spacing:-0.025em;margin-bottom:8px}
+.price-desc{color:var(--ink-3);font-size:14.5px;line-height:1.55;min-height:62px}
+.price-amt{display:flex;align-items:baseline;gap:6px;margin:24px 0 4px}
+.price-amt .v{font-size:44px;font-weight:600;letter-spacing:-0.04em;line-height:1;font-feature-settings:"tnum"}
+.price-amt .u{font-size:13px;color:var(--ink-3);font-family:var(--f-mono)}
+.price-from{font-size:12px;color:var(--ink-4);font-family:var(--f-mono);margin-bottom:24px}
+.price ul{list-style:none;padding:0;margin:0 0 28px;display:flex;flex-direction:column;gap:10px}
+.price li{display:flex;align-items:flex-start;gap:10px;font-size:14px;color:var(--ink-2);line-height:1.5}
+.price li svg{width:16px;height:16px;color:var(--a1);flex-shrink:0;margin-top:2px}
+.price .btn{width:100%}
+
+/* When-pro */
+.pro-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:14px}
+.pro-card{
+  padding:24px;border-radius:var(--r-xl);min-height:200px;
+  background:linear-gradient(180deg, rgba(255,255,255,.045), rgba(255,255,255,.02));
+  border:1px solid var(--line);
+  display:flex;flex-direction:column;gap:10px;
+  transition:.35s var(--ease-out);
+}
+.pro-card:hover{transform:translateY(-4px);border-color:var(--line-2)}
+.pro-card .num{font-family:var(--f-mono);font-size:11px;color:var(--a1);letter-spacing:.12em}
+.pro-card b{font-size:18px;font-weight:600;letter-spacing:-0.02em}
+.pro-card p{font-size:13.5px;color:var(--ink-3);line-height:1.55;margin-top:auto}
+
+/* Glossary (light section) */
+.light-block{
+  background:#f6f7fb;color:#0a0e16;
+  border-top:1px solid rgba(0,0,0,.05);border-bottom:1px solid rgba(0,0,0,.05);
+}
+.light-block h2,.light-block h3{color:#0a0e16}
+.light-block .section-head p{color:#525968}
+.light-block .eyebrow{color:#0a0e16}
+.light-block .eyebrow::before{background:#0a0e16;box-shadow:0 0 0 4px rgba(0,0,0,.08)}
+.terms{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.term{
+  background:#fff;border:1px solid #e6e8ef;border-radius:var(--r-xl);
+  padding:24px;box-shadow:0 1px 0 rgba(0,0,0,.02);
+  transition:.3s var(--ease-out);
+}
+.term:hover{transform:translateY(-4px);box-shadow:0 20px 50px -20px rgba(0,0,0,.15)}
+.term b{display:block;font-size:18px;font-weight:600;letter-spacing:-0.02em;margin-bottom:8px}
+.term p{font-size:14px;color:#525968;line-height:1.55}
+
+/* Testimonial */
+.quote-wrap{
+  border-radius:var(--r-2xl);
+  padding:64px 48px;text-align:center;
+  background:
+    radial-gradient(80% 50% at 50% 0%, color-mix(in oklab, var(--a2) 16%, transparent), transparent 70%),
+    linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.015));
+  border:1px solid var(--line);
+  max-width:880px;margin:0 auto;
+}
+.quote-text{font-family:var(--f-display);font-style:italic;font-size:clamp(24px,3vw,38px);line-height:1.25;letter-spacing:-0.025em;color:var(--ink);max-width:24ch;margin:0 auto}
+[data-serif="false"] .quote-text{font-family:var(--f-sans);font-style:normal;font-weight:500}
+.quote-attr{margin-top:32px;display:inline-flex;align-items:center;gap:14px;font-size:13.5px;color:var(--ink-3)}
+.quote-avatar{width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg, var(--a2), var(--a3));display:grid;place-items:center;color:var(--accent-ink);font-weight:700;font-size:14px}
+.quote-attr b{color:var(--ink);font-weight:600}
+.quote-attr .sep{opacity:.35}
+
+/* FAQ */
+.faq-list{max-width:820px;margin:0 auto;display:flex;flex-direction:column;gap:8px}
+.faq{
+  border-radius:var(--r-lg);
+  background:var(--surface);border:1px solid var(--line);
+  overflow:hidden;
+  transition:.3s;
+}
+.faq[open]{background:var(--surface-2);border-color:var(--line-2)}
+.faq summary{
+  list-style:none;cursor:pointer;
+  padding:22px 24px;
+  display:flex;align-items:center;justify-content:space-between;gap:16px;
+  font-size:16px;font-weight:500;letter-spacing:-0.015em;
+}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary .plus{
+  width:28px;height:28px;border-radius:8px;display:grid;place-items:center;flex-shrink:0;
+  background:var(--surface-2);border:1px solid var(--line);transition:.3s;
+}
+.faq summary .plus svg{transition:transform .3s var(--spring)}
+.faq[open] .plus{background:var(--a1);border-color:var(--a1);color:var(--accent-ink)}
+.faq[open] .plus svg{transform:rotate(45deg)}
+.faq-body{padding:0 24px 22px;color:var(--ink-3);font-size:14.5px;line-height:1.6;max-width:70ch}
+
+/* CTA */
+.cta-final{
+  position:relative;overflow:hidden;
+  padding:80px 48px;text-align:center;
+  border-radius:var(--r-2xl);
+  background:
+    radial-gradient(60% 60% at 20% 0%, color-mix(in oklab, var(--a2) 26%, transparent), transparent 60%),
+    radial-gradient(50% 50% at 80% 100%, color-mix(in oklab, var(--a3) 22%, transparent), transparent 60%),
+    linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
+  border:1px solid var(--line-2);
+}
+.cta-final::before{
+  content:"";position:absolute;inset:-2px;border-radius:inherit;pointer-events:none;
+  background:conic-gradient(from var(--ang,0deg) at 50% 50%,
+    transparent 0deg, color-mix(in oklab, var(--a1) 35%, transparent) 60deg,
+    transparent 120deg, color-mix(in oklab, var(--a2) 35%, transparent) 240deg, transparent 360deg);
+  filter:blur(20px);opacity:.35;z-index:-1;
+  animation:rot 14s linear infinite;
+}
+.cta-final h2{margin-bottom:18px;max-width:18ch;margin-inline:auto}
+.cta-final p{max-width:54ch;margin:0 auto 32px;color:var(--ink-2);font-size:17px;line-height:1.55}
+.cta-final .actions{justify-content:center}
+
+/* Footer */
+footer{padding:64px 0 40px;border-top:1px solid var(--line);position:relative;z-index:2}
+.foot-grid{display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:36px;margin-bottom:48px}
+.foot-grid h4{font-family:var(--f-mono);font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.12em;color:var(--ink-4);margin-bottom:14px}
+.foot-grid ul{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:8px}
+.foot-grid a{font-size:14px;color:var(--ink-2);transition:.2s}
+.foot-grid a:hover{color:var(--ink)}
+.foot-grid p{font-size:14px;color:var(--ink-3);line-height:1.6;max-width:36ch;margin-top:14px}
+.foot-base{
+  padding-top:24px;border-top:1px solid var(--line);
+  display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;
+  font-family:var(--f-mono);font-size:11.5px;color:var(--ink-4);text-transform:uppercase;letter-spacing:.1em;
+}
+
+/* Mobile floating CTA */
+.mobile-cta{
+  display:none;position:fixed;left:16px;right:16px;bottom:16px;z-index:60;
+  box-shadow:0 16px 40px rgba(0,0,0,.5), 0 0 0 1px rgba(255,255,255,.05);
+}
+
+/* Reveal — dramatic scale + blur */
+[data-reveal]{
+  opacity:0;transform:translateY(40px) scale(.92);
+  filter:blur(8px);
+  transition:opacity 1s var(--ease-out), transform 1.2s var(--ease-out), filter 1s var(--ease-out);
+  transition-delay:var(--rd,0ms);
+}
+[data-reveal].in{opacity:1;transform:none;filter:blur(0)}
+
+/* === CARD 3D TILT + GLOW SPOTLIGHT === */
+.tilt-card{
+  --mx:50%;--my:50%;--glow-opacity:0;
+  transform-style:preserve-3d;perspective:800px;
+  transition:transform .35s var(--ease-out);
+}
+.tilt-card::after{
+  content:"";position:absolute;inset:-1px;border-radius:inherit;pointer-events:none;
+  background:radial-gradient(circle at var(--mx) var(--my), color-mix(in oklab, var(--a1) 40%, transparent), transparent 50%);
+  opacity:var(--glow-opacity);transition:opacity .4s;
+}
+
+/* === ANIMATED GRADIENT BORDER on featured elements === */
+.glow-border{
+  position:relative;
+}
+.glow-border::before{
+  content:"";position:absolute;inset:-2px;border-radius:inherit;pointer-events:none;z-index:-1;
+  background:conic-gradient(from var(--ang,0deg) at 50% 50%,
+    var(--a1), var(--a2), var(--a3), var(--a1));
+  opacity:.6;
+  animation:rot 6s linear infinite;
+}
+.glow-border::after{
+  content:"";position:absolute;inset:0;border-radius:inherit;
+  background:inherit;z-index:0;
+}
+
+/* === BUTTON GLOW PULSE === */
+.btn--primary{
+  animation:btnPulse 3s ease-in-out infinite;
+}
+@keyframes btnPulse{
+  0%,100%{box-shadow:0 1px 0 rgba(255,255,255,.3) inset, 0 18px 40px -10px color-mix(in oklab, var(--a1) 50%, transparent)}
+  50%{box-shadow:0 1px 0 rgba(255,255,255,.4) inset, 0 24px 60px -8px color-mix(in oklab, var(--a1) 70%, transparent), 0 0 40px -4px color-mix(in oklab, var(--a1) 40%, transparent)}
+}
+
+/* === TEXT HIGHLIGHT SWEEP === */
+.sweep{
+  position:relative;display:inline;
+}
+.sweep::after{
+  content:"";position:absolute;left:0;top:0;width:100%;height:100%;
+  background:linear-gradient(90deg, transparent 0%, rgba(255,255,255,.15) 50%, transparent 100%);
+  background-size:200% 100%;
+  mix-blend-mode:overlay;
+  animation:sweepText 4s ease-in-out infinite;
+  pointer-events:none;
+}
+@keyframes sweepText{
+  0%{background-position:200% 0}
+  100%{background-position:-200% 0}
+}
+
+/* === STAGE SCAN LINE === */
+.stage-inner::after{
+  content:"";position:absolute;inset:0;z-index:10;pointer-events:none;
+  background:linear-gradient(180deg,
+    transparent 0%,
+    transparent calc(var(--scan,0%) - 2%),
+    color-mix(in oklab, var(--a1) 30%, transparent) var(--scan,0%),
+    transparent calc(var(--scan,0%) + 2%),
+    transparent 100%);
+  animation:scanLine 4s ease-in-out infinite;
+}
+@keyframes scanLine{
+  0%{--scan:0%}50%{--scan:100%}100%{--scan:0%}
+}
+@property --scan{syntax:'<percentage>';initial-value:0%;inherits:false}
+
+/* === HERO WORD ANIMATION === */
+.hero h1 .word{
+  display:inline-block;
+  opacity:0;transform:translateY(30px) scale(.85);
+  filter:blur(6px);
+  animation:wordIn .8s var(--ease-out) forwards;
+  animation-delay:var(--wd, 0ms);
+}
+@keyframes wordIn{
+  to{opacity:1;transform:none;filter:blur(0)}
+}
+
+/* === FLOATING CHIPS in hero stage === */
+.chip{
+  transition:transform .3s var(--spring), background .3s, border-color .3s;
+}
+.chip:hover{
+  transform:translateY(-3px) scale(1.06);
+  background:color-mix(in oklab, var(--a1) 12%, transparent);
+  border-color:color-mix(in oklab, var(--a1) 30%, transparent);
+  color:var(--a1);
+}
+
+/* === PARALLAX LAYERS === */
+[data-speed]{
+  will-change:transform;
+}
+
+/* === STAGGER children on pain/pro/pricing grids === */
+.pain-grid [data-reveal]:nth-child(1){--rd:0ms}
+.pain-grid [data-reveal]:nth-child(2){--rd:120ms}
+.pain-grid [data-reveal]:nth-child(3){--rd:240ms}
+.pain-grid [data-reveal]:nth-child(4){--rd:360ms}
+.pricing-grid [data-reveal]:nth-child(1){--rd:0ms}
+.pricing-grid [data-reveal]:nth-child(2){--rd:150ms}
+.pricing-grid [data-reveal]:nth-child(3){--rd:300ms}
+
+@media(max-width:1100px){
+  .pain-grid{grid-template-columns:1fr 1fr}
+  .pricing-grid{grid-template-columns:1fr}
+  .pro-grid{grid-template-columns:1fr 1fr 1fr}
+  .method-wrap{grid-template-columns:1fr}
+  .terms{grid-template-columns:1fr 1fr}
+  .nav-links{display:none}
+  .foot-grid{grid-template-columns:1fr 1fr}
+}
+@media(max-width:720px){
+  :root{--pad-section:80px;--r-2xl:28px;--r-xl:22px}
+  .hero{padding:48px 0 60px;min-height:auto}
+  .hero-tag{flex-wrap:wrap;padding:6px 6px 6px 12px}
+  .actions{flex-direction:column;align-items:stretch}
+  .actions .btn{width:100%}
+  .actions-trust{gap:14px;font-size:12.5px}
+  .stage{margin-top:40px}
+  .stage-body{min-height:auto}
+  .flow{min-height:300px;display:none}
+  .pain-grid{grid-template-columns:1fr}
+  .pro-grid{grid-template-columns:1fr}
+  .terms{grid-template-columns:1fr}
+  .pricing-grid{grid-template-columns:1fr}
+  .quote-wrap{padding:48px 24px}
+  .cta-final{padding:56px 24px}
+  .mobile-cta{display:inline-flex}
+  .foot-grid{grid-template-columns:1fr 1fr;gap:28px}
+  .brand-sub{display:none}
+  .nav .btn{display:none}
+}
+
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+  [data-reveal]{opacity:1;transform:none;filter:none}
+  .hero h1 .word{opacity:1;transform:none;filter:none}
+  .a-item{opacity:1;transform:none}
+  .lead-card{opacity:1!important;transform:none!important}
+}
+
+/* ===== V14 — USER PRICING / UNIFIED OFFER ===== */
+.pricing-controls{
+  position:relative;
+  max-width:860px;
+  margin:-26px auto 34px;
+  display:grid;
+  grid-template-columns:1fr auto;
+  gap:14px;
+  align-items:center;
+  padding:14px;
+  border-radius:24px;
+  background:linear-gradient(180deg, rgba(255,255,255,.055), rgba(255,255,255,.025));
+  border:1px solid var(--line);
+  box-shadow:0 26px 70px -42px rgba(0,0,0,.85);
+  overflow:hidden;
+}
+.pricing-controls::before{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(circle at var(--pcx,18%) 50%, color-mix(in oklab, var(--a1) 18%, transparent), transparent 34%);
+}
+.pricing-controls .pc-copy{position:relative;z-index:1}
+.pricing-controls .pc-copy b{display:block;font-size:15px;letter-spacing:-.015em}
+.pricing-controls .pc-copy span{display:block;margin-top:3px;color:var(--ink-3);font-size:13px;line-height:1.45}
+.user-switch{
+  position:relative;z-index:1;
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+  gap:6px;
+  padding:6px;
+  border-radius:18px;
+  background:rgba(255,255,255,.05);
+  border:1px solid var(--line);
+}
+.user-switch button{
+  position:relative;
+  min-width:44px;
+  height:38px;
+  border-radius:13px;
+  color:var(--ink-2);
+  font-weight:700;
+  font-size:13px;
+  transition:.25s var(--spring);
+}
+.user-switch button:hover{color:var(--ink);background:rgba(255,255,255,.055)}
+.user-switch button.on{
+  background:linear-gradient(135deg,var(--a1),var(--a2));
+  color:var(--accent-ink);
+  box-shadow:0 14px 30px -16px color-mix(in oklab, var(--a1) 75%, transparent), inset 0 1px 0 rgba(255,255,255,.38);
+}
+.price-amt .v{
+  transition:filter .25s ease, transform .25s var(--spring), opacity .25s ease;
+}
+.price-amt.updating .v{
+  opacity:.35;
+  filter:blur(4px);
+  transform:translateY(8px) scale(.98);
+}
+.price-extra{
+  margin:12px 0 0;
+  padding:10px 12px;
+  border-radius:16px;
+  background:rgba(255,255,255,.035);
+  border:1px solid var(--line);
+  color:var(--ink-3);
+  font-size:12.5px;
+  line-height:1.45;
+}
+.price-extra strong{color:var(--ink-2)}
+.price-note{
+  margin-top:20px;
+  display:grid;
+  grid-template-columns:1.1fr .9fr;
+  gap:16px;
+}
+.price-note-card{
+  border-radius:26px;
+  padding:20px;
+  background:linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.025));
+  border:1px solid var(--line);
+}
+.price-note-card b{display:block;font-size:16px;margin-bottom:6px;letter-spacing:-.015em}
+.price-note-card p{font-size:14px;line-height:1.58;color:var(--ink-3)}
+.user-matrix{
+  border-radius:26px;
+  overflow:hidden;
+  border:1px solid var(--line);
+  background:rgba(255,255,255,.035);
+}
+.user-matrix table{width:100%;border-collapse:collapse}
+.user-matrix th,.user-matrix td{
+  padding:12px 14px;
+  border-bottom:1px solid var(--line);
+  text-align:left;
+  font-size:13px;
+}
+.user-matrix th{
+  font-family:var(--f-mono);
+  font-size:10px;
+  color:var(--ink-4);
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  background:rgba(255,255,255,.035);
+}
+.user-matrix td{color:var(--ink-2);font-weight:600}
+.user-matrix tr:last-child td{border-bottom:0}
+.price-disclaimer{
+  margin-top:16px;
+  padding:14px 16px;
+  border-radius:20px;
+  border:1px dashed color-mix(in oklab, var(--a1) 32%, var(--line));
+  background:color-mix(in oklab, var(--a1) 7%, transparent);
+  color:var(--ink-2);
+  font-size:13.5px;
+  line-height:1.55;
+}
+@media(max-width:900px){
+  .pricing-controls{grid-template-columns:1fr; margin-top:-18px}
+  .user-switch{grid-template-columns:repeat(5,1fr); width:100%}
+  .price-note{grid-template-columns:1fr}
+  .user-matrix{overflow-x:auto}
+  .user-matrix table{min-width:620px}
+}
+@media(max-width:720px){
+  .pricing-controls{padding:12px;border-radius:22px}
+  .pricing-controls .pc-copy span{font-size:12.5px}
+  .user-switch button{min-width:0;height:36px}
+  .price-note-card{padding:16px}
+  .price-disclaimer{font-size:12.8px}
+}
+
+</style>
+</head>
+<body>
+<div class="ambient" aria-hidden="true"></div>
+<div class="aurora" aria-hidden="true"><div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div></div>
+<canvas id="particles" aria-hidden="true"></canvas>
+<div class="cursor-glow" id="cursorGlow" aria-hidden="true"></div>
+<div class="grain" aria-hidden="true"></div>
+
+<a class="skip-link" href="#main">Pular para o conteúdo</a>
+
+<header class="nav" id="nav">
+  <div class="container nav-inner">
+    <a class="brand" href="#top" aria-label="SmartFlux">
+      <span class="brand-mark">S</span>
+      <span>
+        <span class="brand-name">SmartFlux</span>
+        <span class="brand-sub">Diagnóstico Kommo</span>
+      </span>
+    </a>
+    <nav class="nav-links" aria-label="Navegação">
+      <a href="#problema">Problema</a>
+      <a href="#metodo">Método</a>
+      <a href="#planos">Planos</a>
+      <a href="#pro">Quando Pro</a>
+      <a href="#faq">FAQ</a>
+    </nav>
+    <a class="btn btn--primary btn--sm magnetic" href="https://wa.me/5534992710008?text=Quero%20fazer%20um%20diagn%C3%B3stico%20SmartFlux" target="_blank" rel="noopener">
+      Fazer diagnóstico
+      <svg class="arrow" viewBox="0 0 16 16" fill="none"><path d="M3 8h10m-4-4 4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </a>
+  </div>
+</header>
+
+<main id="main">
+
+<!-- ============ HERO ============ -->
+<section class="hero" id="top">
+  <div class="container">
+    <div class="hero-grid">
+      <div data-reveal>
+        <div class="hero-tag">
+          <span class="dot"></span>
+          <span>Diagnóstico antes da licença</span>
+          <span class="pill">v14 · SmartFlux Method</span>
+        </div>
+        <h1 id="heroTitle">
+          <span class="word" style="--wd:100ms">Implante</span> <span class="word" style="--wd:180ms">a</span> <span class="word" style="--wd:240ms">Kommo</span> <span class="word" style="--wd:320ms">como</span> <span class="word" style="--wd:400ms">uma</span> <span class="word serif gradient-text sweep" style="--wd:520ms">operação</span><br>
+          <span class="word" style="--wd:640ms">—</span> <span class="word" style="--wd:700ms">não</span> <span class="word" style="--wd:760ms">como</span> <span class="word" style="--wd:840ms">licença</span> <span class="word" style="--wd:920ms">solta.</span>
+        </h1>
+        <p class="hero-copy">
+          A SmartFlux analisa WhatsApp, leads, canais, anúncios, IA e agendamento <em>antes</em> de montar sua operação na Kommo. O objetivo não é empurrar plano caro — é evitar estrutura fraca e dinheiro mal gasto.
+        </p>
+        <div class="actions">
+          <a class="btn btn--primary magnetic" href="https://wa.me/5534992710008?text=Quero%20fazer%20um%20diagn%C3%B3stico%20SmartFlux%20da%20minha%20opera%C3%A7%C3%A3o" target="_blank" rel="noopener">
+            Fazer diagnóstico gratuito
+            <svg class="arrow" viewBox="0 0 16 16" fill="none"><path d="M3 8h10m-4-4 4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+          <a class="btn btn--ghost magnetic" href="#metodo">Ver como funciona</a>
+        </div>
+        <div class="actions-trust">
+          <span class="check"><svg viewBox="0 0 16 16" fill="none"><path d="M3 8.5 6.5 12 13 4.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Sem compromisso</span>
+          <span class="check"><svg viewBox="0 0 16 16" fill="none"><path d="M3 8.5 6.5 12 13 4.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Resposta em até 24h</span>
+          <span class="check"><svg viewBox="0 0 16 16" fill="none"><path d="M3 8.5 6.5 12 13 4.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Implantação guiada</span>
+        </div>
+      </div>
+
+      <!-- Stage -->
+      <div class="stage" id="stage" data-reveal style="--rd:120ms">
+        <div class="stage-shell">
+          <div class="stage-inner">
+            <div class="stage-bar">
+              <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+              <span class="url"><span>smartflux.diag/operação</span></span>
+              <span class="live">simulação ao vivo</span>
+            </div>
+            <div class="stage-body">
+              <!-- LEFT: Console -->
+              <div class="stage-pane">
+                <div class="pane-head">
+                  <span>Console de diagnóstico</span>
+                  <span class="badge">AI Copilot</span>
+                </div>
+                <div class="prompt">
+                  <div class="prompt-label">Entrada do cliente</div>
+                  <div class="typing" id="typing"><span id="typingText"></span><span class="caret"></span></div>
+                </div>
+                <div class="chips">
+                  <span class="chip">Uso só WhatsApp</span>
+                  <span class="chip">Leads parados</span>
+                  <span class="chip">Quero IA</span>
+                  <span class="chip">Anúncios</span>
+                </div>
+                <div class="analysis">
+                  <div class="a-item">
+                    <span class="a-icon">✓</span>
+                    <div><b>Canal principal identificado</b><small>WhatsApp é a origem dominante</small></div>
+                    <span class="a-tag ok">OK</span>
+                  </div>
+                  <div class="a-item">
+                    <span class="a-icon">↻</span>
+                    <div><b>Dor principal detectada</b><small>interessados somem após orçamento</small></div>
+                    <span class="a-tag warn">Follow-up</span>
+                  </div>
+                  <div class="a-item">
+                    <span class="a-icon">⚡</span>
+                    <div><b>Automação recomendada</b><small>retorno + tarefa para vendedor</small></div>
+                    <span class="a-tag">Funil</span>
+                  </div>
+                  <div class="a-item">
+                    <span class="a-icon">◆</span>
+                    <div><b>Plano sugerido</b><small>começar simples, escalar depois</small></div>
+                    <span class="a-tag ok">Recomendação</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- CENTER: Flow -->
+              <div class="stage-pane flow">
+                <svg class="lines" viewBox="0 0 400 400" preserveAspectRatio="none" aria-hidden="true">
+                  <defs>
+                    <linearGradient id="flowGrad" x1="0" y1="0" x2="1" y2="1">
+                      <stop offset="0%" stop-color="var(--a2)" stop-opacity=".0"/>
+                      <stop offset="50%" stop-color="var(--a1)" stop-opacity=".8"/>
+                      <stop offset="100%" stop-color="var(--a3)" stop-opacity=".0"/>
+                    </linearGradient>
+                    <linearGradient id="sparkA" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stop-color="var(--a2)"/>
+                      <stop offset="100%" stop-color="var(--a2)" stop-opacity="0"/>
+                    </linearGradient>
+                    <linearGradient id="sparkL" x1="0" y1="0" x2="1" y2="0">
+                      <stop offset="0%" stop-color="var(--a1)"/>
+                      <stop offset="100%" stop-color="var(--a2)"/>
+                    </linearGradient>
+                    <filter id="packetGlow" x="-100%" y="-100%" width="300%" height="300%">
+                      <feGaussianBlur in="SourceGraphic" stdDeviation="3" result="blur"/>
+                      <feMerge><feMergeNode in="blur"/><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+                    </filter>
+                  </defs>
+                  <!-- Connection lines -->
+                  <path class="conn-line" id="conn1" d="M40,80 C 120,80 160,200 200,200"/>
+                  <path class="conn-line" id="conn2" d="M360,60 C 280,60 240,200 200,200"/>
+                  <path class="conn-line" id="conn3" d="M40,340 C 120,340 160,200 200,200"/>
+                  <path class="conn-line" id="conn4" d="M360,330 C 280,330 240,200 200,200"/>
+                  <path class="conn-line" id="conn5" d="M10,200 L 120,200"/>
+                  <path class="conn-line" id="conn6" d="M390,200 L 280,200"/>
+                  <!-- Active pulse lines (cloned) -->
+                  <path class="conn-active" d="M40,80 C 120,80 160,200 200,200"/>
+                  <path class="conn-active" d="M360,60 C 280,60 240,200 200,200"/>
+                  <path class="conn-active" d="M40,340 C 120,340 160,200 200,200"/>
+                  <path class="conn-active" d="M360,330 C 280,330 240,200 200,200"/>
+                  <path class="conn-active" d="M10,200 L 120,200"/>
+                  <path class="conn-active" d="M390,200 L 280,200"/>
+                  <!-- Data packets with trails -->
+                  <circle class="packet" r="5">
+                    <animateMotion dur="2.8s" repeatCount="indefinite" path="M40,80 C 120,80 160,200 200,200"/>
+                  </circle>
+                  <circle class="trail" r="3" fill="var(--a1)" opacity=".35">
+                    <animateMotion dur="2.8s" repeatCount="indefinite" path="M40,80 C 120,80 160,200 200,200" begin="-0.15s"/>
+                  </circle>
+                  <circle class="trail t2" r="2" fill="var(--a1)" opacity=".15">
+                    <animateMotion dur="2.8s" repeatCount="indefinite" path="M40,80 C 120,80 160,200 200,200" begin="-0.3s"/>
+                  </circle>
+                  <circle class="packet p2" r="4.5">
+                    <animateMotion dur="3.2s" repeatCount="indefinite" path="M360,60 C 280,60 240,200 200,200" begin="0.6s"/>
+                  </circle>
+                  <circle class="trail" r="3" fill="var(--a2)" opacity=".35">
+                    <animateMotion dur="3.2s" repeatCount="indefinite" path="M360,60 C 280,60 240,200 200,200" begin="0.45s"/>
+                  </circle>
+                  <circle class="packet" r="4">
+                    <animateMotion dur="3.5s" repeatCount="indefinite" path="M40,340 C 120,340 160,200 200,200" begin="1.2s"/>
+                  </circle>
+                  <circle class="trail" r="2.5" fill="var(--a1)" opacity=".3">
+                    <animateMotion dur="3.5s" repeatCount="indefinite" path="M40,340 C 120,340 160,200 200,200" begin="1.05s"/>
+                  </circle>
+                  <circle class="packet p3" r="5">
+                    <animateMotion dur="2.6s" repeatCount="indefinite" path="M360,330 C 280,330 240,200 200,200" begin="0.4s"/>
+                  </circle>
+                  <circle class="trail" r="3" fill="var(--a3)" opacity=".3">
+                    <animateMotion dur="2.6s" repeatCount="indefinite" path="M360,330 C 280,330 240,200 200,200" begin="0.25s"/>
+                  </circle>
+                  <circle class="packet p2" r="4">
+                    <animateMotion dur="3s" repeatCount="indefinite" path="M10,200 L 120,200" begin="0.8s"/>
+                  </circle>
+                  <circle class="packet" r="4.5">
+                    <animateMotion dur="2.4s" repeatCount="indefinite" path="M390,200 L 280,200" begin="1s"/>
+                  </circle>
+                  <!-- Reverse packets (hub → nodes) -->
+                  <circle class="packet p3" r="4">
+                    <animateMotion dur="3s" repeatCount="indefinite" path="M200,200 C 160,200 120,80 40,80" begin="1.5s"/>
+                  </circle>
+                  <circle class="trail" r="2.5" fill="var(--a3)" opacity=".3">
+                    <animateMotion dur="3s" repeatCount="indefinite" path="M200,200 C 160,200 120,80 40,80" begin="1.35s"/>
+                  </circle>
+                  <circle class="packet" r="4">
+                    <animateMotion dur="3.4s" repeatCount="indefinite" path="M200,200 C 240,200 280,60 360,60" begin="2s"/>
+                  </circle>
+                  <circle class="trail" r="2.5" fill="var(--a1)" opacity=".3">
+                    <animateMotion dur="3.4s" repeatCount="indefinite" path="M200,200 C 240,200 280,60 360,60" begin="1.85s"/>
+                  </circle>
+                </svg>
+                <!-- Diagnostic progress bar -->
+                <div class="diag-progress"><i></i></div>
+                <!-- Energy pulses -->
+                <div class="energy-pulse"></div>
+                <div class="energy-pulse ep2"></div>
+                <div class="energy-pulse ep3"></div>
+                <!-- Orbital rings -->
+                <div class="hub-orbit r1"></div>
+                <div class="hub-orbit r2"></div>
+                <div class="hub-orbit r3"></div>
+                <div class="hub">
+                  Kommo<small>CRM + IA</small>
+                </div>
+                <div class="node n1"><span class="ico"></span>WhatsApp</div>
+                <div class="node n2"><span class="ico"></span>Leads</div>
+                <div class="node n3"><span class="ico"></span>Follow-up</div>
+                <div class="node n4"><span class="ico"></span>Anúncios</div>
+                <div class="node n5"><span class="ico"></span>Canais</div>
+                <div class="node n6"><span class="ico"></span>IA</div>
+                <!-- Toast notifications -->
+                <div class="toast-area" id="toastArea"></div>
+              </div>
+
+              <!-- RIGHT: KPI -->
+              <div class="stage-pane">
+                <div class="seal">
+                  <span class="seal-mark">SF</span>
+                  <div><b>SmartFlux Method™</b><span>Nada de plano no escuro</span></div>
+                </div>
+                <div class="kpi-grid">
+                  <div class="kpi">
+                    <b>Prioridade do lead</b>
+                    <div class="num" data-count="86">0</div>
+                    <div class="sub">pontuação comercial</div>
+                    <div class="bar"><i></i></div>
+                  </div>
+                  <div class="kpi">
+                    <b>Risco de vazamento</b>
+                    <div class="num" data-count="72"><span class="unit">%</span></div>
+                    <div class="sub">sem follow-up estruturado</div>
+                    <div class="bar warn"><i></i></div>
+                  </div>
+                  <!-- Mini CRM Pipeline -->
+                  <div class="kpi pipeline" id="pipeline">
+                    <div class="pipeline-head">Pipeline ao vivo</div>
+                    <div class="pipeline-stages">
+                      <div class="pipeline-stage active" data-col="0">Novo</div>
+                      <div class="pipeline-stage" data-col="1">Qualif.</div>
+                      <div class="pipeline-stage" data-col="2">Proposta</div>
+                      <div class="pipeline-stage" data-col="3">Ganho</div>
+                    </div>
+                    <div class="pipeline-track" id="pipelineTrack">
+                      <div class="lead-card" style="top:0" data-stage="0">
+                        <span class="avatar">MA</span>
+                        <div class="lead-info"><div class="lead-name">Maria A.</div><div class="lead-stage">Novo contato</div></div>
+                        <span class="lead-status"></span>
+                      </div>
+                      <div class="lead-card" style="top:40px" data-stage="1">
+                        <span class="avatar">JR</span>
+                        <div class="lead-info"><div class="lead-name">João R.</div><div class="lead-stage">Qualificado</div></div>
+                        <span class="lead-status" style="background:var(--a2);box-shadow:0 0 8px var(--a2)"></span>
+                      </div>
+                      <div class="lead-card" style="top:80px" data-stage="2">
+                        <span class="avatar">CS</span>
+                        <div class="lead-info"><div class="lead-name">Carlos S.</div><div class="lead-stage">Proposta</div></div>
+                        <span class="lead-status" style="background:#ffcc66;box-shadow:0 0 8px #ffcc66"></span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ LOGOS / TRUST ============ -->
+<section class="logos" aria-label="Operação" data-speed="-0.03">
+  <div class="container">
+    <div class="logos-row">
+      <span class="label">Atuamos em</span>
+      <div class="marquee">
+        <div class="marquee-track">
+          <span class="marquee-item">Estética</span>
+          <span class="marquee-item">Clínicas</span>
+          <span class="marquee-item">Imobiliárias</span>
+          <span class="marquee-item">Educação</span>
+          <span class="marquee-item">Varejo local</span>
+          <span class="marquee-item">Serviços</span>
+          <span class="marquee-item">Agências</span>
+          <span class="marquee-item">E-commerce</span>
+          <!-- duplicate for seamless loop -->
+          <span class="marquee-item">Estética</span>
+          <span class="marquee-item">Clínicas</span>
+          <span class="marquee-item">Imobiliárias</span>
+          <span class="marquee-item">Educação</span>
+          <span class="marquee-item">Varejo local</span>
+          <span class="marquee-item">Serviços</span>
+          <span class="marquee-item">Agências</span>
+          <span class="marquee-item">E-commerce</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PROBLEMA ============ -->
+<section id="problema">
+  <div class="container">
+    <div class="section-head" data-reveal>
+      <span class="eyebrow">O problema real</span>
+      <h2>Seu problema talvez não seja <span class="serif sweep">falta de cliente</span>.<br>É falta de controle.</h2>
+      <p>Antes de vender licença, a SmartFlux procura onde sua operação perde oportunidade — no atendimento, no retorno, nos canais, nos leads parados e na IA mal planejada.</p>
+    </div>
+    <div class="pain-grid">
+      <article class="pain tilt-card" data-reveal>
+        <div class="pain-icon">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M3 4h14v9H7l-4 3V4z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="pain-num">01 · Conversa</div>
+        <h3>WhatsApp bagunçado</h3>
+        <p>Conversas espalhadas, sem etapa, sem histórico comercial e sem próximo passo claro.</p>
+      </article>
+      <article class="pain tilt-card" data-reveal style="--rd:80ms">
+        <div class="pain-icon">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M4 10a6 6 0 1 1 6 6M4 10v-4M4 10h4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="pain-num">02 · Retorno</div>
+        <h3>Follow-up esquecido</h3>
+        <p>O interessado pede orçamento, some, e ninguém sabe quando deve chamar novamente.</p>
+      </article>
+      <article class="pain tilt-card" data-reveal style="--rd:160ms">
+        <div class="pain-icon">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 3v8m0 3v.5M3 16h14L10 4 3 16z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="pain-num">03 · Decisão</div>
+        <h3>Plano escolhido no chute</h3>
+        <p>Sem analisar canais, volume, anúncios e IA, você paga caro ou fica limitado rápido.</p>
+      </article>
+      <article class="pain tilt-card" data-reveal style="--rd:240ms">
+        <div class="pain-icon">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M6 10a4 4 0 1 1 8 0v3a4 4 0 0 1-4 4 4 4 0 0 1-4-4v-3z" stroke="currentColor" stroke-width="1.6"/><path d="M10 6V3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+        </div>
+        <div class="pain-num">04 · Estratégia</div>
+        <h3>IA sem método</h3>
+        <p>IA não resolve bagunça sozinha. Primeiro vem processo. Depois automação inteligente.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MÉTODO ============ -->
+<section id="metodo" style="border-top:1px solid var(--line)">
+  <div class="container">
+    <div class="section-head" data-reveal>
+      <span class="eyebrow">Método SmartFlux</span>
+      <h2>Não é revenda de licença.<br>É <span class="serif gradient-text sweep">diagnóstico, implantação e operação</span>.</h2>
+      <p>Antes de indicar Kommo Avançado ou Pro, analisamos a operação para saber o que faz sentido — e o que seria dinheiro fora do lugar.</p>
+    </div>
+    <div class="method-wrap">
+      <div class="method-card" data-reveal>
+        <span class="eyebrow">Passo a passo</span>
+        <h3 style="margin-top:14px">Como a implantação acontece, na ordem certa</h3>
+        <p style="color:var(--ink-3);font-size:14.5px;line-height:1.6;margin-top:10px">
+          Começamos pelo diagnóstico. Só depois vem recomendação de plano, configuração da Kommo, funil, bot, follow-up e treinamento.
+        </p>
+        <div class="steps">
+          <div class="step">
+            <span class="step-num">01</span>
+            <div><b>Diagnóstico</b><p>Canais, volume de leads, atendimento, dor principal e objetivo do negócio.</p></div>
+          </div>
+          <div class="step">
+            <span class="step-num">02</span>
+            <div><b>Recomendação</b><p>Avançado ou Pro conforme necessidade real, com argumentos claros.</p></div>
+          </div>
+          <div class="step">
+            <span class="step-num">03</span>
+            <div><b>Implantação</b><p>Funil, campos, mensagens, tarefas, bot e automações configurados.</p></div>
+          </div>
+          <div class="step">
+            <span class="step-num">04</span>
+            <div><b>Treinamento</b><p>Uso simples para o cliente não comprar a ferramenta e deixar parada.</p></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="table-card" data-reveal style="--rd:120ms">
+        <div class="filters" role="tablist">
+          <button class="filter on" data-filter="all">Tudo</button>
+          <button class="filter" data-filter="canais">Canais</button>
+          <button class="filter" data-filter="leads">Leads</button>
+          <button class="filter" data-filter="ia">IA</button>
+          <button class="filter" data-filter="ads">Anúncios</button>
+          <button class="filter" data-filter="agenda">Agendamento</button>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Item</th><th>Situação comum</th><th>Impacto</th><th>Recomendação</th></tr></thead>
+            <tbody>
+              <tr data-cat="canais"><td><b>WhatsApp principal</b></td><td>1 número central</td><td><span class="tag ok">controlável</span></td><td>Avançado atende</td></tr>
+              <tr data-cat="canais"><td><b>Múltiplos canais</b></td><td>WA + Insta + equipes</td><td><span class="tag warn">atenção</span></td><td>avaliar Pro</td></tr>
+              <tr data-cat="ads"><td><b>Anúncios pagos</b></td><td>Meta, Google ou TikTok</td><td><span class="tag info">depende</span></td><td>analisar origem</td></tr>
+              <tr data-cat="leads"><td><b>Leads parados</b></td><td>orçamento sem retorno</td><td><span class="tag alert">crítico</span></td><td>follow-up automático</td></tr>
+              <tr data-cat="ia"><td><b>Uso de IA</b></td><td>triagem e intenção</td><td><span class="tag info">avaliar</span></td><td>onde gera valor</td></tr>
+              <tr data-cat="agenda"><td><b>Agendamento</b></td><td>clínica / serviço</td><td><span class="tag warn">atenção</span></td><td>Pro recomendado</td></tr>
+              <tr data-cat="leads"><td><b>Volume alto</b></td><td>+300 leads/mês</td><td><span class="tag warn">atenção</span></td><td>Pro + automação</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ TESTIMONIAL / VOICE ============ -->
+<section id="voz">
+  <div class="container">
+    <div class="quote-wrap" data-reveal>
+      <span class="eyebrow">Nossa posição</span>
+      <p class="quote-text" style="margin-top:24px">"Não indicamos plano no escuro. Antes da licença, a gente entende a operação."</p>
+      <div class="quote-attr">
+        <span class="quote-avatar">SF</span>
+        <div><b>Equipe SmartFlux</b><div style="font-size:12px;font-family:var(--f-mono);color:var(--ink-4);margin-top:2px">Implantadora Kommo · Brasil</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PRICING ============ -->
+<section id="planos" style="border-top:1px solid var(--line)">
+  <div class="container">
+    <div class="section-head" data-reveal>
+      <span class="eyebrow">Pacotes SmartFlux</span>
+      <h2>Você paga pela implantação da operação,<br>não só por "mexer no CRM".</h2>
+      <p>A licença Kommo segue a recomendação do diagnóstico. Os pacotes abaixo são serviços SmartFlux de configuração, automação e acompanhamento.</p>
+    </div>
+    <div class="pricing-controls" data-reveal>
+      <div class="pc-copy">
+        <b>Simulador de implantação por usuários</b>
+        <span>Valores estimados da implantação SmartFlux. A licença Kommo continua separada e varia conforme plano e usuários contratados.</span>
+      </div>
+      <div class="user-switch" role="group" aria-label="Quantidade de usuários">
+        <button type="button" class="on" data-users="1">1</button>
+        <button type="button" data-users="2">2</button>
+        <button type="button" data-users="3">3</button>
+        <button type="button" data-users="4">4</button>
+        <button type="button" data-users="5">5</button>
+      </div>
+    </div>
+    <div class="pricing-grid">
+      <article class="price tilt-card" data-reveal data-plan="inicial" data-base="497" data-extra="120">
+        <span class="price-tag subtle">Entrada</span>
+        <h3>Organização Inicial</h3>
+        <p class="price-desc">Para quem quer sair da bagunça do WhatsApp e começar com um funil simples e funcional.</p>
+        <div class="price-amt" data-price-wrap><span class="v" data-price>R$497</span><span class="u">a partir</span></div>
+        <div class="price-from" data-user-line>implantação · 1 usuário · pagamento único</div>
+        <div class="price-extra"><strong>Usuário adicional:</strong> +R$120 na implantação.</div>
+        <ul>
+          <li><svg viewBox="0 0 16 16" fill="none"><path d="M3 8.5 6.5 12 13 4.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Diagnóstico inicial</li>
+          <li><svg viewBox="0 0 16 16" fill="none"><path d="M3 8.5 6.5 12 13 4.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Recomendação de plano Kommo</li>
+          <li><svg viewBox="0 0 16 16" fill="none"><path d="M3 8.5 6.5 12 13 4.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Funil básico configurado</li>
+          <li><svg viewBox="0 0 16 16" fill="none"><path d="M3 8.5 6.5 12 13 4.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Mensagens prontas</li>
+          <li><svg viewBox="0 0 16 16" fill="none"><path d="M3 8.5 6.5 12 13 4.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Treinamento inicial</li>
+        </ul>
+        <a class="btn btn--ghost magnetic" href="https://wa.me/5534992710008?text=Quero%20conhecer%20a%20Organiza%C3%A7%C3%A3o%20Inicial%20SmartFlux" target="_blank" rel="noopener">Quero começar simples</a>
+      </article>
+
+      <article class="price featured tilt-card glow-border" data-reveal style="--rd:80ms" data-plan="inteligente" data-base="1497" data-extra="180">
+        <span class="price-tag">Mais indicado</span>
+        <h3>Atendimento Inteligente</h3>
+        <p class="price-desc">Para quem quer CRM, bot, follow-up, prioridade de lead e automações funcionando juntos.</p>
+        <div class="price-amt" data-price-wrap><span class="v" data-price>R$1.497</span><span class="u">a partir</span></div>
+        <div class="price-from" data-user-line>implantação · 1 usuário · pagamento único</div>
+        <div class="price-extra"><strong>Usuário adicional:</strong> +R$180 na implantação.</div>
+        <ul>
+          <li><svg viewBox="0 0 16 16" fill="none"><path d="M3 8.5 6.5 12 13 4.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Tudo do plano inicial</li>
+          <li><svg viewBox="0 0 16 16" fill="none"><path d="M3 8.5 6.5 12 13 4.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Bot de qualificação</li>
+          <li><svg viewBox="0 0 16 16" fill="none"><path d="M3 8.5 6.5 12 13 4.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Follow-up automático</li>
+          <li><svg viewBox="0 0 16 16" fill="none"><path d="M3 8.5 6.5 12 13 4.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Campos e tags inteligentes</li>
+          <li><svg viewBox="0 0 16 16" fill="none"><path d="M3 8.5 6.5 12 13 4.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Treinamento da equipe</li>
+        </ul>
+        <a class="btn btn--primary magnetic" href="https://wa.me/5534992710008?text=Quero%20o%20Atendimento%20Inteligente%20SmartFlux" target="_blank" rel="noopener">Quero automação completa</a>
+      </article>
+
+      <article class="price tilt-card" data-reveal style="--rd:160ms" data-plan="completa" data-base="3000" data-extra="250">
+        <span class="price-tag subtle">Escala</span>
+        <h3>Operação Completa</h3>
+        <p class="price-desc">Para operações com mais canais, anúncios, IA, agendamento, equipe e necessidade de escala.</p>
+        <div class="price-amt" data-price-wrap><span class="v" data-price>R$3.000</span><span class="u">a partir</span></div>
+        <div class="price-from" data-user-line>projeto · 1 usuário · escopo guiado</div>
+        <div class="price-extra"><strong>Usuário adicional:</strong> +R$250 no projeto.</div>
+        <ul>
+          <li><svg viewBox="0 0 16 16" fill="none"><path d="M3 8.5 6.5 12 13 4.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Análise de canais e leads</li>
+          <li><svg viewBox="0 0 16 16" fill="none"><path d="M3 8.5 6.5 12 13 4.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Automações avançadas</li>
+          <li><svg viewBox="0 0 16 16" fill="none"><path d="M3 8.5 6.5 12 13 4.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> IA e agendamento</li>
+          <li><svg viewBox="0 0 16 16" fill="none"><path d="M3 8.5 6.5 12 13 4.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Integração com anúncios</li>
+          <li><svg viewBox="0 0 16 16" fill="none"><path d="M3 8.5 6.5 12 13 4.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Acompanhamento dedicado</li>
+        </ul>
+        <a class="btn btn--ghost magnetic" href="https://wa.me/5534992710008?text=Quero%20a%20Opera%C3%A7%C3%A3o%20Completa%20SmartFlux" target="_blank" rel="noopener">Falar sobre escala</a>
+      </article>
+    </div>
+    <div class="price-note" data-reveal>
+      <div class="price-note-card">
+        <b>Regra comercial mais limpa</b>
+        <p>Não multiplique o projeto inteiro por usuário. Use valor-base da implantação + acréscimo por usuário adicional. Fica mais justo, mais vendável e evita parecer que você está cobrando duas vezes pelo mesmo setup.</p>
+      </div>
+      <div class="user-matrix" aria-label="Tabela de valores por usuários">
+        <table>
+          <thead><tr><th>Plano</th><th>1 usuário</th><th>2 usuários</th><th>3 usuários</th><th>4 usuários</th><th>5 usuários</th></tr></thead>
+          <tbody>
+            <tr><td>Organização Inicial</td><td>R$497</td><td>R$617</td><td>R$737</td><td>R$857</td><td>R$977</td></tr>
+            <tr><td>Atendimento Inteligente</td><td>R$1.497</td><td>R$1.677</td><td>R$1.857</td><td>R$2.037</td><td>R$2.217</td></tr>
+            <tr><td>Operação Completa</td><td>R$3.000</td><td>R$3.250</td><td>R$3.500</td><td>R$3.750</td><td>R$4.000</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="price-disclaimer" data-reveal>
+      <strong>Importante:</strong> valores referentes à implantação SmartFlux. Licenças Kommo, disparos, integrações externas, números de WhatsApp, ferramentas de IA e custos de terceiros devem ser orçados separadamente.
+    </div>
+  </div>
+</section>
+
+<!-- ============ WHEN PRO ============ -->
+<section id="pro">
+  <div class="container">
+    <div class="section-head" data-reveal>
+      <span class="eyebrow">Quando o Pro faz sentido</span>
+      <h2>Nem todo negócio precisa começar no Pro.<br><span class="serif sweep">Mas alguns não deveriam começar fracos.</span></h2>
+      <p>O diagnóstico serve justamente para não empurrar plano caro para quem não precisa — e para não colocar uma operação complexa em uma estrutura limitada.</p>
+    </div>
+    <div class="pro-grid">
+      <article class="pro-card" data-reveal><span class="num">01</span><b>Anúncios pagos</b><p>Meta, Google ou TikTok Ads — análise de origem e retorno precisa ser considerada.</p></article>
+      <article class="pro-card" data-reveal style="--rd:60ms"><span class="num">02</span><b>Vários canais</b><p>Mais de um WhatsApp, Insta, unidade, marca ou equipe pode pedir estrutura maior.</p></article>
+      <article class="pro-card" data-reveal style="--rd:120ms"><span class="num">03</span><b>IA avançada</b><p>Triagem, áudio, intenção, agente e automações inteligentes bem dimensionadas.</p></article>
+      <article class="pro-card" data-reveal style="--rd:180ms"><span class="num">04</span><b>Agendamento</b><p>Clínicas, estética, consultórios e serviços — transformar conversa em horário marcado.</p></article>
+      <article class="pro-card" data-reveal style="--rd:240ms"><span class="num">05</span><b>Alto volume</b><p>Muitos leads exigem funil, limpeza, prioridade e acompanhamento mais sério.</p></article>
+    </div>
+  </div>
+</section>
+
+<!-- ============ GLOSSARY (LIGHT) ============ -->
+<section id="glossario" class="light-block">
+  <div class="container">
+    <div class="section-head" data-reveal>
+      <span class="eyebrow">Português claro</span>
+      <h2>Você não precisa entender de CRM<br>para começar.</h2>
+      <p>A SmartFlux traduz a ferramenta para rotina real de atendimento, venda e retorno.</p>
+    </div>
+    <div class="terms">
+      <article class="term" data-reveal><b>Lead</b><p>Pessoa interessada que chamou no WhatsApp, Instagram ou formulário perguntando preço, horário ou serviço.</p></article>
+      <article class="term" data-reveal style="--rd:60ms"><b>CRM</b><p>Painel que organiza clientes, interessados, propostas, histórico, retornos e próximas ações.</p></article>
+      <article class="term" data-reveal style="--rd:120ms"><b>Funil</b><p>Caminho do cliente: novo contato, atendimento, proposta, retorno e fechamento.</p></article>
+      <article class="term" data-reveal><b>Follow-up</b><p>Retorno para quem demonstrou interesse, mas ainda não comprou ou não respondeu.</p></article>
+      <article class="term" data-reveal style="--rd:60ms"><b>Automação</b><p>Tarefa que o sistema faz sozinho — lembrete, retorno, mudança de etapa, sem depender da equipe lembrar.</p></article>
+      <article class="term" data-reveal style="--rd:120ms"><b>Bot</b><p>Assistente que coleta informações, responde dúvidas simples e organiza o atendimento antes do humano.</p></article>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FAQ ============ -->
+<section id="faq">
+  <div class="container">
+    <div class="section-head" data-reveal>
+      <span class="eyebrow">Perguntas importantes</span>
+      <h2>Clareza antes de contratar.</h2>
+      <p>Quanto mais simples a explicação, menor o risco de comprar errado ou criar expectativa errada.</p>
+    </div>
+    <div class="faq-list">
+      <details class="faq" data-reveal>
+        <summary>A SmartFlux é a Kommo? <span class="plus"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 2v10M2 7h10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></span></summary>
+        <div class="faq-body">Não. A SmartFlux atua como parceira/implantadora, ajudando empresas a configurar e usar a Kommo de forma prática.</div>
+      </details>
+      <details class="faq" data-reveal>
+        <summary>A licença Kommo está inclusa? <span class="plus"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 2v10M2 7h10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></span></summary>
+        <div class="faq-body">Depende da proposta. A licença é separada e segue os valores oficiais. A SmartFlux cobra pela implantação, configuração e acompanhamento.</div>
+      </details>
+      <details class="faq" data-reveal>
+        <summary>Preciso começar pelo plano Pro? <span class="plus"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 2v10M2 7h10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></span></summary>
+        <div class="faq-body">Não necessariamente. Se o Avançado resolver, começamos nele. Se houver muitos canais, anúncios, IA ou volume alto, o Pro pode ser mais adequado.</div>
+      </details>
+      <details class="faq" data-reveal>
+        <summary>O bot substitui minha equipe? <span class="plus"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 2v10M2 7h10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></span></summary>
+        <div class="faq-body">Não. Ele filtra, organiza e automatiza partes repetitivas. Atendimento humano continua importante onde decide compra.</div>
+      </details>
+      <details class="faq" data-reveal>
+        <summary>Funciona para empresa pequena? <span class="plus"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 2v10M2 7h10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></span></summary>
+        <div class="faq-body">Sim, desde que receba contatos por WhatsApp, Instagram ou formulário e precise organizar interessados e retornos.</div>
+      </details>
+      <details class="faq" data-reveal>
+        <summary>Vocês prometem aumento de vendas? <span class="plus"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 2v10M2 7h10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></span></summary>
+        <div class="faq-body">Não prometemos milagre. A proposta é organizar processo, reduzir perda de oportunidades e melhorar o acompanhamento comercial.</div>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FINAL CTA ============ -->
+<section id="contato">
+  <div class="container">
+    <div class="cta-final" data-reveal>
+      <span class="eyebrow">Próximo passo</span>
+      <h2 style="margin-top:20px">Antes de contratar Kommo, descubra o que sua operação <span class="serif gradient-text sweep">realmente precisa.</span></h2>
+      <p>Faça um diagnóstico SmartFlux e entenda se sua empresa deve começar simples, usar automação, avaliar Pro, organizar canais ou estruturar IA com mais cuidado.</p>
+      <div class="actions">
+        <a class="btn btn--primary magnetic" href="https://wa.me/5534992710008?text=Quero%20fazer%20um%20diagn%C3%B3stico%20SmartFlux%20antes%20de%20contratar%20Kommo" target="_blank" rel="noopener">
+          Fazer diagnóstico gratuito
+          <svg class="arrow" viewBox="0 0 16 16" fill="none"><path d="M3 8h10m-4-4 4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+        <a class="btn btn--ghost magnetic" href="#metodo">Revisar o método</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="container">
+    <div class="foot-grid">
+      <div>
+        <a class="brand" href="#top">
+          <span class="brand-mark">S</span>
+          <span><span class="brand-name">SmartFlux</span><span class="brand-sub">Kommo + CRM + IA</span></span>
+        </a>
+        <p>Diagnóstico, implantação e operação para pequenos e médios negócios que vendem por mensagem.</p>
+      </div>
+      <div>
+        <h4>Navegação</h4>
+        <ul>
+          <li><a href="#problema">Problema</a></li>
+          <li><a href="#metodo">Método</a></li>
+          <li><a href="#planos">Planos</a></li>
+          <li><a href="#pro">Quando Pro</a></li>
+          <li><a href="#faq">FAQ</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Contato</h4>
+        <ul>
+          <li><a href="https://wa.me/5534992710008" target="_blank" rel="noopener">WhatsApp · (34) 9 9271-0008</a></li>
+          <li><a href="https://instagram.com/smartflux" target="_blank" rel="noopener">Instagram · @smartflux</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Posição</h4>
+        <ul>
+          <li>Parceira implantadora Kommo</li>
+          <li>Atendimento Brasil · PT-BR</li>
+          <li>Resposta em até 24h</li>
+        </ul>
+      </div>
+    </div>
+    <div class="foot-base">
+      <span>© <span id="year"></span> SmartFlux</span>
+      <span>Diagnóstico antes da licença · Método SmartFlux™</span>
+    </div>
+  </div>
+</footer>
+
+<a class="btn btn--primary mobile-cta magnetic" href="https://wa.me/5534992710008?text=Quero%20fazer%20um%20diagn%C3%B3stico%20SmartFlux" target="_blank" rel="noopener">
+  Fazer diagnóstico gratuito
+  <svg class="arrow" viewBox="0 0 16 16" fill="none"><path d="M3 8h10m-4-4 4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+</a>
+
+<!-- ============ TWEAKS PANEL ============ -->
+<div id="tweaks-root"></div>
+
+<!-- React + Babel for tweaks panel -->
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script type="text/babel" src="tweaks-panel.jsx"></script>
+<script type="text/babel" src="tweaks-app.jsx"></script>
+
+<!-- ============ MAIN SCRIPT ============ -->
+<script>
+(function(){
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // Year
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  // Apply persisted tweaks on load
+  const apply = (k) => {
+    document.documentElement.dataset.accent   = k.accent || 'cyan';
+    document.documentElement.dataset.density  = k.density || 'comfortable';
+    document.documentElement.dataset.serif    = String(k.displaySerif !== false);
+    document.documentElement.dataset.grain    = String(k.grain !== false);
+  };
+  apply(window.TWEAK_DEFAULTS || {});
+
+  // Nav scroll state
+  const nav = document.getElementById('nav');
+  const onScroll = () => nav.classList.toggle('scrolled', window.scrollY > 8);
+  onScroll(); addEventListener('scroll', onScroll, {passive:true});
+
+  // Reveal observer
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target);} });
+  }, {rootMargin:'0px 0px -10% 0px', threshold:0.05});
+  document.querySelectorAll('[data-reveal]').forEach(el => io.observe(el));
+
+  // Magnetic buttons
+  if (!reduce) {
+    document.querySelectorAll('.magnetic').forEach(el => {
+      let raf=null, tx=0, ty=0, cx=0, cy=0;
+      const tick = () => {
+        cx += (tx-cx)*0.18; cy += (ty-cy)*0.18;
+        el.style.transform = `translate(${cx.toFixed(2)}px, ${cy.toFixed(2)}px)`;
+        if (Math.abs(tx-cx)>.1 || Math.abs(ty-cy)>.1) raf = requestAnimationFrame(tick);
+        else { raf=null; if (tx===0 && ty===0) el.style.transform=''; }
+      };
+      el.addEventListener('mousemove', (e) => {
+        const r = el.getBoundingClientRect();
+        tx = ((e.clientX - r.left)/r.width - .5) * 12;
+        ty = ((e.clientY - r.top)/r.height - .5) * 12;
+        if (!raf) raf = requestAnimationFrame(tick);
+      });
+      el.addEventListener('mouseleave', () => {
+        tx=0; ty=0;
+        if (!raf) raf = requestAnimationFrame(tick);
+      });
+    });
+  }
+
+  // Stage tilt
+  const stage = document.getElementById('stage');
+  if (stage && !reduce && matchMedia('(min-width: 980px)').matches) {
+    let raf=null, ttx=0, tty=0, ctx=0, cty=0;
+    const tick = () => {
+      ctx += (ttx-ctx)*0.08; cty += (tty-cty)*0.08;
+      stage.style.setProperty('--tilt-x', cty.toFixed(2)+'deg');
+      stage.style.setProperty('--tilt-y', ctx.toFixed(2)+'deg');
+      if (Math.abs(ttx-ctx)>.05 || Math.abs(tty-cty)>.05) raf = requestAnimationFrame(tick);
+      else raf = null;
+    };
+    stage.addEventListener('mousemove', (e) => {
+      const r = stage.getBoundingClientRect();
+      ttx = ((e.clientX - r.left)/r.width - .5) * 8;
+      tty = -((e.clientY - r.top)/r.height - .5) * 5;
+      if (!raf) raf = requestAnimationFrame(tick);
+    });
+    stage.addEventListener('mouseleave', () => {
+      ttx=0; tty=0; if (!raf) raf = requestAnimationFrame(tick);
+    });
+  }
+
+  // Typing demo (loops)
+  const phrases = [
+    "Tenho um número de WhatsApp e leads somem depois do orçamento.",
+    "Recebo contato por Insta e WA, equipe se perde.",
+    "Quero IA, mas não sei por onde começar.",
+    "Faço anúncios e os leads não viram cliente."
+  ];
+  const tEl = document.getElementById('typingText');
+  if (tEl && !reduce) {
+    let pi=0, ci=0, deleting=false;
+    const speed = () => deleting ? 22 : 38;
+    const step = () => {
+      const cur = phrases[pi];
+      if (!deleting) {
+        ci++;
+        tEl.textContent = cur.slice(0, ci);
+        if (ci === cur.length) { deleting = true; return setTimeout(step, 1800); }
+      } else {
+        ci--;
+        tEl.textContent = cur.slice(0, ci);
+        if (ci === 0) { deleting = false; pi = (pi+1) % phrases.length; return setTimeout(step, 360); }
+      }
+      setTimeout(step, speed());
+    };
+    step();
+  } else if (tEl) {
+    tEl.textContent = phrases[0];
+  }
+
+  // KPI count-up when stage visible
+  const ku = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (!e.isIntersecting) return;
+      document.querySelectorAll('[data-count]').forEach(el => {
+        const target = +el.dataset.count;
+        const unit = el.querySelector('.unit');
+        const t0 = performance.now(), dur = 1400;
+        const run = (t) => {
+          const k = Math.min(1, (t-t0)/dur);
+          const e = 1 - Math.pow(1-k, 3);
+          const val = Math.round(target*e);
+          el.firstChild.nodeValue = val;
+          if (unit) el.appendChild(unit);
+          if (k<1) requestAnimationFrame(run);
+        };
+        requestAnimationFrame(run);
+      });
+      ku.disconnect();
+    });
+  }, {threshold:0.3});
+  if (stage) ku.observe(stage);
+
+  // Table filters
+  const filterBtns = document.querySelectorAll('.filter');
+  filterBtns.forEach(b => {
+    b.addEventListener('click', () => {
+      filterBtns.forEach(x => x.classList.remove('on'));
+      b.classList.add('on');
+      const cat = b.dataset.filter;
+      document.querySelectorAll('tbody tr').forEach(r => {
+        r.style.display = (cat==='all' || r.dataset.cat===cat) ? '' : 'none';
+      });
+    });
+  });
+
+  // ============ PARTICLE SYSTEM (Canvas) ============
+  const cvs = document.getElementById('particles');
+  if (cvs && !reduce) {
+    const ctx2 = cvs.getContext('2d');
+    let W, H;
+    const resizeCvs = () => { W = cvs.width = innerWidth; H = cvs.height = innerHeight; };
+    resizeCvs(); addEventListener('resize', resizeCvs);
+    const N = 55;
+    const pts = [];
+    for (let i = 0; i < N; i++) {
+      pts.push({
+        x: Math.random() * innerWidth,
+        y: Math.random() * innerHeight,
+        vx: (Math.random() - .5) * .35,
+        vy: (Math.random() - .5) * .35,
+        r: Math.random() * 2.2 + .6,
+        a: Math.random() * .35 + .12,
+      });
+    }
+    const drawParticles = () => {
+      ctx2.clearRect(0, 0, W, H);
+      for (const p of pts) {
+        p.x += p.vx; p.y += p.vy;
+        if (p.x < 0) p.x = W; if (p.x > W) p.x = 0;
+        if (p.y < 0) p.y = H; if (p.y > H) p.y = 0;
+        ctx2.beginPath();
+        ctx2.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx2.fillStyle = '#00e5b8';
+        ctx2.globalAlpha = p.a;
+        ctx2.fill();
+      }
+      // connections
+      for (let i = 0; i < N; i++) {
+        for (let j = i + 1; j < N; j++) {
+          const dx = pts[i].x - pts[j].x;
+          const dy = pts[i].y - pts[j].y;
+          const d2 = dx * dx + dy * dy;
+          if (d2 < 20000) {
+            ctx2.beginPath();
+            ctx2.moveTo(pts[i].x, pts[i].y);
+            ctx2.lineTo(pts[j].x, pts[j].y);
+            ctx2.strokeStyle = '#00e5b8';
+            ctx2.globalAlpha = (1 - d2 / 20000) * .07;
+            ctx2.lineWidth = .6;
+            ctx2.stroke();
+          }
+        }
+      }
+      ctx2.globalAlpha = 1;
+      requestAnimationFrame(drawParticles);
+    };
+    requestAnimationFrame(drawParticles);
+  }
+
+  // ============ CURSOR GLOW FOLLOWER ============
+  const glow = document.getElementById('cursorGlow');
+  if (glow && !reduce && matchMedia('(hover:hover)').matches) {
+    let glowActive = false;
+    document.addEventListener('mousemove', (e) => {
+      if (!glowActive) { glow.classList.add('active'); glowActive = true; }
+      glow.style.left = e.clientX + 'px';
+      glow.style.top = e.clientY + 'px';
+    });
+    document.addEventListener('mouseleave', () => {
+      glow.classList.remove('active'); glowActive = false;
+    });
+  }
+
+  // ============ 3D TILT CARDS WITH GLOW ============
+  if (!reduce) {
+    document.querySelectorAll('.tilt-card').forEach(card => {
+      card.addEventListener('mousemove', (e) => {
+        const r = card.getBoundingClientRect();
+        const x = (e.clientX - r.left) / r.width;
+        const y = (e.clientY - r.top) / r.height;
+        const tiltX = (y - .5) * -12;
+        const tiltY = (x - .5) * 12;
+        card.style.transform =
+          'perspective(800px) rotateX(' + tiltX.toFixed(1) + 'deg) rotateY(' + tiltY.toFixed(1) + 'deg) translateY(-8px) scale(1.025)';
+        card.style.setProperty('--mx', (x * 100) + '%');
+        card.style.setProperty('--my', (y * 100) + '%');
+        card.style.setProperty('--glow-opacity', '1');
+      });
+      card.addEventListener('mouseleave', () => {
+        card.style.transform = '';
+        card.style.setProperty('--glow-opacity', '0');
+      });
+    });
+  }
+
+  // ============ NODE HIGHLIGHT CYCLE ============
+  const nodes = document.querySelectorAll('.node');
+  if (nodes.length) {
+    let currentNode = 0;
+    const connActives = document.querySelectorAll('.conn-active');
+    const cycleNode = () => {
+      nodes.forEach(n => n.classList.remove('active'));
+      if (!reduce) connActives.forEach(c => c.classList.remove('fire'));
+      nodes[currentNode].classList.add('active');
+      if (!reduce && connActives[currentNode]) {
+        connActives[currentNode].classList.remove('fire');
+        void connActives[currentNode].offsetWidth;
+        connActives[currentNode].classList.add('fire');
+      }
+      currentNode = (currentNode + 1) % nodes.length;
+    };
+    cycleNode();
+    setInterval(cycleNode, 2200);
+  }
+
+  // ============ PIPELINE CRM ANIMATION ============
+  const pTrack = document.getElementById('pipelineTrack');
+  if (pTrack) {
+    const stageNames = ['Novo contato', 'Qualificado', 'Proposta', 'Ganho'];
+    const stageColors = ['var(--a1)', 'var(--a2)', '#ffcc66', '#3ee083'];
+    const leadCards = pTrack.querySelectorAll('.lead-card');
+    const stagePills = document.querySelectorAll('.pipeline-stage');
+
+    // Show cards initially
+    setTimeout(() => {
+      leadCards.forEach((c, i) => setTimeout(() => c.classList.add('visible'), i * 300));
+    }, 600);
+
+    // Cycle: advance each lead to next stage every few seconds
+    const advanceLead = () => {
+      leadCards.forEach(card => {
+        let s = parseInt(card.dataset.stage);
+        s = (s + 1) % 4;
+        card.dataset.stage = s;
+        const stageLabel = card.querySelector('.lead-stage');
+        const dot = card.querySelector('.lead-status');
+        if (stageLabel) stageLabel.textContent = stageNames[s];
+        if (dot) {
+          dot.style.background = stageColors[s];
+          dot.style.boxShadow = '0 0 8px ' + stageColors[s];
+        }
+        // Animate: brief fade-shift
+        card.style.opacity = '0';
+        card.style.transform = 'translateX(10px)';
+        setTimeout(() => {
+          card.style.opacity = '1';
+          card.style.transform = 'translateX(0)';
+        }, 200);
+      });
+      // Highlight active stage column
+      stagePills.forEach(p => p.classList.remove('active'));
+      const activeStage = parseInt(leadCards[0].dataset.stage);
+      if (stagePills[activeStage]) stagePills[activeStage].classList.add('active');
+    };
+    setInterval(advanceLead, 3500);
+  }
+
+  // ============ NOTIFICATION TOASTS ============
+  const toastArea = document.getElementById('toastArea');
+  if (toastArea) {
+    const toasts = [
+      { text: 'Lead qualificado → proposta', dot: '' },
+      { text: 'Follow-up automático enviado', dot: 't-blue' },
+      { text: 'Novo lead via WhatsApp', dot: '' },
+      { text: 'Bot coletou informações', dot: 't-blue' },
+      { text: 'Tarefa criada para vendedor', dot: 't-warn' },
+      { text: 'Lead movido: Qualificado → Proposta', dot: '' },
+      { text: 'IA analisou intenção de compra', dot: 't-blue' },
+      { text: 'Agendamento confirmado', dot: '' },
+      { text: 'Risco de perda detectado', dot: 't-warn' },
+      { text: 'Canal Instagram conectado', dot: 't-blue' },
+    ];
+    let toastIdx = 0;
+    const showToast = () => {
+      const t = toasts[toastIdx % toasts.length];
+      const el = document.createElement('div');
+      el.className = 'toast';
+      const now = new Date();
+      const time = String(now.getHours()).padStart(2,'0') + ':' + String(now.getMinutes()).padStart(2,'0');
+      el.innerHTML = '<span class="t-dot ' + t.dot + '"></span>' + t.text + '<span class="t-time">' + time + '</span>';
+      toastArea.appendChild(el);
+      requestAnimationFrame(() => requestAnimationFrame(() => el.classList.add('show')));
+      // Remove after 3s
+      setTimeout(() => {
+        el.classList.remove('show');
+        setTimeout(() => el.remove(), 600);
+      }, 3000);
+      // Max 3 visible
+      while (toastArea.children.length > 3) toastArea.children[0].remove();
+      toastIdx++;
+    };
+    // First toast after 1.5s, then every 2.8s
+    setTimeout(() => { showToast(); setInterval(showToast, 2800); }, 1500);
+  }
+
+  // ============ PARALLAX SCROLL ============
+  if (!reduce && matchMedia('(min-width:720px)').matches) {
+    const pEls = document.querySelectorAll('[data-speed]');
+    let pTick = false;
+    const runParallax = () => {
+      const sy = scrollY;
+      pEls.forEach(el => {
+        const spd = parseFloat(el.dataset.speed) || 0;
+        el.style.transform = 'translateY(' + (sy * spd).toFixed(1) + 'px)';
+      });
+      pTick = false;
+    };
+    addEventListener('scroll', () => { if (!pTick) { pTick = true; requestAnimationFrame(runParallax); } }, { passive: true });
+  }
+
+  // ============ V14 PRICING USER SIMULATOR ============
+  const pricingControls = document.querySelector('.pricing-controls');
+  const userButtons = document.querySelectorAll('[data-users]');
+  const priceCards = document.querySelectorAll('.price[data-base][data-extra]');
+  const brl = (n) => 'R$' + Math.round(n).toLocaleString('pt-BR');
+  const updatePrices = (users) => {
+    userButtons.forEach(btn => btn.classList.toggle('on', Number(btn.dataset.users) === users));
+    priceCards.forEach(card => {
+      const base = Number(card.dataset.base || 0);
+      const extra = Number(card.dataset.extra || 0);
+      const total = base + Math.max(0, users - 1) * extra;
+      const priceEl = card.querySelector('[data-price]');
+      const wrap = card.querySelector('[data-price-wrap]');
+      const line = card.querySelector('[data-user-line]');
+      if (wrap) wrap.classList.add('updating');
+      setTimeout(() => {
+        if (priceEl) priceEl.textContent = brl(total);
+        if (line) line.textContent = (card.dataset.plan === 'completa' ? 'projeto' : 'implantação') + ' · ' + users + (users === 1 ? ' usuário' : ' usuários') + (card.dataset.plan === 'completa' ? ' · escopo guiado' : ' · pagamento único');
+        if (wrap) wrap.classList.remove('updating');
+      }, 130);
+    });
+    if (pricingControls) pricingControls.style.setProperty('--pcx', (users * 18) + '%');
+  };
+  userButtons.forEach(btn => btn.addEventListener('click', () => updatePrices(Number(btn.dataset.users || 1))));
+
+})();
+</script>
+</body>
+</html>
