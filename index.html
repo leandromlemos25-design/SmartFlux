@@ -17,10 +17,11 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800;900&family=Geist+Mono:wght@400;500;600&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
 
-
 <link rel="stylesheet" href="assets/css/styles.css">
+<link rel="stylesheet" href="assets/css/premium-polish.css">
 </head>
 <body>
+<div id="scroll-progress" aria-hidden="true"></div>
 <div class="ambient" aria-hidden="true"></div>
 <div class="aurora" aria-hidden="true"><div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div></div>
 <canvas id="particles" aria-hidden="true"></canvas>
@@ -51,8 +52,23 @@
       Fazer diagnóstico
       <svg class="arrow" viewBox="0 0 16 16" fill="none"><path d="M3 8h10m-4-4 4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
     </a>
+    <button class="nav-hamburger" id="navHamburger" aria-label="Abrir menu" aria-expanded="false" aria-controls="navMobile">
+      <span></span><span></span><span></span>
+    </button>
   </div>
 </header>
+
+<nav class="nav-mobile" id="navMobile" aria-label="Menu de navegação">
+  <a href="#problema">Problema</a>
+  <a href="#metodo">Método</a>
+  <a href="#planos">Planos</a>
+  <a href="#pro">Quando Pro</a>
+  <a href="#faq">FAQ</a>
+  <a class="btn btn--primary" href="https://wa.me/5534992710008?text=Quero%20fazer%20um%20diagn%C3%B3stico%20SmartFlux" target="_blank" rel="noopener">
+    Fazer diagnóstico
+    <svg class="arrow" viewBox="0 0 16 16" fill="none"><path d="M3 8h10m-4-4 4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </a>
+</nav>
 
 <main id="main">
 
@@ -169,88 +185,48 @@
                       <feMerge><feMergeNode in="blur"/><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
                     </filter>
                   </defs>
-                  <!-- Connection lines -->
                   <path class="conn-line" id="conn1" d="M40,80 C 120,80 160,200 200,200"/>
                   <path class="conn-line" id="conn2" d="M360,60 C 280,60 240,200 200,200"/>
                   <path class="conn-line" id="conn3" d="M40,340 C 120,340 160,200 200,200"/>
                   <path class="conn-line" id="conn4" d="M360,330 C 280,330 240,200 200,200"/>
                   <path class="conn-line" id="conn5" d="M10,200 L 120,200"/>
                   <path class="conn-line" id="conn6" d="M390,200 L 280,200"/>
-                  <!-- Active pulse lines (cloned) -->
                   <path class="conn-active" d="M40,80 C 120,80 160,200 200,200"/>
                   <path class="conn-active" d="M360,60 C 280,60 240,200 200,200"/>
                   <path class="conn-active" d="M40,340 C 120,340 160,200 200,200"/>
                   <path class="conn-active" d="M360,330 C 280,330 240,200 200,200"/>
                   <path class="conn-active" d="M10,200 L 120,200"/>
                   <path class="conn-active" d="M390,200 L 280,200"/>
-                  <!-- Data packets with trails -->
-                  <circle class="packet" r="5">
-                    <animateMotion dur="2.8s" repeatCount="indefinite" path="M40,80 C 120,80 160,200 200,200"/>
-                  </circle>
-                  <circle class="trail" r="3" fill="var(--a1)" opacity=".35">
-                    <animateMotion dur="2.8s" repeatCount="indefinite" path="M40,80 C 120,80 160,200 200,200" begin="-0.15s"/>
-                  </circle>
-                  <circle class="trail t2" r="2" fill="var(--a1)" opacity=".15">
-                    <animateMotion dur="2.8s" repeatCount="indefinite" path="M40,80 C 120,80 160,200 200,200" begin="-0.3s"/>
-                  </circle>
-                  <circle class="packet p2" r="4.5">
-                    <animateMotion dur="3.2s" repeatCount="indefinite" path="M360,60 C 280,60 240,200 200,200" begin="0.6s"/>
-                  </circle>
-                  <circle class="trail" r="3" fill="var(--a2)" opacity=".35">
-                    <animateMotion dur="3.2s" repeatCount="indefinite" path="M360,60 C 280,60 240,200 200,200" begin="0.45s"/>
-                  </circle>
-                  <circle class="packet" r="4">
-                    <animateMotion dur="3.5s" repeatCount="indefinite" path="M40,340 C 120,340 160,200 200,200" begin="1.2s"/>
-                  </circle>
-                  <circle class="trail" r="2.5" fill="var(--a1)" opacity=".3">
-                    <animateMotion dur="3.5s" repeatCount="indefinite" path="M40,340 C 120,340 160,200 200,200" begin="1.05s"/>
-                  </circle>
-                  <circle class="packet p3" r="5">
-                    <animateMotion dur="2.6s" repeatCount="indefinite" path="M360,330 C 280,330 240,200 200,200" begin="0.4s"/>
-                  </circle>
-                  <circle class="trail" r="3" fill="var(--a3)" opacity=".3">
-                    <animateMotion dur="2.6s" repeatCount="indefinite" path="M360,330 C 280,330 240,200 200,200" begin="0.25s"/>
-                  </circle>
-                  <circle class="packet p2" r="4">
-                    <animateMotion dur="3s" repeatCount="indefinite" path="M10,200 L 120,200" begin="0.8s"/>
-                  </circle>
-                  <circle class="packet" r="4.5">
-                    <animateMotion dur="2.4s" repeatCount="indefinite" path="M390,200 L 280,200" begin="1s"/>
-                  </circle>
-                  <!-- Reverse packets (hub → nodes) -->
-                  <circle class="packet p3" r="4">
-                    <animateMotion dur="3s" repeatCount="indefinite" path="M200,200 C 160,200 120,80 40,80" begin="1.5s"/>
-                  </circle>
-                  <circle class="trail" r="2.5" fill="var(--a3)" opacity=".3">
-                    <animateMotion dur="3s" repeatCount="indefinite" path="M200,200 C 160,200 120,80 40,80" begin="1.35s"/>
-                  </circle>
-                  <circle class="packet" r="4">
-                    <animateMotion dur="3.4s" repeatCount="indefinite" path="M200,200 C 240,200 280,60 360,60" begin="2s"/>
-                  </circle>
-                  <circle class="trail" r="2.5" fill="var(--a1)" opacity=".3">
-                    <animateMotion dur="3.4s" repeatCount="indefinite" path="M200,200 C 240,200 280,60 360,60" begin="1.85s"/>
-                  </circle>
+                  <circle class="packet" r="5"><animateMotion dur="2.8s" repeatCount="indefinite" path="M40,80 C 120,80 160,200 200,200"/></circle>
+                  <circle class="trail" r="3" fill="var(--a1)" opacity=".35"><animateMotion dur="2.8s" repeatCount="indefinite" path="M40,80 C 120,80 160,200 200,200" begin="-0.15s"/></circle>
+                  <circle class="trail t2" r="2" fill="var(--a1)" opacity=".15"><animateMotion dur="2.8s" repeatCount="indefinite" path="M40,80 C 120,80 160,200 200,200" begin="-0.3s"/></circle>
+                  <circle class="packet p2" r="4.5"><animateMotion dur="3.2s" repeatCount="indefinite" path="M360,60 C 280,60 240,200 200,200" begin="0.6s"/></circle>
+                  <circle class="trail" r="3" fill="var(--a2)" opacity=".35"><animateMotion dur="3.2s" repeatCount="indefinite" path="M360,60 C 280,60 240,200 200,200" begin="0.45s"/></circle>
+                  <circle class="packet" r="4"><animateMotion dur="3.5s" repeatCount="indefinite" path="M40,340 C 120,340 160,200 200,200" begin="1.2s"/></circle>
+                  <circle class="trail" r="2.5" fill="var(--a1)" opacity=".3"><animateMotion dur="3.5s" repeatCount="indefinite" path="M40,340 C 120,340 160,200 200,200" begin="1.05s"/></circle>
+                  <circle class="packet p3" r="5"><animateMotion dur="2.6s" repeatCount="indefinite" path="M360,330 C 280,330 240,200 200,200" begin="0.4s"/></circle>
+                  <circle class="trail" r="3" fill="var(--a3)" opacity=".3"><animateMotion dur="2.6s" repeatCount="indefinite" path="M360,330 C 280,330 240,200 200,200" begin="0.25s"/></circle>
+                  <circle class="packet p2" r="4"><animateMotion dur="3s" repeatCount="indefinite" path="M10,200 L 120,200" begin="0.8s"/></circle>
+                  <circle class="packet" r="4.5"><animateMotion dur="2.4s" repeatCount="indefinite" path="M390,200 L 280,200" begin="1s"/></circle>
+                  <circle class="packet p3" r="4"><animateMotion dur="3s" repeatCount="indefinite" path="M200,200 C 160,200 120,80 40,80" begin="1.5s"/></circle>
+                  <circle class="trail" r="2.5" fill="var(--a3)" opacity=".3"><animateMotion dur="3s" repeatCount="indefinite" path="M200,200 C 160,200 120,80 40,80" begin="1.35s"/></circle>
+                  <circle class="packet" r="4"><animateMotion dur="3.4s" repeatCount="indefinite" path="M200,200 C 240,200 280,60 360,60" begin="2s"/></circle>
+                  <circle class="trail" r="2.5" fill="var(--a1)" opacity=".3"><animateMotion dur="3.4s" repeatCount="indefinite" path="M200,200 C 240,200 280,60 360,60" begin="1.85s"/></circle>
                 </svg>
-                <!-- Diagnostic progress bar -->
                 <div class="diag-progress"><i></i></div>
-                <!-- Energy pulses -->
                 <div class="energy-pulse"></div>
                 <div class="energy-pulse ep2"></div>
                 <div class="energy-pulse ep3"></div>
-                <!-- Orbital rings -->
                 <div class="hub-orbit r1"></div>
                 <div class="hub-orbit r2"></div>
                 <div class="hub-orbit r3"></div>
-                <div class="hub">
-                  Kommo<small>CRM + IA</small>
-                </div>
+                <div class="hub">Kommo<small>CRM + IA</small></div>
                 <div class="node n1"><span class="ico"></span>WhatsApp</div>
                 <div class="node n2"><span class="ico"></span>Leads</div>
                 <div class="node n3"><span class="ico"></span>Follow-up</div>
                 <div class="node n4"><span class="ico"></span>Anúncios</div>
                 <div class="node n5"><span class="ico"></span>Canais</div>
                 <div class="node n6"><span class="ico"></span>IA</div>
-                <!-- Toast notifications -->
                 <div class="toast-area" id="toastArea"></div>
               </div>
 
@@ -273,7 +249,6 @@
                     <div class="sub">sem follow-up estruturado</div>
                     <div class="bar warn"><i></i></div>
                   </div>
-                  <!-- Mini CRM Pipeline -->
                   <div class="kpi pipeline" id="pipeline">
                     <div class="pipeline-head">Pipeline ao vivo</div>
                     <div class="pipeline-stages">
@@ -325,7 +300,6 @@
           <span class="marquee-item">Serviços</span>
           <span class="marquee-item">Agências</span>
           <span class="marquee-item">E-commerce</span>
-          <!-- duplicate for seamless loop -->
           <span class="marquee-item">Estética</span>
           <span class="marquee-item">Clínicas</span>
           <span class="marquee-item">Imobiliárias</span>
@@ -350,36 +324,28 @@
     </div>
     <div class="pain-grid">
       <article class="pain tilt-card" data-reveal>
-        <div class="pain-icon">
-          <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M3 4h14v9H7l-4 3V4z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
-        </div>
+        <div class="pain-icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M3 4h14v9H7l-4 3V4z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg></div>
         <div class="pain-num">01 · Conversa</div>
-        <h3>WhatsApp bagunçado</h3>
+        <h3>WhatsApp bagençado</h3>
         <p>Conversas espalhadas, sem etapa, sem histórico comercial e sem próximo passo claro.</p>
       </article>
       <article class="pain tilt-card" data-reveal style="--rd:80ms">
-        <div class="pain-icon">
-          <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M4 10a6 6 0 1 1 6 6M4 10v-4M4 10h4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </div>
+        <div class="pain-icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M4 10a6 6 0 1 1 6 6M4 10v-4M4 10h4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
         <div class="pain-num">02 · Retorno</div>
         <h3>Follow-up esquecido</h3>
         <p>O interessado pede orçamento, some, e ninguém sabe quando deve chamar novamente.</p>
       </article>
       <article class="pain tilt-card" data-reveal style="--rd:160ms">
-        <div class="pain-icon">
-          <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 3v8m0 3v.5M3 16h14L10 4 3 16z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
-        </div>
+        <div class="pain-icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 3v8m0 3v.5M3 16h14L10 4 3 16z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg></div>
         <div class="pain-num">03 · Decisão</div>
         <h3>Plano escolhido no chute</h3>
         <p>Sem analisar canais, volume, anúncios e IA, você paga caro ou fica limitado rápido.</p>
       </article>
       <article class="pain tilt-card" data-reveal style="--rd:240ms">
-        <div class="pain-icon">
-          <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M6 10a4 4 0 1 1 8 0v3a4 4 0 0 1-4 4 4 4 0 0 1-4-4v-3z" stroke="currentColor" stroke-width="1.6"/><path d="M10 6V3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
-        </div>
+        <div class="pain-icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M6 10a4 4 0 1 1 8 0v3a4 4 0 0 1-4 4 4 4 0 0 1-4-4v-3z" stroke="currentColor" stroke-width="1.6"/><path d="M10 6V3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></div>
         <div class="pain-num">04 · Estratégia</div>
         <h3>IA sem método</h3>
-        <p>IA não resolve bagunça sozinha. Primeiro vem processo. Depois automação inteligente.</p>
+        <p>IA não resolve bagença sozinha. Primeiro vem processo. Depois automação inteligente.</p>
       </article>
     </div>
   </div>
@@ -397,9 +363,7 @@
       <div class="method-card" data-reveal>
         <span class="eyebrow">Passo a passo</span>
         <h3 style="margin-top:14px">Como a implantação acontece, na ordem certa</h3>
-        <p style="color:var(--ink-3);font-size:14.5px;line-height:1.6;margin-top:10px">
-          Começamos pelo diagnóstico. Só depois vem recomendação de plano, configuração da Kommo, funil, bot, follow-up e treinamento.
-        </p>
+        <p style="color:var(--ink-3);font-size:14.5px;line-height:1.6;margin-top:10px">Começamos pelo diagnóstico. Só depois vem recomendação de plano, configuração da Kommo, funil, bot, follow-up e treinamento.</p>
         <div class="steps">
           <div class="step">
             <span class="step-num">01</span>
@@ -419,7 +383,6 @@
           </div>
         </div>
       </div>
-
       <div class="table-card" data-reveal style="--rd:120ms">
         <div class="filters" role="tablist">
           <button class="filter on" data-filter="all">Tudo</button>
@@ -448,15 +411,29 @@
   </div>
 </section>
 
-<!-- ============ TESTIMONIAL / VOICE ============ -->
+<!-- ============ RESULTADOS ============ -->
 <section id="voz">
   <div class="container">
-    <div class="quote-wrap" data-reveal>
-      <span class="eyebrow">Nossa posição</span>
-      <p class="quote-text" style="margin-top:24px">"Não indicamos plano no escuro. Antes da licença, a gente entende a operação."</p>
-      <div class="quote-attr">
-        <span class="quote-avatar">SF</span>
-        <div><b>Equipe SmartFlux</b><div style="font-size:12px;font-family:var(--f-mono);color:var(--ink-4);margin-top:2px">Implantadora Kommo · Brasil</div></div>
+    <div class="results-wrap" data-reveal>
+      <span class="eyebrow">Resultados reais</span>
+      <h2 style="margin-top:20px;max-width:22ch;margin-inline:auto;text-align:center">Números que mostram o que o método entrega.</h2>
+      <p style="color:var(--ink-3);font-size:clamp(15px,1.2vw,17px);max-width:52ch;margin:16px auto 52px;text-align:center;line-height:1.6">Implantamos em mais de 12 segmentos diferentes. Cada número reflete o comprometimento com cada operação.</p>
+      <div class="results-grid">
+        <div class="result-card tilt-card" data-reveal>
+          <div class="result-num" data-result-count="80" data-result-suffix="+">80+</div>
+          <div class="result-label">Operações implantadas</div>
+          <div class="result-sub">WhatsApp · CRM · IA · Kommo</div>
+        </div>
+        <div class="result-card tilt-card" data-reveal style="--rd:120ms">
+          <div class="result-num" data-result-count="12" data-result-suffix="+">12+</div>
+          <div class="result-label">Segmentos atendidos</div>
+          <div class="result-sub">Estética · Saúde · Varejo · Serviços</div>
+        </div>
+        <div class="result-card tilt-card" data-reveal style="--rd:240ms">
+          <div class="result-num">4</div>
+          <div class="result-label">Etapas do método</div>
+          <div class="result-sub">Diagnóstico → Implantação completa</div>
+        </div>
       </div>
     </div>
   </div>
@@ -467,7 +444,7 @@
   <div class="container">
     <div class="section-head" data-reveal>
       <span class="eyebrow">Pacotes SmartFlux</span>
-      <h2>Você paga pela implantação da operação,<br>não só por "mexer no CRM".</h2>
+      <h2>Você paga pela implantação da operação,<br>não só por “mexer no CRM”.</h2>
       <p>A licença Kommo segue a recomendação do diagnóstico. Os pacotes abaixo são serviços SmartFlux de configuração, automação e acompanhamento.</p>
     </div>
     <div class="pricing-controls" data-reveal>
@@ -487,7 +464,7 @@
       <article class="price tilt-card" data-reveal data-plan="inicial" data-base="497" data-extra="120">
         <span class="price-tag subtle">Entrada</span>
         <h3>Organização Inicial</h3>
-        <p class="price-desc">Para quem quer sair da bagunça do WhatsApp e começar com um funil simples e funcional.</p>
+        <p class="price-desc">Para quem quer sair da bagença do WhatsApp e começar com um funil simples e funcional.</p>
         <div class="price-amt" data-price-wrap><span class="v" data-price>R$497</span><span class="u">a partir</span></div>
         <div class="price-from" data-user-line>implantação · 1 usuário · pagamento único</div>
         <div class="price-extra"><strong>Usuário adicional:</strong> +R$120 na implantação.</div>
@@ -500,7 +477,6 @@
         </ul>
         <a class="btn btn--ghost magnetic" href="https://wa.me/5534992710008?text=Quero%20conhecer%20a%20Organiza%C3%A7%C3%A3o%20Inicial%20SmartFlux" target="_blank" rel="noopener">Quero começar simples</a>
       </article>
-
       <article class="price featured tilt-card glow-border" data-reveal style="--rd:80ms" data-plan="inteligente" data-base="1497" data-extra="180">
         <span class="price-tag">Mais indicado</span>
         <h3>Atendimento Inteligente</h3>
@@ -517,7 +493,6 @@
         </ul>
         <a class="btn btn--primary magnetic" href="https://wa.me/5534992710008?text=Quero%20o%20Atendimento%20Inteligente%20SmartFlux" target="_blank" rel="noopener">Quero automação completa</a>
       </article>
-
       <article class="price tilt-card" data-reveal style="--rd:160ms" data-plan="completa" data-base="3000" data-extra="250">
         <span class="price-tag subtle">Escala</span>
         <h3>Operação Completa</h3>
@@ -537,8 +512,8 @@
     </div>
     <div class="price-note" data-reveal>
       <div class="price-note-card">
-        <b>Regra comercial mais limpa</b>
-        <p>Não multiplique o projeto inteiro por usuário. Use valor-base da implantação + acréscimo por usuário adicional. Fica mais justo, mais vendável e evita parecer que você está cobrando duas vezes pelo mesmo setup.</p>
+        <b>Por que você paga pela implantação?</b>
+        <p>Configurar um CRM do jeito certo exige análise da operação, construção de funil, automações, mensagens e treinamento da equipe. Você contrata a estrutura completa funcionando — não apenas o acesso à ferramenta.</p>
       </div>
       <div class="user-matrix" aria-label="Tabela de valores por usuários">
         <table>
@@ -575,7 +550,7 @@
   </div>
 </section>
 
-<!-- ============ GLOSSARY (LIGHT) ============ -->
+<!-- ============ GLOSSARY (DARK) ============ -->
 <section id="glossario" class="light-block">
   <div class="container">
     <div class="section-head" data-reveal>
@@ -701,7 +676,7 @@
   <svg class="arrow" viewBox="0 0 16 16" fill="none"><path d="M3 8h10m-4-4 4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
 </a>
 
-
 <script src="assets/js/main.js" defer></script>
+<script src="assets/js/premium-polish.js" defer></script>
 </body>
 </html>
