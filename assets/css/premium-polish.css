@@ -28,6 +28,36 @@
   display: block;
 }
 
+/* === KOMMO PARTNER BADGE (hero + footer) === */
+.hero-badge--img {
+  background: none;
+  border: none;
+  padding: 0;
+  line-height: 0;
+}
+.kommo-partner-badge {
+  height: 36px;
+  width: auto;
+  border-radius: 9px;
+  display: block;
+  box-shadow: 0 0 0 1px rgba(255,255,255,.08), 0 4px 20px -4px rgba(14,1,66,.5);
+  transition: transform .25s var(--ease-out), box-shadow .25s var(--ease-out);
+}
+.hero-badge--img:hover .kommo-partner-badge {
+  transform: scale(1.04);
+  box-shadow: 0 0 0 1px rgba(255,255,255,.18), 0 8px 28px -4px rgba(14,1,66,.7);
+}
+.foot-badge { margin-top: 16px; }
+.foot-kommo-badge {
+  height: 30px;
+  width: auto;
+  border-radius: 7px;
+  opacity: .85;
+  display: block;
+  transition: opacity .2s;
+}
+.foot-kommo-badge:hover { opacity: 1; }
+
 /* === HAMBURGER BUTTON === */
 .nav-hamburger {
   display: none;
@@ -160,6 +190,71 @@ body.menu-open { overflow: hidden; }
   .results-grid .result-card:last-child { grid-column: auto; }
 }
 
+/* === CREDENTIALS SECTION === */
+.cred-wrap { text-align: center; }
+.cred-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  max-width: 840px;
+  margin: 0 auto;
+}
+.cred-card {
+  border-radius: var(--r-xl);
+  background: linear-gradient(180deg, rgba(255,255,255,.055), rgba(255,255,255,.02));
+  border: 1px solid var(--line);
+  overflow: hidden;
+  transition: .35s var(--ease-out);
+  position: relative;
+}
+.cred-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 0%, color-mix(in oklab, var(--a2) 14%, transparent), transparent 60%);
+  opacity: 0;
+  transition: opacity .4s;
+  pointer-events: none;
+}
+.cred-card:hover {
+  transform: translateY(-6px);
+  border-color: color-mix(in oklab, var(--a2) 28%, var(--line-2));
+  box-shadow: 0 24px 60px -20px rgba(0,0,0,.6);
+}
+.cred-card:hover::before { opacity: 1; }
+.cred-img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+.cred-meta {
+  padding: 14px 20px;
+  border-top: 1px solid var(--line);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.cred-meta::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--a1);
+  box-shadow: 0 0 0 3px color-mix(in oklab, var(--a1) 20%, transparent);
+  flex-shrink: 0;
+}
+.cred-label {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  font-family: var(--f-mono);
+}
+@media (max-width: 720px) {
+  .cred-grid { grid-template-columns: 1fr; max-width: 440px; }
+}
+
 /* === FAQ SMOOTH ENTRANCE === */
 .faq-body { animation: faqIn .4s var(--ease-out); }
 @keyframes faqIn {
@@ -250,6 +345,7 @@ a.mobile-cta {
 @media (prefers-reduced-motion: reduce) {
   .faq-body { animation: none; }
   .result-card { transition: none; }
+  .cred-card { transition: none; }
   #scroll-progress { transition: none; }
   .btn--primary, .hero .btn--primary, .cta-final .btn--primary, a.mobile-cta { animation: none !important; }
 }
