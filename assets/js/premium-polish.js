@@ -71,4 +71,17 @@
     resultCountEls.forEach(function (el) { rio.observe(el); });
   }
 
+  // ============ STAGE CONSOLE — ANALYSIS ITEMS CYCLING ============
+  var aItems = document.querySelectorAll('.a-item');
+  if (aItems.length && !reduce) {
+    var aIdx = 0;
+    var cycleA = function () {
+      aItems.forEach(function (el) { el.classList.remove('a-active'); });
+      aItems[aIdx].classList.add('a-active');
+      aIdx = (aIdx + 1) % aItems.length;
+    };
+    cycleA();
+    setInterval(cycleA, 2200);
+  }
+
 }());

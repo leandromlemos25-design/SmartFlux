@@ -28,6 +28,17 @@
   display: block;
 }
 
+/* === SEAL LOGO === */
+.seal-mark { padding: 0 !important; overflow: hidden; }
+.seal-logo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  border-radius: inherit;
+  display: block;
+}
+
 /* === KOMMO PARTNER BADGE (hero + footer) === */
 .hero-badge--img {
   background: none;
@@ -138,6 +149,49 @@
 }
 body.menu-open { overflow: hidden; }
 
+/* === STAGE CONSOLE — SCAN LINE === */
+.stage-pane:first-child { position: relative; overflow: hidden; }
+.stage-pane:first-child::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 2px;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    color-mix(in oklab, var(--a1) 70%, transparent) 40%,
+    color-mix(in oklab, var(--a2) 90%, transparent) 60%,
+    transparent 100%
+  );
+  box-shadow: 0 0 12px 2px color-mix(in oklab, var(--a1) 40%, transparent);
+  animation: stageScan 4.5s linear infinite;
+  pointer-events: none;
+  z-index: 10;
+}
+@keyframes stageScan {
+  0%   { transform: translateY(0);    opacity: 0; }
+  4%   { opacity: 1; }
+  90%  { opacity: .6; }
+  100% { transform: translateY(520px); opacity: 0; }
+}
+
+/* === STAGE CONSOLE — ANALYSIS ITEM ACTIVE STATE === */
+.a-item {
+  border-radius: 8px;
+  transition: background .35s, box-shadow .35s;
+}
+.a-item.a-active {
+  background: color-mix(in oklab, var(--a1) 8%, transparent);
+  box-shadow: 0 0 0 1px color-mix(in oklab, var(--a1) 22%, transparent) inset,
+              0 2px 12px -4px color-mix(in oklab, var(--a1) 30%, transparent);
+}
+.a-item.a-active .a-icon {
+  color: var(--a1);
+  filter: drop-shadow(0 0 5px var(--a1));
+}
+.a-item.a-active b { color: var(--ink); }
+
 /* === RESULTS / METRICS SECTION === */
 .results-wrap { text-align: center; }
 .results-grid {
@@ -222,11 +276,7 @@ body.menu-open { overflow: hidden; }
   box-shadow: 0 24px 60px -20px rgba(0,0,0,.6);
 }
 .cred-card:hover::before { opacity: 1; }
-.cred-img {
-  width: 100%;
-  height: auto;
-  display: block;
-}
+.cred-img { width: 100%; height: auto; display: block; }
 .cred-meta {
   padding: 14px 20px;
   border-top: 1px solid var(--line);
@@ -346,6 +396,7 @@ a.mobile-cta {
   .faq-body { animation: none; }
   .result-card { transition: none; }
   .cred-card { transition: none; }
+  .stage-pane:first-child::after { animation: none; }
   #scroll-progress { transition: none; }
   .btn--primary, .hero .btn--primary, .cta-final .btn--primary, a.mobile-cta { animation: none !important; }
 }
