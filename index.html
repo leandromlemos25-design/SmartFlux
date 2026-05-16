@@ -14,11 +14,12 @@
 <link rel="preload" as="image" href="logo-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800;900&family=Geist+Mono:wght@400;500;600&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800;900&family=Geist+Mono:wght@400;500;600&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/css/v2-core.css">
 <link rel="stylesheet" href="assets/css/v2-sections.css">
 <link rel="stylesheet" href="assets/css/v2-sections-2.css">
 <link rel="stylesheet" href="assets/css/v2-effects.css">
+<link rel="stylesheet" href="assets/css/v2-glossario.css">
 </head>
 <body>
 <div id="scroll-progress" aria-hidden="true"></div>
@@ -565,23 +566,391 @@
   </div>
 </section>
 
-<!-- ============ GLOSSARY (DARK) ============ -->
-<section id="glossario" class="light-block">
-  <div class="container">
-    <div class="section-head" data-reveal>
-      <span class="eyebrow">Português claro</span>
-      <h2>Você não precisa entender de CRM<br>para começar.</h2>
-      <p>A SmartFlux traduz a ferramenta para rotina real de atendimento, venda e retorno.</p>
-    </div>
-    <div class="terms">
-      <article class="term" data-reveal><b>Lead</b><p>Pessoa interessada que chamou no WhatsApp, Instagram ou formulário perguntando preço, horário ou serviço.</p></article>
-      <article class="term" data-reveal style="--rd:60ms"><b>CRM</b><p>Painel que organiza clientes, interessados, propostas, histórico, retornos e próximas ações.</p></article>
-      <article class="term" data-reveal style="--rd:120ms"><b>Funil</b><p>Caminho do cliente: novo contato, atendimento, proposta, retorno e fechamento.</p></article>
-      <article class="term" data-reveal><b>Follow-up</b><p>Retorno para quem demonstrou interesse, mas ainda não comprou ou não respondeu.</p></article>
-      <article class="term" data-reveal style="--rd:60ms"><b>Automação</b><p>Tarefa que o sistema faz sozinho — lembrete, retorno, mudança de etapa, sem depender da equipe lembrar.</p></article>
-      <article class="term" data-reveal style="--rd:120ms"><b>Bot</b><p>Assistente que coleta informações, responde dúvidas simples e organiza o atendimento antes do humano.</p></article>
+<!-- ============ GLOSSÁRIO — 3D Book ============ -->
+<section id="glossario" class="book-glossary">
+  <canvas id="bk-particles" class="bk-canvas"></canvas>
+  <div class="bk-grid"></div>
+  <div class="bk-ambient"></div>
+
+  <!-- HUD -->
+  <div class="bk-hud">
+    <span class="bk-hud-label">GLOSSÁRIO</span>
+    <span class="bk-hud-title">CRM em <em>Português Claro</em></span>
+    <span class="bk-page-counter" id="bk-counter">1 / 5</span>
+  </div>
+
+  <!-- Book stage -->
+  <div class="bk-stage">
+    <div class="bk-book" id="bk-book" aria-label="Dicionário CRM SmartFlux">
+
+      <!-- LEAF 0 — Capa -->
+      <div class="bk-leaf" id="bk-leaf-0" style="z-index:5">
+        <!-- Front: Capa -->
+        <div class="bk-front">
+          <div class="bk-page bk-cover">
+            <div class="bk-cover-spine"></div>
+            <div class="bk-cover-glow"></div>
+            <span class="bk-cover-badge">SmartFlux × Kommo</span>
+            <h2>Dicionário<br><em>CRM</em></h2>
+            <p>Entenda cada termo antes de fechar — sem jargão, sem enrolação.</p>
+            <div class="bk-glare"></div>
+          </div>
+        </div>
+        <!-- Back: Prefácio -->
+        <div class="bk-back">
+          <div class="bk-page bk-content-page bk-left">
+            <div class="bk-page-glow"></div>
+            <span class="bk-pg-num">PG. 01</span>
+            <span class="bk-entry-tag">Prefácio</span>
+            <h3 class="bk-entry-title">Por que este<br><em>dicionário</em>?</h3>
+            <div class="bk-divider"></div>
+            <p class="bk-entry-def">CRM parece complicado até você entender o que cada palavra significa. Este glossário existe pra isso: traduzir a ferramenta pra rotina real de vendas, atendimento e retorno.</p>
+            <p class="bk-entry-def">Você não precisa ser tech para crescer com o Kommo. Precisa só saber o que está contratando.</p>
+            <div class="bk-entry-pills">
+              <span class="bk-pill">5 conceitos</span>
+              <span class="bk-pill">linguagem simples</span>
+              <span class="bk-pill">exemplos reais</span>
+            </div>
+            <div class="bk-fold-shadow"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- LEAF 1 — CRM / Lead -->
+      <div class="bk-leaf" id="bk-leaf-1" style="z-index:4">
+        <!-- Front: CRM -->
+        <div class="bk-front">
+          <div class="bk-page bk-content-page bk-right">
+            <div class="bk-page-glow"></div>
+            <span class="bk-pg-num">PG. 02</span>
+            <span class="bk-entry-tag">Termo #01</span>
+            <h3 class="bk-entry-title"><em>CRM</em></h3>
+            <div class="bk-divider"></div>
+            <p class="bk-entry-def">Software que centraliza todos os seus contatos, conversas e negócios em um único painel. Com o Kommo, você vê o histórico completo de cada cliente — de onde veio, o que perguntou, o que comprou.</p>
+            <div class="bk-entry-analogy">Pense num caderno de clientes infinito, que nunca se perde e ainda te avisa quando é hora de ligar.</div>
+            <div class="bk-entry-pills">
+              <span class="bk-pill">kommo</span>
+              <span class="bk-pill">pipeline</span>
+              <span class="bk-pill">histórico</span>
+            </div>
+            <div class="bk-fold-shadow"></div>
+          </div>
+        </div>
+        <!-- Back: Lead -->
+        <div class="bk-back">
+          <div class="bk-page bk-content-page bk-left">
+            <div class="bk-page-glow"></div>
+            <span class="bk-pg-num">PG. 03</span>
+            <span class="bk-entry-tag">Termo #02</span>
+            <h3 class="bk-entry-title"><em>Lead</em></h3>
+            <div class="bk-divider"></div>
+            <p class="bk-entry-def">Pessoa que demonstrou interesse no seu produto ou serviço. Pode ter mandado mensagem no WhatsApp, preenchido um formulário ou clicado no seu anúncio.</p>
+            <div class="bk-entry-analogy">É o cliente em potencial que ainda não decidiu. Seu trabalho é guiá-lo até o "sim".</div>
+            <div class="bk-entry-pills">
+              <span class="bk-pill">captação</span>
+              <span class="bk-pill">whatsapp</span>
+              <span class="bk-pill">formulário</span>
+            </div>
+            <div class="bk-fold-shadow"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- LEAF 2 — Funil / Follow-up -->
+      <div class="bk-leaf" id="bk-leaf-2" style="z-index:3">
+        <!-- Front: Funil -->
+        <div class="bk-front">
+          <div class="bk-page bk-content-page bk-right">
+            <div class="bk-page-glow"></div>
+            <span class="bk-pg-num">PG. 04</span>
+            <span class="bk-entry-tag">Termo #03</span>
+            <h3 class="bk-entry-title"><em>Funil</em> de Vendas</h3>
+            <div class="bk-divider"></div>
+            <p class="bk-entry-def">Mapa visual das etapas que um lead percorre até virar cliente. No Kommo, cada card representa uma negociação — você arrasta do "novo contato" até "fechado".</p>
+            <div class="bk-entry-analogy">Igual a uma fila organizada: você sabe exatamente quem está onde e qual é o próximo passo.</div>
+            <div class="bk-entry-pills">
+              <span class="bk-pill">kanban</span>
+              <span class="bk-pill">etapas</span>
+              <span class="bk-pill">deal</span>
+            </div>
+            <div class="bk-fold-shadow"></div>
+          </div>
+        </div>
+        <!-- Back: Follow-up -->
+        <div class="bk-back">
+          <div class="bk-page bk-content-page bk-left">
+            <div class="bk-page-glow"></div>
+            <span class="bk-pg-num">PG. 05</span>
+            <span class="bk-entry-tag">Termo #04</span>
+            <h3 class="bk-entry-title"><em>Follow-up</em></h3>
+            <div class="bk-divider"></div>
+            <p class="bk-entry-def">Retorno para quem ainda não respondeu ou não fechou. A maioria das vendas acontece no 5º contato — e a maioria das empresas desiste no 1º.</p>
+            <div class="bk-entry-analogy">Com o Kommo, o follow-up é automático: lembrete, mensagem agendada, tarefa criada. Você não esquece ninguém.</div>
+            <div class="bk-entry-pills">
+              <span class="bk-pill">lembrete</span>
+              <span class="bk-pill">agendamento</span>
+              <span class="bk-pill">persistência</span>
+            </div>
+            <div class="bk-fold-shadow"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- LEAF 3 — Automação / Bot -->
+      <div class="bk-leaf" id="bk-leaf-3" style="z-index:2">
+        <!-- Front: Automação -->
+        <div class="bk-front">
+          <div class="bk-page bk-content-page bk-right">
+            <div class="bk-page-glow"></div>
+            <span class="bk-pg-num">PG. 06</span>
+            <span class="bk-entry-tag">Termo #05</span>
+            <h3 class="bk-entry-title"><em>Automação</em></h3>
+            <div class="bk-divider"></div>
+            <p class="bk-entry-def">Sequência de ações que o sistema executa sozinho quando um gatilho acontece — lead entrou, mensagem enviada, prazo passou. Sem você precisar fazer nada manualmente.</p>
+            <div class="bk-entry-analogy">Como um funcionário que nunca dorme: responde, agenda, move e notifica no horário certo.</div>
+            <div class="bk-entry-pills">
+              <span class="bk-pill">gatilho</span>
+              <span class="bk-pill">workflow</span>
+              <span class="bk-pill">ação</span>
+            </div>
+            <div class="bk-fold-shadow"></div>
+          </div>
+        </div>
+        <!-- Back: Bot & IA -->
+        <div class="bk-back">
+          <div class="bk-page bk-content-page bk-left">
+            <div class="bk-page-glow"></div>
+            <span class="bk-pg-num">PG. 07</span>
+            <span class="bk-entry-tag">Bônus</span>
+            <h3 class="bk-entry-title">Bot <em>& IA</em></h3>
+            <div class="bk-divider"></div>
+            <p class="bk-entry-def">O bot coleta dados e responde perguntas básicas 24h. A IA (inteligência artificial) vai além: aprende o tom da sua empresa, qualifica leads e sugere respostas — direto no Kommo.</p>
+            <div class="bk-entry-analogy">Você vende enquanto dorme. O bot atende, a IA qualifica e você fecha.</div>
+            <div class="bk-entry-pills">
+              <span class="bk-pill">chatbot</span>
+              <span class="bk-pill">ia nativa</span>
+              <span class="bk-pill">24/7</span>
+            </div>
+            <div class="bk-fold-shadow"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- LEAF 4 — Contracapa -->
+      <div class="bk-leaf" id="bk-leaf-4" style="z-index:1">
+        <!-- Front: CTA -->
+        <div class="bk-front">
+          <div class="bk-page bk-content-page bk-right" style="justify-content:center;align-items:center;text-align:center;gap:16px;">
+            <div class="bk-page-glow"></div>
+            <span class="bk-entry-tag">Próximo passo</span>
+            <h3 class="bk-entry-title" style="text-align:center">Agora você<br><em>já sabe o suficiente</em></h3>
+            <p class="bk-entry-def" style="text-align:center;max-width:240px">A SmartFlux configura tudo isso pra você no Kommo — em até 7 dias, sem dor de cabeça.</p>
+            <a href="#contato" class="bk-back-cover bk-cta" style="display:inline-block;padding:10px 24px;border:1px solid rgba(0,229,255,.35);border-radius:6px;color:#00E5FF;font-family:'JetBrains Mono',monospace;font-size:.7rem;letter-spacing:.1em;text-decoration:none;margin-top:8px;">→ FALAR COM A SMARTFLUX</a>
+            <div class="bk-fold-shadow"></div>
+          </div>
+        </div>
+        <!-- Back: Contracapa -->
+        <div class="bk-back">
+          <div class="bk-page bk-back-cover">
+            <div class="bk-cover-glow"></div>
+            <span class="bk-cover-badge">FIM DO GLOSSÁRIO</span>
+            <h3>SmartFlux</h3>
+            <p>Implementação Kommo CRM para pequenas e médias empresas brasileiras.</p>
+            <div class="bk-glare"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="bk-shadow"></div>
     </div>
   </div>
+
+  <!-- Controls -->
+  <div class="bk-controls">
+    <button class="bk-btn" id="bk-prev" disabled aria-label="Página anterior">
+      <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+      PREV
+    </button>
+    <div class="bk-dots" id="bk-dots"></div>
+    <button class="bk-sound-btn" id="bk-sound" aria-label="Som">
+      <svg id="bk-sound-icon" viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>
+    </button>
+    <button class="bk-btn" id="bk-next" aria-label="Próxima página">
+      NEXT
+      <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+    </button>
+  </div>
+
+  <div class="bk-hint">← → setas do teclado · swipe no mobile</div>
+
+  <script>
+  (function() {
+    'use strict';
+
+    const TOTAL_LEAVES = 5;
+    const book   = document.getElementById('bk-book');
+    const prevBtn = document.getElementById('bk-prev');
+    const nextBtn = document.getElementById('bk-next');
+    const counter = document.getElementById('bk-counter');
+    const dotsWrap = document.getElementById('bk-dots');
+    const soundBtn = document.getElementById('bk-sound');
+
+    let currentPage = 0;
+    let soundOn = false;
+    let audioCtx = null;
+
+    for (let i = 0; i < TOTAL_LEAVES; i++) {
+      const d = document.createElement('button');
+      d.className = 'bk-dot' + (i === 0 ? ' bk-active' : '');
+      d.setAttribute('aria-label', 'Ir para página ' + (i + 1));
+      d.addEventListener('click', () => goTo(i));
+      dotsWrap.appendChild(d);
+    }
+
+    function updateDots() {
+      dotsWrap.querySelectorAll('.bk-dot').forEach((d, i) => {
+        d.classList.toggle('bk-active', i === currentPage);
+      });
+    }
+
+    function initAudio() {
+      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    }
+
+    function playFlip() {
+      if (!soundOn) return;
+      try {
+        initAudio();
+        const buf = audioCtx.createBuffer(1, audioCtx.sampleRate * 0.12, audioCtx.sampleRate);
+        const data = buf.getChannelData(0);
+        for (let i = 0; i < data.length; i++) {
+          const t = i / audioCtx.sampleRate;
+          data[i] = (Math.random() * 2 - 1) * Math.exp(-t * 35) * 0.3;
+        }
+        const src = audioCtx.createBufferSource();
+        src.buffer = buf;
+        const filter = audioCtx.createBiquadFilter();
+        filter.type = 'bandpass';
+        filter.frequency.value = 1800;
+        filter.Q.value = 0.8;
+        src.connect(filter);
+        filter.connect(audioCtx.destination);
+        src.start();
+      } catch(e) {}
+    }
+
+    soundBtn.addEventListener('click', () => {
+      soundOn = !soundOn;
+      const icon = document.getElementById('bk-sound-icon');
+      if (!soundOn) {
+        icon.innerHTML = '<polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/>';
+      } else {
+        icon.innerHTML = '<polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>';
+      }
+      soundBtn.style.color = soundOn ? '#00E5FF' : '';
+    });
+
+    function applyLeafStates() {
+      for (let i = 0; i < TOTAL_LEAVES; i++) {
+        const leaf = document.getElementById('bk-leaf-' + i);
+        if (!leaf) continue;
+        leaf.classList.toggle('bk-flipped', i < currentPage);
+        leaf.style.zIndex = i < currentPage
+          ? TOTAL_LEAVES - i
+          : TOTAL_LEAVES + (TOTAL_LEAVES - i);
+      }
+    }
+
+    function goTo(page) {
+      if (page < 0 || page >= TOTAL_LEAVES) return;
+      currentPage = page;
+      playFlip();
+      applyLeafStates();
+      prevBtn.disabled = currentPage === 0;
+      nextBtn.disabled = currentPage === TOTAL_LEAVES - 1;
+      counter.textContent = (currentPage + 1) + ' / ' + TOTAL_LEAVES;
+      updateDots();
+    }
+
+    prevBtn.addEventListener('click', () => goTo(currentPage - 1));
+    nextBtn.addEventListener('click', () => goTo(currentPage + 1));
+
+    document.addEventListener('keydown', e => {
+      if (e.key === 'ArrowRight' || e.key === 'ArrowDown') { e.preventDefault(); goTo(currentPage + 1); }
+      if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')   { e.preventDefault(); goTo(currentPage - 1); }
+    });
+
+    let touchX = 0;
+    book.addEventListener('touchstart', e => { touchX = e.touches[0].clientX; }, { passive: true });
+    book.addEventListener('touchend', e => {
+      const dx = e.changedTouches[0].clientX - touchX;
+      if (Math.abs(dx) > 40) goTo(currentPage + (dx < 0 ? 1 : -1));
+    });
+
+    document.addEventListener('mousemove', e => {
+      const cx = window.innerWidth / 2;
+      const cy = window.innerHeight / 2;
+      const rx = ((e.clientY - cy) / cy) * 6;
+      const ry = ((e.clientX - cx) / cx) * -6;
+      book.style.transform = 'rotateX(' + (8 + rx) + 'deg) rotateY(' + (-4 + ry) + 'deg)';
+    });
+
+    const canvas = document.getElementById('bk-particles');
+    const ctx2d = canvas.getContext('2d');
+    let W, H, nodes = [];
+
+    function resize() {
+      W = canvas.width  = canvas.offsetWidth;
+      H = canvas.height = canvas.offsetHeight;
+    }
+    window.addEventListener('resize', resize);
+    resize();
+
+    function randomNode() {
+      return {
+        x: Math.random() * W,
+        y: Math.random() * H,
+        vx: (Math.random() - .5) * .3,
+        vy: (Math.random() - .5) * .3,
+        r: Math.random() * 1.5 + .5
+      };
+    }
+
+    for (let i = 0; i < 60; i++) nodes.push(randomNode());
+
+    function drawParticles() {
+      ctx2d.clearRect(0, 0, W, H);
+      nodes.forEach(n => {
+        n.x += n.vx; n.y += n.vy;
+        if (n.x < 0) n.x = W; if (n.x > W) n.x = 0;
+        if (n.y < 0) n.y = H; if (n.y > H) n.y = 0;
+        ctx2d.beginPath();
+        ctx2d.arc(n.x, n.y, n.r, 0, Math.PI * 2);
+        ctx2d.fillStyle = 'rgba(0,229,255,.35)';
+        ctx2d.fill();
+      });
+      nodes.forEach((a, i) => {
+        for (let j = i + 1; j < nodes.length; j++) {
+          const b = nodes[j];
+          const dx = a.x - b.x, dy = a.y - b.y;
+          const dist = Math.sqrt(dx*dx + dy*dy);
+          if (dist < 100) {
+            ctx2d.beginPath();
+            ctx2d.moveTo(a.x, a.y);
+            ctx2d.lineTo(b.x, b.y);
+            ctx2d.strokeStyle = 'rgba(0,229,255,' + (.08 * (1 - dist/100)) + ')';
+            ctx2d.lineWidth = .5;
+            ctx2d.stroke();
+          }
+        }
+      });
+      requestAnimationFrame(drawParticles);
+    }
+    drawParticles();
+
+    applyLeafStates();
+  })();
+  </script>
 </section>
 
 <!-- ============ FAQ ============ -->
