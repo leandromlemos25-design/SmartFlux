@@ -583,8 +583,11 @@
   <div class="bk-stage">
     <div class="bk-book" id="bk-book" aria-label="Dicionário CRM SmartFlux">
 
-      <!-- LEAF 0 — Capa -->
-      <div class="bk-leaf" id="bk-leaf-0" style="z-index:5">
+      <!-- Spine visual divider -->
+      <div class="bk-spine-line"></div>
+
+      <!-- LEAF 0 — Capa (full-width cover, flips around center) -->
+      <div class="bk-leaf bk-leaf-cover" id="bk-leaf-0" style="z-index:10">
         <div class="bk-front">
           <div class="bk-page bk-cover">
             <div class="bk-cover-spine"></div>
@@ -641,7 +644,7 @@
             <h3 class="bk-entry-title"><em>Lead</em></h3>
             <div class="bk-divider"></div>
             <p class="bk-entry-def">Pessoa que demonstrou interesse no seu produto ou serviço. Pode ter mandado mensagem no WhatsApp, preenchido um formulário ou clicado no seu anúncio.</p>
-            <div class="bk-entry-analogy">É o cliente em potencial que ainda não decidiu. Seu trabalho é guiá-lo até o “sim”.</div>
+            <div class="bk-entry-analogy">É o cliente em potencial que ainda não decidiu. Seu trabalho é guiá-lo até o "sim".</div>
             <div class="bk-entry-pills">
               <span class="bk-pill">captação</span>
               <span class="bk-pill">whatsapp</span>
@@ -661,7 +664,7 @@
             <span class="bk-entry-tag">Termo #03</span>
             <h3 class="bk-entry-title"><em>Funil</em> de Vendas</h3>
             <div class="bk-divider"></div>
-            <p class="bk-entry-def">Mapa visual das etapas que um lead percorre até virar cliente. No Kommo, cada card representa uma negociação — você arrasta do “novo contato” até “fechado”.</p>
+            <p class="bk-entry-def">Mapa visual das etapas que um lead percorre até virar cliente. No Kommo, cada card representa uma negociação — você arrasta do "novo contato" até "fechado".</p>
             <div class="bk-entry-analogy">Igual a uma fila organizada: você sabe exatamente quem está onde e qual é o próximo passo.</div>
             <div class="bk-entry-pills">
               <span class="bk-pill">kanban</span>
@@ -845,9 +848,11 @@
         const leaf = document.getElementById('bk-leaf-' + i);
         if (!leaf) continue;
         leaf.classList.toggle('bk-flipped', i < currentPage);
+        /* Flipped: most-recently-flipped is on top (higher i = higher z).
+           Unflipped: earliest leaf is on top (cover stays above all). */
         leaf.style.zIndex = i < currentPage
-          ? TOTAL_LEAVES - i
-          : TOTAL_LEAVES + (TOTAL_LEAVES - i);
+          ? i
+          : TOTAL_LEAVES * 2 - i;
       }
     }
 
@@ -891,15 +896,7 @@
     /* Neural particles — canvas fills full section */
     const canvas = document.getElementById('bk-particles');
     const ctx2d  = canvas.getContext('2d');
-    let W, H, nodes = [];
-
-    function resize() {
-      W = canvas.width  = canvas.offsetWidth  || window.innerWidth;
-      H = canvas.height = canvas.offsetHeight || window.innerHeight;
-    }
-    window.addEventListener('resize', resize);
-    window.addEventListener('load',   resize);
-    requestAnimationFrame(resize);
+    let W = 0, H = 0, nodes = [];
 
     function randomNode() {
       return {
@@ -911,9 +908,26 @@
       };
     }
 
-    for (let i = 0; i < 60; i++) nodes.push(randomNode());
+    function resize() {
+      const p = canvas.parentElement;
+      const nW = p ? p.clientWidth  : window.innerWidth;
+      const nH = p ? p.clientHeight : window.innerHeight;
+      if (!nW || !nH) return;
+      const firstPaint = W === 0;
+      W = canvas.width  = nW;
+      H = canvas.height = nH;
+      /* Re-seed nodes on first valid paint so they spread over the full area */
+      if (firstPaint) {
+        nodes = [];
+        for (let i = 0; i < 60; i++) nodes.push(randomNode());
+      }
+    }
+    window.addEventListener('resize', resize);
+    window.addEventListener('load',   resize);
+    requestAnimationFrame(resize);
 
     function drawParticles() {
+      if (!W || !H || !nodes.length) { requestAnimationFrame(drawParticles); return; }
       ctx2d.clearRect(0, 0, W, H);
       nodes.forEach(n => {
         n.x += n.vx; n.y += n.vy;
