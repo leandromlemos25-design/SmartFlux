@@ -276,6 +276,12 @@ a.mobile-cta {
   gap: 12px;
   min-width: 0;
 }
+.brand-logo-full {
+  height: 38px;
+  width: auto;
+  max-width: 180px;
+  object-fit: contain;
+}
 .brand-logo-wrap {
   width: 42px; height: 42px;
   border-radius: 12px;
@@ -512,4 +518,5 @@ section {
   .mobile-cta { display: flex }
   .foot-grid { grid-template-columns: 1fr }
   footer { padding-bottom: 100px }
+  .brand-logo-full { height: 30px }
 }
