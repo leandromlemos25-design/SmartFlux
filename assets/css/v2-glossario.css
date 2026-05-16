@@ -79,7 +79,7 @@
   padding: 2px 8px;
 }
 
-/* Book stage — perspective lives here, not on the section */
+/* Book stage — perspective container */
 .bk-stage {
   position: relative;
   z-index: 10;
@@ -92,7 +92,7 @@
   perspective-origin: center center;
 }
 
-/* Book outer wrapper */
+/* Book outer wrapper — full spread width */
 .bk-book {
   position: relative;
   width: 720px;
@@ -111,14 +111,29 @@
   .bk-book { width: 95vw; height: 65vw; min-height: 280px; }
 }
 
-/* Individual leaf (two pages: front + back) */
+/*
+ * Leaves live in the RIGHT HALF of the spread.
+ * transform-origin: left center = the book spine (center of spread).
+ * When flipped -180deg, the back face appears in the LEFT HALF.
+ * This prevents the flipped page from extending outside the book bounds.
+ */
 .bk-leaf {
   position: absolute;
-  inset: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 50%;
   transform-style: preserve-3d;
   transform-origin: left center;
   transition: transform .9s cubic-bezier(.645,.045,.355,1);
-  backface-visibility: hidden;
+}
+
+/* Cover leaf: full width, flips around spine (center of book) */
+.bk-leaf-cover {
+  left: 0;
+  right: 0;
+  width: 100%;
+  transform-origin: 50% center;
 }
 
 .bk-leaf.bk-flipped {
@@ -131,12 +146,21 @@
   position: absolute;
   inset: 0;
   backface-visibility: hidden;
-  border-radius: 3px 12px 12px 3px;
+  border-radius: 0 12px 12px 0;
   overflow: hidden;
 }
 
 .bk-back {
   transform: rotateY(180deg);
+  border-radius: 12px 0 0 12px;
+}
+
+/* Cover face gets full rounded corners */
+.bk-leaf-cover .bk-front {
+  border-radius: 3px 12px 12px 3px;
+}
+
+.bk-leaf-cover .bk-back {
   border-radius: 12px 3px 3px 12px;
 }
 
@@ -266,18 +290,22 @@
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  padding: 32px 28px 28px;
-  gap: 12px;
+  padding: 28px 24px 24px;
+  gap: 10px;
   height: 100%;
   box-sizing: border-box;
 }
 
-.bk-content-page.bk-right {
-  border-radius: 3px 12px 12px 3px;
-}
-
-.bk-content-page.bk-left {
-  border-radius: 12px 3px 3px 12px;
+/* Spine divider line (center of spread) */
+.bk-spine-line {
+  position: absolute;
+  left: 50%;
+  top: 8%;
+  bottom: 8%;
+  width: 1px;
+  background: linear-gradient(180deg, transparent, rgba(0,229,255,.15) 20%, rgba(0,229,255,.15) 80%, transparent);
+  pointer-events: none;
+  z-index: 5;
 }
 
 /* Page number */
@@ -306,10 +334,10 @@
 
 .bk-entry-title {
   font-family: 'Space Grotesk', sans-serif;
-  font-size: clamp(1.1rem, 2.5vw, 1.5rem);
+  font-size: clamp(1.1rem, 2.5vw, 1.4rem);
   font-weight: 800;
   color: #fff;
-  margin: 0 0 6px;
+  margin: 0 0 4px;
   line-height: 1.1;
 }
 
@@ -320,10 +348,10 @@
 
 .bk-entry-def {
   font-family: 'Space Grotesk', sans-serif;
-  font-size: .82rem;
+  font-size: .8rem;
   color: rgba(255,255,255,.65);
   line-height: 1.6;
-  margin: 0 0 8px;
+  margin: 0 0 6px;
 }
 
 .bk-entry-analogy {
@@ -333,9 +361,9 @@
   background: rgba(0,229,255,.05);
   border-left: 2px solid rgba(0,229,255,.25);
   border-radius: 0 6px 6px 0;
-  padding: 8px 12px;
+  padding: 8px 10px;
   font-family: 'Space Grotesk', sans-serif;
-  font-size: .78rem;
+  font-size: .76rem;
   color: rgba(255,255,255,.5);
   line-height: 1.5;
 }
@@ -350,7 +378,7 @@
 .bk-entry-pills {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px;
+  gap: 5px;
   margin-top: 4px;
 }
 
@@ -361,14 +389,14 @@
   background: rgba(124,92,255,.08);
   border: 1px solid rgba(124,92,255,.2);
   border-radius: 4px;
-  padding: 2px 8px;
+  padding: 2px 7px;
 }
 
 .bk-divider {
   width: 40px;
   height: 1px;
   background: linear-gradient(90deg, rgba(0,229,255,.4), transparent);
-  margin: 4px 0;
+  margin: 2px 0;
 }
 
 /* Page edge glow */
@@ -402,9 +430,9 @@
   position: absolute;
   top: 0;
   right: 0;
-  width: 24px;
+  width: 20px;
   height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(0,0,0,.25));
+  background: linear-gradient(90deg, transparent, rgba(0,0,0,.2));
   pointer-events: none;
   z-index: 20;
 }
@@ -561,6 +589,6 @@
   .bk-hud-title { font-size: .85rem; }
   .bk-controls { bottom: 16px; }
   .bk-hint { display: none; }
-  .bk-content-page { padding: 20px 16px 16px; }
+  .bk-content-page { padding: 18px 14px 14px; }
   .bk-entry-title { font-size: 1rem; }
 }
