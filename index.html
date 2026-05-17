@@ -882,21 +882,38 @@
       if (Math.abs(dx) > 40) goTo(currentPage + (dx < 0 ? 1 : -1));
     });
 
-    /* Parallax: relative to section, not window */
-    document.addEventListener('mousemove', e => {
-      const section = book.closest('.book-glossary');
-      const r = section ? section.getBoundingClientRect() : { left: 0, top: 0, width: window.innerWidth, height: window.innerHeight };
-      const cx = r.left + r.width  / 2;
-      const cy = r.top  + r.height / 2;
-      const rx = ((e.clientY - cy) / (r.height / 2)) * 4;
-      const ry = ((e.clientX - cx) / (r.width  / 2)) * -4;
-      book.style.transform = 'rotateX(' + (4 + rx) + 'deg) rotateY(' + ry + 'deg)';
+    /* Click left half → prev, right half → next (works on desktop + mobile tap) */
+    book.addEventListener('click', e => {
+      const r = book.getBoundingClientRect();
+      if (e.clientX > r.left + r.width / 2) {
+        goTo(currentPage + 1);
+      } else {
+        goTo(currentPage - 1);
+      }
     });
+
+    /* Parallax on desktop only — mousemove doesn't fire on touch */
+    const isTouch = window.matchMedia('(pointer: coarse)').matches;
+    if (!isTouch) {
+      document.addEventListener('mousemove', e => {
+        const section = book.closest('.book-glossary');
+        const r = section ? section.getBoundingClientRect() : { left: 0, top: 0, width: window.innerWidth, height: window.innerHeight };
+        const cx = r.left + r.width  / 2;
+        const cy = r.top  + r.height / 2;
+        const rx = ((e.clientY - cy) / (r.height / 2)) * 4;
+        const ry = ((e.clientX - cx) / (r.width  / 2)) * -4;
+        book.style.transform = 'rotateX(' + (4 + rx) + 'deg) rotateY(' + ry + 'deg)';
+      });
+    }
 
     /* Neural particles — canvas fills full section */
     const canvas = document.getElementById('bk-particles');
     const ctx2d  = canvas.getContext('2d');
-    let W = 0, H = 0, nodes = [];
+    const isMobileParticles = window.matchMedia('(pointer: coarse)').matches;
+    const NODE_COUNT    = isMobileParticles ? 22 : 55;
+    const CONNECT_DIST  = isMobileParticles ? 75 : 100;
+    const FRAME_MS      = isMobileParticles ? 48 : 16; /* ~20fps mobile / ~60fps desktop */
+    let W = 0, H = 0, nodes = [], lastDraw = 0;
 
     function randomNode() {
       return {
@@ -919,15 +936,18 @@
       /* Re-seed nodes on first valid paint so they spread over the full area */
       if (firstPaint) {
         nodes = [];
-        for (let i = 0; i < 60; i++) nodes.push(randomNode());
+        for (let i = 0; i < NODE_COUNT; i++) nodes.push(randomNode());
       }
     }
     window.addEventListener('resize', resize);
     window.addEventListener('load',   resize);
     requestAnimationFrame(resize);
 
-    function drawParticles() {
-      if (!W || !H || !nodes.length) { requestAnimationFrame(drawParticles); return; }
+    function drawParticles(ts) {
+      requestAnimationFrame(drawParticles);
+      if (!W || !H || !nodes.length) return;
+      if (ts - lastDraw < FRAME_MS) return;
+      lastDraw = ts;
       ctx2d.clearRect(0, 0, W, H);
       nodes.forEach(n => {
         n.x += n.vx; n.y += n.vy;
@@ -943,19 +963,18 @@
           const b = nodes[j];
           const dx = a.x - b.x, dy = a.y - b.y;
           const dist = Math.sqrt(dx*dx + dy*dy);
-          if (dist < 100) {
+          if (dist < CONNECT_DIST) {
             ctx2d.beginPath();
             ctx2d.moveTo(a.x, a.y);
             ctx2d.lineTo(b.x, b.y);
-            ctx2d.strokeStyle = 'rgba(0,229,255,' + (.08 * (1 - dist/100)) + ')';
+            ctx2d.strokeStyle = 'rgba(0,229,255,' + (.08 * (1 - dist/CONNECT_DIST)) + ')';
             ctx2d.lineWidth = .5;
             ctx2d.stroke();
           }
         }
       });
-      requestAnimationFrame(drawParticles);
     }
-    drawParticles();
+    requestAnimationFrame(drawParticles);
 
     applyLeafStates();
   })();
