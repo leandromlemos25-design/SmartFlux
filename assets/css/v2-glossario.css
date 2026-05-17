@@ -583,6 +583,11 @@
   z-index: 2;
 }
 
+/* Cover back face: content confined to left half (right half is behind leaf 1) */
+.bk-leaf-cover .bk-back .bk-content-page {
+  padding-right: calc(50% + 8px);
+}
+
 /* Performance: GPU-composited layers for 3D elements */
 .bk-book,
 .bk-leaf,
