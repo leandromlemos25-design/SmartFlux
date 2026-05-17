@@ -583,12 +583,40 @@
   z-index: 2;
 }
 
+/* Performance: GPU-composited layers for 3D elements */
+.bk-book,
+.bk-leaf,
+.bk-canvas {
+  will-change: transform;
+}
+
 /* Mobile adjustments */
 @media (max-width: 600px) {
-  .bk-hud { flex-direction: column; gap: 6px; top: 16px; }
-  .bk-hud-title { font-size: .85rem; }
-  .bk-controls { bottom: 16px; }
+  .bk-hud { flex-direction: column; gap: 4px; top: 12px; }
+  .bk-hud-title { font-size: .8rem; }
+  .bk-hud-label { display: none; }
+  .bk-controls { bottom: 12px; gap: 10px; }
+  .bk-btn { padding: 7px 14px; font-size: .6rem; }
   .bk-hint { display: none; }
-  .bk-content-page { padding: 18px 14px 14px; }
-  .bk-entry-title { font-size: 1rem; }
+
+  /* Taller book on mobile so content fits */
+  .bk-book { width: 96vw; height: 72vw; min-height: 300px; }
+
+  /* Compact pages — strip non-essential elements */
+  .bk-content-page { padding: 14px 10px 10px; gap: 6px; }
+  .bk-entry-title { font-size: .9rem; line-height: 1.1; margin-bottom: 2px; }
+  .bk-entry-def { font-size: .72rem; line-height: 1.5; margin-bottom: 4px; }
+  .bk-entry-analogy { display: none; }
+  .bk-entry-pills { display: none; }
+  .bk-divider { margin: 1px 0; }
+  .bk-pg-num { font-size: .55rem; margin-bottom: 0; }
+  .bk-entry-tag { font-size: .55rem; padding: 1px 6px; margin-bottom: 2px; }
+
+  /* Cover compact */
+  .bk-cover { gap: 10px; padding: 20px 16px; }
+  .bk-cover h2 { font-size: 1.2rem; }
+  .bk-cover p { font-size: .75rem; max-width: 200px; }
+
+  /* Spine line hidden on mobile (too narrow) */
+  .bk-spine-line { display: none; }
 }
