@@ -569,3 +569,51 @@
 .marquee-item::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--ink-4) }
 
 /* ===== Continued in next file for remaining sections ===== */
+
+/* ===== STAGE + SECTIONS MOBILE ===== */
+@media (max-width: 720px) {
+  /* Stage console: hide KPI right-pane, simplify */
+  .stage-body { min-height: auto; }
+  .stage-pane:last-child { display: none; }
+  .stage-shell {
+    box-shadow: 0 40px 80px -30px rgba(0,0,0,.6);
+  }
+  .stage-shell::before { display: none; }
+
+  /* Hub: remove orbit rings and pulse animations */
+  .hub-orbit, .energy-pulse, .diag-progress { display: none; }
+  .hub::after { display: none; }
+  .hub { animation: none; width: 100px; height: 100px; border-radius: 22px; font-size: 12px; }
+
+  /* Nodes: disable float animation */
+  .node { animation: none !important; backdrop-filter: none; -webkit-backdrop-filter: none; }
+  .node { padding: 5px 9px; font-size: 10.5px; }
+
+  /* Toast: no blur */
+  .toast { backdrop-filter: none; -webkit-backdrop-filter: none; }
+
+  /* Hero: tighter spacing */
+  .hero { padding: 44px 0 64px; min-height: auto; }
+  .hero-copy { font-size: 16px; margin: 22px 0 28px; }
+  .hero-trust-row { padding: 8px 14px; font-size: 11.5px; gap: 10px; margin-bottom: 20px; }
+  .actions-trust { margin-top: 24px; gap: 14px; font-size: 12px; }
+
+  /* Marquee: tighter */
+  .marquee-track { gap: 36px; }
+  .marquee-item { font-size: 15px; }
+}
+
+@media (max-width: 480px) {
+  /* Stage panes: compact */
+  .stage-pane { padding: 12px; gap: 8px; }
+  .flow { min-height: 240px; padding: 12px; }
+  .hub { width: 80px; height: 80px; border-radius: 18px; font-size: 11px; }
+
+  /* Pain/Method/Pricing cards: reduce padding */
+  .pain { padding: 18px 14px; }
+  .method-card { padding: 20px 16px; }
+  .price { padding: 20px 16px; }
+
+  /* Hero tag compact */
+  .hero-tag { padding: 5px 6px 5px 12px; font-size: 12px; margin-bottom: 20px; }
+}
