@@ -420,6 +420,10 @@
 
   /* Stage scan line: off */
   .stage-inner::after { display: none; }
+
+  /* hero-glow and deco-orbs: constrain width to prevent horizontal overflow */
+  .hero-glow { width: min(500px, 100vw); height: 300px; }
+  .deco-orb { display: none; }
 }
 
 /* ===== REDUCED MOTION ===== */

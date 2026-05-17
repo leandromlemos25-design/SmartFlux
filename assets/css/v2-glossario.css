@@ -624,4 +624,10 @@
 
   /* Spine line hidden on mobile (too narrow) */
   .bk-spine-line { display: none; }
+
+  /* Book section: remove forced full-height on mobile */
+  .book-glossary { height: auto; min-height: 540px; padding: 70px 0 72px !important; }
+
+  /* Prefácio second paragraph: hide to prevent bottom overflow */
+  .bk-leaf-cover .bk-back .bk-content-page .bk-entry-def + .bk-entry-def { display: none; }
 }
