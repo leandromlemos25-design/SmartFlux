@@ -115,7 +115,6 @@
  * Leaves live in the RIGHT HALF of the spread.
  * transform-origin: left center = the book spine (center of spread).
  * When flipped -180deg, the back face appears in the LEFT HALF.
- * This prevents the flipped page from extending outside the book bounds.
  */
 .bk-leaf {
   position: absolute;
@@ -128,7 +127,6 @@
   transition: transform .9s cubic-bezier(.645,.045,.355,1);
 }
 
-/* Cover leaf: full width, flips around spine (center of book) */
 .bk-leaf-cover {
   left: 0;
   right: 0;
@@ -155,7 +153,6 @@
   border-radius: 12px 0 0 12px;
 }
 
-/* Cover face gets full rounded corners */
 .bk-leaf-cover .bk-front {
   border-radius: 3px 12px 12px 3px;
 }
@@ -296,7 +293,7 @@
   box-sizing: border-box;
 }
 
-/* Spine divider line (center of spread) */
+/* Spine divider line */
 .bk-spine-line {
   position: absolute;
   left: 50%;
@@ -369,7 +366,7 @@
 }
 
 .bk-entry-analogy::before {
-  content: '→';
+  content: '\2192';
   color: #00E5FF;
   flex-shrink: 0;
   margin-top: 1px;
@@ -583,7 +580,7 @@
   z-index: 2;
 }
 
-/* Cover back face: content confined to left half (right half is behind leaf 1) */
+/* Cover back face: content confined to left half */
 .bk-leaf-cover .bk-back .bk-content-page {
   padding-right: calc(50% + 8px);
 }
@@ -604,10 +601,15 @@
   .bk-btn { padding: 7px 14px; font-size: .6rem; }
   .bk-hint { display: none; }
 
-  /* Taller book on mobile so content fits */
-  .bk-book { width: 96vw; height: 72vw; min-height: 300px; }
+  /* No 3D tilt on mobile — prevents overflow:hidden clipping the rotated book */
+  .bk-book {
+    width: 94vw;
+    height: 68vw;
+    min-height: 290px;
+    transform: none !important;
+  }
 
-  /* Compact pages — strip non-essential elements */
+  /* Compact pages */
   .bk-content-page { padding: 14px 10px 10px; gap: 6px; }
   .bk-entry-title { font-size: .9rem; line-height: 1.1; margin-bottom: 2px; }
   .bk-entry-def { font-size: .72rem; line-height: 1.5; margin-bottom: 4px; }
@@ -622,12 +624,15 @@
   .bk-cover h2 { font-size: 1.2rem; }
   .bk-cover p { font-size: .75rem; max-width: 200px; }
 
-  /* Spine line hidden on mobile (too narrow) */
   .bk-spine-line { display: none; }
 
-  /* Book section: remove forced full-height on mobile */
-  .book-glossary { height: auto; min-height: 540px; padding: 70px 0 72px !important; }
+  /* Proper height for section on mobile — auto-height + padding for HUD/controls */
+  .book-glossary {
+    height: auto;
+    min-height: 560px;
+    padding: 75px 0 80px !important;
+  }
 
-  /* Prefácio second paragraph: hide to prevent bottom overflow */
+  /* Prefácio second paragraph: hide to save vertical space */
   .bk-leaf-cover .bk-back .bk-content-page .bk-entry-def + .bk-entry-def { display: none; }
 }
