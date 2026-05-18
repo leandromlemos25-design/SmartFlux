@@ -277,12 +277,13 @@ a.mobile-cta {
   min-width: 0;
 }
 .brand-logo-full {
-  height: 44px;
+  height: 38px;
   width: auto;
-  max-width: 220px;
+  max-width: 200px;
   object-fit: contain;
   object-position: left center;
   mix-blend-mode: screen;
+  filter: brightness(0.75);
 }
 .brand-logo-wrap {
   width: 42px; height: 42px;
@@ -520,7 +521,7 @@ section {
   .mobile-cta { display: flex }
   .foot-grid { grid-template-columns: 1fr }
   footer { padding-bottom: 100px }
-  .brand-logo-full { height: 34px; max-width: 160px; }
+  .brand-logo-full { height: 30px; max-width: 160px; }
 }
 
 /* ===== MOBILE OPTIMIZATIONS ===== */
