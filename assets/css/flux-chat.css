@@ -1,0 +1,372 @@
+/* ============ FLUX — SmartFlux AI Chat Widget ============ */
+
+/* ── Botão flutuante ───────────────────────────────────── */
+.flux-btn {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 998;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #00E5B8 0%, #37d3ff 100%);
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8px 28px -4px rgba(0,229,184,.55);
+  transition: transform .3s cubic-bezier(.34,1.56,.64,1), box-shadow .3s;
+  animation: fluxPulse 3.5s ease-in-out infinite;
+}
+
+@keyframes fluxPulse {
+  0%, 100% { box-shadow: 0 8px 28px -4px rgba(0,229,184,.55), 0 0 0 0 rgba(0,229,184,.25) }
+  50%       { box-shadow: 0 8px 28px -4px rgba(0,229,184,.6),  0 0 0 10px rgba(0,229,184,.0) }
+}
+
+.flux-btn:hover { transform: scale(1.1); }
+.flux-btn.open  { animation: none; box-shadow: 0 6px 20px -4px rgba(0,229,184,.4); }
+
+.flux-btn svg {
+  width: 22px; height: 22px;
+  stroke: #04221b; fill: none;
+  stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round;
+  pointer-events: none;
+}
+.flux-btn.open  .ico-chat  { display: none; }
+.flux-btn       .ico-close { display: none; }
+.flux-btn.open  .ico-close { display: block; }
+
+.flux-badge {
+  position: absolute;
+  top: -3px; right: -3px;
+  width: 19px; height: 19px;
+  border-radius: 50%;
+  background: #ff5252;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  font-family: 'Geist Mono', monospace;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #07090f;
+  transition: transform .25s cubic-bezier(.34,1.56,.64,1), opacity .2s;
+}
+.flux-badge.hidden { transform: scale(0); opacity: 0; }
+
+@media (max-width: 720px) {
+  .flux-btn { bottom: 86px; right: 14px; width: 50px; height: 50px; }
+}
+
+/* ── Painel do chat ─────────────────────────────────────── */
+.flux-panel {
+  position: fixed;
+  bottom: 92px;
+  right: 24px;
+  width: 360px;
+  height: 530px;
+  z-index: 997;
+  background: #060d1f;
+  border: 1px solid rgba(0,229,255,.14);
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow:
+    0 40px 100px -20px rgba(0,0,0,.75),
+    0 0 0 1px rgba(255,255,255,.04) inset,
+    0 0 60px -20px rgba(0,229,255,.1);
+  transform: translateY(16px) scale(.97);
+  opacity: 0;
+  pointer-events: none;
+  visibility: hidden;
+  transition: transform .38s cubic-bezier(.23,1,.32,1), opacity .28s, visibility 0s .3s;
+}
+.flux-panel.open {
+  transform: none;
+  opacity: 1;
+  pointer-events: all;
+  visibility: visible;
+  transition: transform .38s cubic-bezier(.23,1,.32,1), opacity .28s, visibility 0s;
+}
+
+@media (max-width: 720px) {
+  .flux-panel {
+    bottom: 0; right: 0; left: 0;
+    width: 100%; height: 72dvh;
+    border-radius: 20px 20px 0 0;
+    border-bottom: none;
+  }
+}
+
+/* ── Header ─────────────────────────────────────────────── */
+.flux-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  border-bottom: 1px solid rgba(255,255,255,.06);
+  background: linear-gradient(180deg, rgba(255,255,255,.04), transparent);
+  flex-shrink: 0;
+}
+
+.flux-avatar {
+  width: 38px; height: 38px;
+  border-radius: 11px;
+  background: linear-gradient(135deg, #00E5B8, #37d3ff);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Geist', 'Space Grotesk', sans-serif;
+  font-weight: 800;
+  font-size: 17px;
+  color: #04221b;
+  flex-shrink: 0;
+  box-shadow: 0 4px 14px -4px rgba(0,229,184,.45);
+}
+
+.flux-info { flex: 1; min-width: 0; }
+
+.flux-info-name {
+  display: block;
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700;
+  font-size: 15px;
+  color: #fff;
+  letter-spacing: -0.015em;
+}
+
+.flux-info-sub {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9.5px;
+  color: rgba(0,229,255,.55);
+  letter-spacing: .07em;
+  text-transform: uppercase;
+  margin-top: 1px;
+}
+
+.flux-online-dot {
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: #00E5B8;
+  box-shadow: 0 0 6px #00E5B8;
+  animation: fluxBlink 2.5s ease-in-out infinite;
+}
+
+@keyframes fluxBlink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: .25; }
+}
+
+.flux-close-btn {
+  width: 30px; height: 30px;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,.07);
+  background: rgba(255,255,255,.04);
+  color: rgba(255,255,255,.35);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; flex-shrink: 0;
+  transition: all .2s;
+}
+.flux-close-btn:hover { color: #fff; background: rgba(255,255,255,.09); border-color: rgba(255,255,255,.14); }
+.flux-close-btn svg { width: 13px; height: 13px; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; fill: none; }
+
+/* ── Mensagens ──────────────────────────────────────────── */
+.flux-messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 14px 14px 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0,229,255,.12) transparent;
+}
+.flux-messages::-webkit-scrollbar { width: 3px; }
+.flux-messages::-webkit-scrollbar-thumb { background: rgba(0,229,255,.14); border-radius: 2px; }
+
+.flux-msg {
+  display: flex;
+  align-items: flex-end;
+  gap: 7px;
+  animation: fluxMsgIn .28s cubic-bezier(.23,1,.32,1);
+}
+@keyframes fluxMsgIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: none; }
+}
+
+.flux-msg.user { flex-direction: row-reverse; }
+
+.flux-msg-av {
+  width: 26px; height: 26px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #00E5B8, #37d3ff);
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 800; font-size: 10px;
+  color: #04221b;
+  font-family: 'Geist', sans-serif;
+  flex-shrink: 0;
+}
+
+.flux-bubble {
+  max-width: 80%;
+  padding: 9px 13px;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 13.5px;
+  line-height: 1.55;
+  word-break: break-word;
+}
+
+.flux-msg.bot .flux-bubble {
+  background: rgba(255,255,255,.05);
+  border: 1px solid rgba(255,255,255,.07);
+  color: rgba(255,255,255,.85);
+  border-radius: 4px 16px 16px 16px;
+}
+.flux-msg.user .flux-bubble {
+  background: linear-gradient(135deg, rgba(0,229,184,.13), rgba(55,211,255,.1));
+  border: 1px solid rgba(0,229,255,.18);
+  color: rgba(255,255,255,.9);
+  border-radius: 16px 4px 16px 16px;
+}
+
+.flux-bubble a {
+  color: #37d3ff;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.flux-cta-inline {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 8px;
+  padding: 6px 12px;
+  border-radius: 8px;
+  background: rgba(0,229,255,.08);
+  border: 1px solid rgba(0,229,255,.25);
+  color: #37d3ff;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: .04em;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all .2s;
+  white-space: nowrap;
+}
+.flux-cta-inline:hover { background: rgba(0,229,255,.14); border-color: rgba(0,229,255,.4); text-decoration: none; }
+
+/* Typing indicator */
+.flux-typing-wrap {
+  display: flex; align-items: flex-end; gap: 7px;
+  animation: fluxMsgIn .25s ease;
+}
+.flux-typing-bubble {
+  background: rgba(255,255,255,.05);
+  border: 1px solid rgba(255,255,255,.07);
+  border-radius: 4px 16px 16px 16px;
+  padding: 10px 14px;
+  display: flex; gap: 4px; align-items: center;
+}
+.flux-typing-bubble span {
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: rgba(0,229,255,.4);
+  animation: fluxDot .9s ease-in-out infinite;
+}
+.flux-typing-bubble span:nth-child(2) { animation-delay: .15s; }
+.flux-typing-bubble span:nth-child(3) { animation-delay: .3s; }
+
+@keyframes fluxDot {
+  0%, 100% { transform: scale(1); opacity: .35; }
+  50%       { transform: scale(1.5); opacity: 1; }
+}
+
+/* Quick replies */
+.flux-quick {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 4px 14px 8px;
+  animation: fluxMsgIn .3s ease;
+}
+.flux-quick button {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px;
+  padding: 5px 11px;
+  border-radius: 99px;
+  background: rgba(0,229,255,.06);
+  border: 1px solid rgba(0,229,255,.18);
+  color: rgba(0,229,255,.75);
+  cursor: pointer;
+  transition: all .2s;
+  letter-spacing: .02em;
+}
+.flux-quick button:hover {
+  background: rgba(0,229,255,.13);
+  color: #00E5FF;
+  border-color: rgba(0,229,255,.38);
+}
+
+/* ── Input ──────────────────────────────────────────────── */
+.flux-input-area {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  padding: 10px 12px;
+  border-top: 1px solid rgba(255,255,255,.05);
+  background: rgba(0,0,0,.25);
+  flex-shrink: 0;
+}
+
+.flux-textarea {
+  flex: 1;
+  background: rgba(255,255,255,.05);
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: 10px;
+  padding: 9px 13px;
+  color: #fff;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 13.5px;
+  line-height: 1.4;
+  outline: none;
+  resize: none;
+  min-height: 38px;
+  max-height: 96px;
+  overflow-y: auto;
+  transition: border-color .2s, background .2s;
+  scrollbar-width: none;
+}
+.flux-textarea::-webkit-scrollbar { display: none; }
+.flux-textarea:focus { border-color: rgba(0,229,255,.28); background: rgba(0,229,255,.04); }
+.flux-textarea::placeholder { color: rgba(255,255,255,.22); }
+.flux-textarea:disabled { opacity: .5; }
+
+.flux-send-btn {
+  width: 38px; height: 38px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #00E5B8, #37d3ff);
+  border: none;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  transition: transform .2s cubic-bezier(.34,1.56,.64,1), box-shadow .2s, opacity .2s;
+  color: #04221b;
+}
+.flux-send-btn:hover:not(:disabled) {
+  transform: scale(1.07);
+  box-shadow: 0 4px 14px -4px rgba(0,229,184,.5);
+}
+.flux-send-btn:disabled { opacity: .35; cursor: not-allowed; transform: none; }
+.flux-send-btn svg { width: 15px; height: 15px; stroke: currentColor; fill: none; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+
+@media (prefers-reduced-motion: reduce) {
+  .flux-btn, .flux-online-dot { animation: none; }
+  .flux-msg, .flux-typing-wrap, .flux-quick { animation: none; }
+}
