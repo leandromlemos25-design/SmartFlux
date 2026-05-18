@@ -20,6 +20,7 @@
 <link rel="stylesheet" href="assets/css/v2-sections-2.css">
 <link rel="stylesheet" href="assets/css/v2-effects.css">
 <link rel="stylesheet" href="assets/css/v2-glossario.css">
+<link rel="stylesheet" href="assets/css/flux-chat.css">
 </head>
 <body>
 <div id="scroll-progress" aria-hidden="true"></div>
@@ -325,7 +326,7 @@
       <article class="pain tilt-card gradient-card" data-reveal>
         <div class="pain-icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M3 4h14v9H7l-4 3V4z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg></div>
         <div class="pain-num">01 · Conversa</div>
-        <h3>WhatsApp bagunçado</h3>
+        <h3>WhatsApp baguçado</h3>
         <p>Conversas espalhadas, sem etapa, sem histórico comercial e sem próximo passo claro.</p>
       </article>
       <article class="pain tilt-card gradient-card" data-reveal style="--rd:80ms">
@@ -344,7 +345,7 @@
         <div class="pain-icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M6 10a4 4 0 1 1 8 0v3a4 4 0 0 1-4 4 4 4 0 0 1-4-4v-3z" stroke="currentColor" stroke-width="1.6"/><path d="M10 6V3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></div>
         <div class="pain-num">04 · Estratégia</div>
         <h3>IA sem método</h3>
-        <p>IA não resolve bagunça sozinha. Primeiro vem processo. Depois automação inteligente.</p>
+        <p>IA não resolve baguça sozinha. Primeiro vem processo. Depois automação inteligente.</p>
       </article>
     </div>
   </div>
@@ -480,7 +481,7 @@
       <article class="price tilt-card" data-reveal data-plan="inicial" data-base="497" data-extra="120">
         <span class="price-tag subtle">Entrada</span>
         <h3>Organização Inicial</h3>
-        <p class="price-desc">Para quem quer sair da bagunça do WhatsApp e começar com um funil simples e funcional.</p>
+        <p class="price-desc">Para quem quer sair da baguça do WhatsApp e começar com um funil simples e funcional.</p>
         <div class="price-amt" data-price-wrap><span class="v" data-price>R$497</span><span class="u">a partir</span></div>
         <div class="price-from" data-user-line>implantação · 1 usuário · pagamento único</div>
         <div class="price-extra"><strong>Usuário adicional:</strong> +R$120 na implantação.</div>
@@ -572,21 +573,17 @@
   <div class="bk-grid"></div>
   <div class="bk-ambient"></div>
 
-  <!-- HUD -->
   <div class="bk-hud">
     <span class="bk-hud-label">GLOSSÁRIO</span>
     <span class="bk-hud-title">CRM em <em>Português Claro</em></span>
     <span class="bk-page-counter" id="bk-counter">1 / 5</span>
   </div>
 
-  <!-- Book stage -->
   <div class="bk-stage">
     <div class="bk-book" id="bk-book" aria-label="Dicionário CRM SmartFlux">
 
-      <!-- Spine visual divider -->
       <div class="bk-spine-line"></div>
 
-      <!-- LEAF 0 — Capa (full-width cover, flips around center) -->
       <div class="bk-leaf bk-leaf-cover" id="bk-leaf-0" style="z-index:10">
         <div class="bk-front">
           <div class="bk-page bk-cover">
@@ -617,7 +614,6 @@
         </div>
       </div>
 
-      <!-- LEAF 1 — CRM / Lead -->
       <div class="bk-leaf" id="bk-leaf-1" style="z-index:4">
         <div class="bk-front">
           <div class="bk-page bk-content-page bk-right">
@@ -655,7 +651,6 @@
         </div>
       </div>
 
-      <!-- LEAF 2 — Funil / Follow-up -->
       <div class="bk-leaf" id="bk-leaf-2" style="z-index:3">
         <div class="bk-front">
           <div class="bk-page bk-content-page bk-right">
@@ -693,7 +688,6 @@
         </div>
       </div>
 
-      <!-- LEAF 3 — Automação / Bot -->
       <div class="bk-leaf" id="bk-leaf-3" style="z-index:2">
         <div class="bk-front">
           <div class="bk-page bk-content-page bk-right">
@@ -717,7 +711,7 @@
             <div class="bk-page-glow"></div>
             <span class="bk-pg-num">PG. 07</span>
             <span class="bk-entry-tag">Bônus</span>
-            <h3 class="bk-entry-title">Bot <em>& IA</em></h3>
+            <h3 class="bk-entry-title">Bot <em>&amp; IA</em></h3>
             <div class="bk-divider"></div>
             <p class="bk-entry-def">O bot coleta dados e responde perguntas básicas 24h. A IA (inteligência artificial) vai além: aprende o tom da sua empresa, qualifica leads e sugere respostas — direto no Kommo.</p>
             <div class="bk-entry-analogy">Você vende enquanto dorme. O bot atende, a IA qualifica e você fecha.</div>
@@ -731,7 +725,6 @@
         </div>
       </div>
 
-      <!-- LEAF 4 — Contracapa -->
       <div class="bk-leaf" id="bk-leaf-4" style="z-index:1">
         <div class="bk-front">
           <div class="bk-page bk-content-page bk-right" style="justify-content:center;align-items:center;text-align:center;gap:16px;">
@@ -758,7 +751,6 @@
     </div>
   </div>
 
-  <!-- Controls -->
   <div class="bk-controls">
     <button class="bk-btn" id="bk-prev" disabled aria-label="Página anterior">
       <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
@@ -848,8 +840,6 @@
         const leaf = document.getElementById('bk-leaf-' + i);
         if (!leaf) continue;
         leaf.classList.toggle('bk-flipped', i < currentPage);
-        /* Flipped: most-recently-flipped is on top (higher i = higher z).
-           Unflipped: earliest leaf is on top (cover stays above all). */
         leaf.style.zIndex = i < currentPage
           ? i
           : TOTAL_LEAVES * 2 - i;
@@ -882,7 +872,6 @@
       if (Math.abs(dx) > 40) goTo(currentPage + (dx < 0 ? 1 : -1));
     });
 
-    /* Click left half → prev, right half → next (works on desktop + mobile tap) */
     book.addEventListener('click', e => {
       const r = book.getBoundingClientRect();
       if (e.clientX > r.left + r.width / 2) {
@@ -892,7 +881,6 @@
       }
     });
 
-    /* Parallax on desktop only — mousemove doesn't fire on touch */
     const isTouch = window.matchMedia('(pointer: coarse)').matches;
     if (!isTouch) {
       document.addEventListener('mousemove', e => {
@@ -906,13 +894,12 @@
       });
     }
 
-    /* Neural particles — canvas fills full section */
     const canvas = document.getElementById('bk-particles');
     const ctx2d  = canvas.getContext('2d');
     const isMobileParticles = window.matchMedia('(pointer: coarse)').matches;
     const NODE_COUNT    = isMobileParticles ? 22 : 55;
     const CONNECT_DIST  = isMobileParticles ? 75 : 100;
-    const FRAME_MS      = isMobileParticles ? 48 : 16; /* ~20fps mobile / ~60fps desktop */
+    const FRAME_MS      = isMobileParticles ? 48 : 16;
     let W = 0, H = 0, nodes = [], lastDraw = 0;
 
     function randomNode() {
@@ -933,7 +920,6 @@
       const firstPaint = W === 0;
       W = canvas.width  = nW;
       H = canvas.height = nH;
-      /* Re-seed nodes on first valid paint so they spread over the full area */
       if (firstPaint) {
         nodes = [];
         for (let i = 0; i < NODE_COUNT; i++) nodes.push(randomNode());
@@ -995,7 +981,7 @@
         <div class="faq-body">Não. A SmartFlux atua como parceira/implantadora, ajudando empresas a configurar e usar a Kommo de forma prática.</div>
       </details>
       <details class="faq" data-reveal>
-        <summary>A licença Kommo está inclusa? <span class="plus"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 2v10M2 7h10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></span></summary>
+        <summary>A licença Kommo está incluída? <span class="plus"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 2v10M2 7h10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></span></summary>
         <div class="faq-body">Depende da proposta. A licença é separada e segue os valores oficiais. A SmartFlux cobra pela implantação, configuração e acompanhamento.</div>
       </details>
       <details class="faq" data-reveal>
@@ -1093,6 +1079,43 @@
   <svg class="arrow" viewBox="0 0 16 16" fill="none"><path d="M3 8h10m-4-4 4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
 </a>
 
+<!-- ============ FLUX Chat Widget ============ -->
+<button class="flux-btn" id="flux-btn" aria-label="Abrir chat Flux">
+  <svg class="ico-chat" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+  <svg class="ico-close" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+  <span class="flux-badge hidden" id="flux-badge">1</span>
+</button>
+
+<div class="flux-panel" id="flux-panel" role="dialog" aria-label="Chat Flux" aria-modal="true">
+  <div class="flux-header">
+    <div class="flux-avatar">F</div>
+    <div class="flux-info">
+      <span class="flux-info-name">Flux</span>
+      <span class="flux-info-sub">
+        <span class="flux-online-dot"></span>
+        SmartFlux IA · online
+      </span>
+    </div>
+    <button class="flux-close-btn" id="flux-close" aria-label="Fechar chat">
+      <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="flux-messages" id="flux-messages"></div>
+  <div class="flux-input-area">
+    <textarea
+      class="flux-textarea"
+      id="flux-textarea"
+      placeholder="Manda sua dúvida aqui..."
+      rows="1"
+      aria-label="Mensagem para o Flux"
+    ></textarea>
+    <button class="flux-send-btn" id="flux-send" aria-label="Enviar mensagem">
+      <svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+    </button>
+  </div>
+</div>
+
+<script src="assets/js/flux-chat.js" defer></script>
 <script src="assets/js/v2-engine.js" defer></script>
 </body>
 </html>
