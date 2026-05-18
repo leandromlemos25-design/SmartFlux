@@ -5,7 +5,7 @@
 // 2. Adicione: ANTHROPIC_API_KEY = sua_chave_da_api_claude
 // 3. Faça redeploy — pronto, o Flux já funciona
 
-export default async function handler(req, res) {
+module.exports = async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
@@ -35,4 +35,4 @@ export default async function handler(req, res) {
   } catch (err) {
     return res.status(500).json({ error: 'proxy_error', message: err.message });
   }
-}
+};

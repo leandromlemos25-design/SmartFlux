@@ -221,6 +221,7 @@
   font-size: 13.5px;
   line-height: 1.55;
   word-break: break-word;
+  overflow: hidden;
 }
 
 .flux-msg.bot .flux-bubble {
@@ -243,22 +244,23 @@
 }
 
 .flux-cta-inline {
-  display: inline-flex;
+  display: flex;
   align-items: center;
   gap: 5px;
   margin-top: 8px;
-  padding: 6px 12px;
+  padding: 6px 10px;
   border-radius: 8px;
   background: rgba(0,229,255,.08);
   border: 1px solid rgba(0,229,255,.25);
   color: #37d3ff;
   font-family: 'JetBrains Mono', monospace;
-  font-size: 11px;
-  letter-spacing: .04em;
+  font-size: 10.5px;
+  letter-spacing: .03em;
   text-decoration: none;
   cursor: pointer;
   transition: all .2s;
-  white-space: nowrap;
+  white-space: normal;
+  word-break: break-word;
 }
 .flux-cta-inline:hover { background: rgba(0,229,255,.14); border-color: rgba(0,229,255,.4); text-decoration: none; }
 
