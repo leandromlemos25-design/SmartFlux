@@ -282,6 +282,7 @@ a.mobile-cta {
   max-width: 220px;
   object-fit: contain;
   object-position: left center;
+  mix-blend-mode: screen;
 }
 .brand-logo-wrap {
   width: 42px; height: 42px;
