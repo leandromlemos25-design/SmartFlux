@@ -375,3 +375,88 @@
   .flux-btn, .flux-online-dot { animation: none; }
   .flux-msg, .flux-typing-wrap, .flux-quick { animation: none; }
 }
+
+/* ── Callout hint ──────────────────────────────────────────── */
+.flux-callout {
+  position: fixed;
+  bottom: 31px;
+  right: 90px;
+  z-index: 997;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 9px 16px 9px 13px;
+  background: #0b1830;
+  border: 1px solid rgba(0,229,255,.22);
+  border-radius: 12px;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  filter: drop-shadow(0 8px 24px rgba(0,0,0,.55));
+  animation:
+    calloutIn .55s cubic-bezier(.23,1,.32,1) 3s forwards,
+    calloutFloat 3s ease-in-out 3.5s infinite;
+}
+/* border arrow (outline layer) */
+.flux-callout::before {
+  content: '';
+  position: absolute;
+  right: -9px; top: 50%;
+  transform: translateY(-50%);
+  border: 8px solid transparent;
+  border-left-color: rgba(0,229,255,.22);
+  border-right: 0;
+}
+/* fill arrow */
+.flux-callout::after {
+  content: '';
+  position: absolute;
+  right: -7px; top: 50%;
+  transform: translateY(-50%);
+  border: 7px solid transparent;
+  border-left-color: #0b1830;
+  border-right: 0;
+}
+.flux-callout.gone {
+  animation: calloutOut .3s cubic-bezier(.4,0,1,1) forwards !important;
+}
+
+.cl-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9.5px;
+  color: rgba(0,229,255,.55);
+  text-transform: uppercase;
+  letter-spacing: .1em;
+}
+.cl-cta {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: #fff;
+  letter-spacing: -0.015em;
+}
+.cl-cta svg {
+  width: 14px; height: 14px;
+  stroke: #00E5B8;
+  fill: rgba(0,229,184,.15);
+  flex-shrink: 0;
+}
+
+@keyframes calloutIn {
+  from { opacity: 0; transform: translateX(12px) }
+  to   { opacity: 1; transform: translateX(0) }
+}
+@keyframes calloutFloat {
+  0%, 100% { transform: translateY(0) }
+  50%       { transform: translateY(-6px) }
+}
+@keyframes calloutOut {
+  to { opacity: 0; transform: translateX(8px) }
+}
+
+@media (max-width: 720px) {
+  .flux-callout { bottom: 102px; right: 72px; }
+}

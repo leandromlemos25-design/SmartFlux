@@ -45,7 +45,7 @@ const QUICK_REPLIES_INITIAL = [
   let isOpen    = false;
   let isLoading = false;
 
-  // ── Toggle ────────────────────────────────────────────────
+  // ── Toggle ──────────────────────────────────────────────────────
   function togglePanel() {
     isOpen = !isOpen;
     btn.classList.toggle('open', isOpen);
@@ -54,6 +54,8 @@ const QUICK_REPLIES_INITIAL = [
       badge.classList.add('hidden');
       textarea.focus();
       if (history.length === 0) showWelcome();
+      const callout = document.getElementById('flux-callout');
+      if (callout) callout.classList.add('gone');
     }
   }
 
@@ -63,14 +65,13 @@ const QUICK_REPLIES_INITIAL = [
 
   setTimeout(() => { if (!isOpen) badge.classList.remove('hidden'); }, 4000);
 
-  // ── Welcome ───────────────────────────────────────────────
+  // ── Welcome ───────────────────────────────────────────────────
   function showWelcome() {
     addBotMessage('Oi! Sou o Flux, assistente da SmartFlux 👋 Como posso te ajudar hoje?');
     showQuickReplies(QUICK_REPLIES_INITIAL);
   }
 
-  // ── Render helpers ────────────────────────────────────────
-  // Retorna o .flux-msg-content para que o CTA seja adicionado fora da bolha
+  // ── Render helpers ────────────────────────────────────────────
   function addBotMessage(text) {
     removeQuickReplies();
 
@@ -143,7 +144,6 @@ const QUICK_REPLIES_INITIAL = [
     if (el) el.remove();
   }
 
-  // CTA adicionado ao .flux-msg-content (fora da bolha, dentro do wrapper)
   function showCtaButton(content) {
     if (!content || content.querySelector('.flux-cta-inline')) return;
     const a = document.createElement('a');
@@ -168,7 +168,7 @@ const QUICK_REPLIES_INITIAL = [
       .replace(/"/g, '&quot;');
   }
 
-  // ── Send ──────────────────────────────────────────────────
+  // ── Send ──────────────────────────────────────────────────────
   async function sendMessage(text) {
     text = (text || textarea.value).trim();
     if (!text || isLoading) return;
@@ -221,7 +221,7 @@ const QUICK_REPLIES_INITIAL = [
     }
   }
 
-  // ── Input handlers ────────────────────────────────────────
+  // ── Input handlers ────────────────────────────────────────────
   sendBtn.addEventListener('click', () => sendMessage());
 
   textarea.addEventListener('keydown', e => {
