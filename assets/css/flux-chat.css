@@ -212,16 +212,25 @@
   color: #04221b;
   font-family: 'Geist', sans-serif;
   flex-shrink: 0;
+  align-self: flex-start;
+  margin-top: 2px;
+}
+
+/* wrapper column para bot: agrupa bolha + botão CTA */
+.flux-msg-content {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-width: 80%;
+  min-width: 0;
 }
 
 .flux-bubble {
-  max-width: 80%;
   padding: 9px 13px;
   font-family: 'Space Grotesk', sans-serif;
   font-size: 13.5px;
   line-height: 1.55;
   word-break: break-word;
-  overflow: hidden;
 }
 
 .flux-msg.bot .flux-bubble {
@@ -235,6 +244,7 @@
   border: 1px solid rgba(0,229,255,.18);
   color: rgba(255,255,255,.9);
   border-radius: 16px 4px 16px 16px;
+  max-width: 80%;
 }
 
 .flux-bubble a {
@@ -243,11 +253,11 @@
   text-underline-offset: 2px;
 }
 
+/* CTA fora da bolha, dentro do flux-msg-content */
 .flux-cta-inline {
   display: flex;
   align-items: center;
   gap: 5px;
-  margin-top: 8px;
   padding: 6px 10px;
   border-radius: 8px;
   background: rgba(0,229,255,.08);
@@ -259,8 +269,8 @@
   text-decoration: none;
   cursor: pointer;
   transition: all .2s;
-  white-space: normal;
-  word-break: break-word;
+  box-sizing: border-box;
+  width: 100%;
 }
 .flux-cta-inline:hover { background: rgba(0,229,255,.14); border-color: rgba(0,229,255,.4); text-decoration: none; }
 

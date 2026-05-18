@@ -1,6 +1,5 @@
 /* ============ FLUX — SmartFlux AI Chat Widget ============ */
 
-// Vercel Serverless Function no mesmo domínio — sem CORS
 const FLUX_WORKER_URL = '/api/flux';
 
 const FLUX_SYSTEM = `Você é o Flux, assistente de IA da SmartFlux. Seu papel é tirar dúvidas sobre CRM Kommo, WhatsApp Business, automações, funis de vendas e o método SmartFlux.
@@ -71,22 +70,39 @@ const QUICK_REPLIES_INITIAL = [
   }
 
   // ── Render helpers ────────────────────────────────────────
+  // Retorna o .flux-msg-content para que o CTA seja adicionado fora da bolha
   function addBotMessage(text) {
     removeQuickReplies();
-    const wrap = document.createElement('div');
-    wrap.className = 'flux-msg bot';
-    wrap.innerHTML =
-      '<div class="flux-msg-av">F</div>' +
-      '<div class="flux-bubble">' + escHtml(text).replace(/\n/g, '<br>') + '</div>';
-    messages.appendChild(wrap);
+
+    const msgWrap = document.createElement('div');
+    msgWrap.className = 'flux-msg bot';
+
+    const av = document.createElement('div');
+    av.className = 'flux-msg-av';
+    av.textContent = 'F';
+
+    const content = document.createElement('div');
+    content.className = 'flux-msg-content';
+
+    const bubble = document.createElement('div');
+    bubble.className = 'flux-bubble';
+    bubble.innerHTML = escHtml(text).replace(/\n/g, '<br>');
+
+    content.appendChild(bubble);
+    msgWrap.appendChild(av);
+    msgWrap.appendChild(content);
+    messages.appendChild(msgWrap);
     scrollBottom();
-    return wrap.querySelector('.flux-bubble');
+    return content;
   }
 
   function addUserMessage(text) {
     const wrap = document.createElement('div');
     wrap.className = 'flux-msg user';
-    wrap.innerHTML = '<div class="flux-bubble">' + escHtml(text).replace(/\n/g, '<br>') + '</div>';
+    const bubble = document.createElement('div');
+    bubble.className = 'flux-bubble';
+    bubble.innerHTML = escHtml(text).replace(/\n/g, '<br>');
+    wrap.appendChild(bubble);
     messages.appendChild(wrap);
     scrollBottom();
   }
@@ -127,16 +143,17 @@ const QUICK_REPLIES_INITIAL = [
     if (el) el.remove();
   }
 
-  function showCtaButton(bubble) {
-    if (!bubble || bubble.querySelector('.flux-cta-inline')) return;
+  // CTA adicionado ao .flux-msg-content (fora da bolha, dentro do wrapper)
+  function showCtaButton(content) {
+    if (!content || content.querySelector('.flux-cta-inline')) return;
     const a = document.createElement('a');
     a.className = 'flux-cta-inline';
     a.href = 'https://wa.me/5534992710008?text=Quero%20fazer%20um%20diagn%C3%B3stico%20SmartFlux';
     a.target = '_blank';
     a.rel = 'noopener';
     a.textContent = '→ Diagnóstico gratuito no WhatsApp';
-    bubble.appendChild(document.createElement('br'));
-    bubble.appendChild(a);
+    content.appendChild(a);
+    scrollBottom();
   }
 
   function scrollBottom() {
@@ -186,16 +203,16 @@ const QUICK_REPLIES_INITIAL = [
 
       history.push({ role: 'assistant', content: reply });
       removeTyping();
-      const bubble = addBotMessage(reply);
+      const content = addBotMessage(reply);
 
       if (/diagn[oó]stico|whatsapp|contato|falar|ligar/i.test(reply)) {
-        setTimeout(() => showCtaButton(bubble), 400);
+        setTimeout(() => showCtaButton(content), 400);
       }
 
     } catch (e) {
       removeTyping();
-      const bubble = addBotMessage('Opa, não consegui responder agora. Fala direto pelo WhatsApp! 👇');
-      setTimeout(() => showCtaButton(bubble), 300);
+      const content = addBotMessage('Opa, não consegui responder agora. Fala direto pelo WhatsApp! 👇');
+      setTimeout(() => showCtaButton(content), 300);
     } finally {
       isLoading = false;
       sendBtn.disabled = false;
