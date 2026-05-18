@@ -408,6 +408,19 @@ tbody tr:hover .tag { transform: scale(1.05) }
 .cta-final p { max-width: 52ch; margin: 0 auto 36px; color: var(--ink-2); font-size: 17px; line-height: 1.6 }
 .cta-final .actions { justify-content: center }
 
+/* ===== GRID-ITEM MIN-WIDTH FIX ===== */
+/* Prevent CSS grid items from expanding beyond their track width when a
+   descendant declares min-width (e.g. table { min-width: 600px }).
+   Without min-width:0 the default min-width:auto causes the 1fr column to
+   grow to the child's min-width, pushing the grid wider than the viewport. */
+.method-wrap > *,
+.pricing-grid > *,
+.cred-grid > *,
+.results-grid > *,
+.pain-grid > *,
+.pro-grid > *,
+.terms > * { min-width: 0; }
+
 /* ===== RESPONSIVE ===== */
 @media (max-width: 1100px) {
   .pain-grid { grid-template-columns: 1fr 1fr }
@@ -438,4 +451,6 @@ tbody tr:hover .tag { transform: scale(1.05) }
   .results-grid .result-card:last-child { grid-column: auto }
   .cta-final { padding: 56px 24px }
   .price-note-card { padding: 20px }
+  /* Remove duplicate primary CTA — fixed mobile-cta bar handles it */
+  .hero .actions .btn--primary { display: none; }
 }
