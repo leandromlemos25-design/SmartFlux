@@ -115,7 +115,7 @@
 .flux-avatar {
   width: 44px; height: 44px;
   border-radius: 12px;
-  background: url('/flux.png') center/80% no-repeat, linear-gradient(135deg, #00E5B8, #37d3ff);
+  background: url('/flux.png') center/90% no-repeat, #0b1424;
   overflow: hidden;
   flex-shrink: 0;
   box-shadow: 0 4px 14px -4px rgba(0,229,184,.45);
@@ -201,7 +201,7 @@
 .flux-msg-av {
   width: 30px; height: 30px;
   border-radius: 9px;
-  background: url('/flux.png') center/80% no-repeat, linear-gradient(135deg, #00E5B8, #37d3ff);
+  background: url('/flux.png') center/90% no-repeat, #0b1424;
   overflow: hidden;
   flex-shrink: 0;
   align-self: flex-start;
