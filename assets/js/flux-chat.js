@@ -1,7 +1,7 @@
 /* ============ FLUX — SmartFlux AI Chat Widget ============ */
 
-// CONFIGURAÇÃO: após criar o Worker, cole a URL aqui
-const FLUX_WORKER_URL = 'https://SEU-WORKER.SEU-SUBDOMINIO.workers.dev';
+// Vercel Serverless Function no mesmo domínio — sem CORS
+const FLUX_WORKER_URL = '/api/flux';
 
 const FLUX_SYSTEM = `Você é o Flux, assistente de IA da SmartFlux. Seu papel é tirar dúvidas sobre CRM Kommo, WhatsApp Business, automações, funis de vendas e o método SmartFlux.
 
@@ -62,7 +62,6 @@ const QUICK_REPLIES_INITIAL = [
   closeBtn.addEventListener('click', togglePanel);
   document.addEventListener('keydown', e => { if (e.key === 'Escape' && isOpen) togglePanel(); });
 
-  // Show badge after 4s if not opened yet
   setTimeout(() => { if (!isOpen) badge.classList.remove('hidden'); }, 4000);
 
   // ── Welcome ───────────────────────────────────────────────
@@ -179,7 +178,7 @@ const QUICK_REPLIES_INITIAL = [
         }),
       });
 
-      if (!res.ok) throw new Error('worker_error');
+      if (!res.ok) throw new Error('api_error');
       const data = await res.json();
       const reply = (data && data.content && data.content[0] && data.content[0].text)
         ? data.content[0].text
