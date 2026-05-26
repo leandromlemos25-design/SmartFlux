@@ -17,7 +17,7 @@ Sobre a SmartFlux:
 - Fazemos diagnóstico da operação antes de indicar qualquer plano
 - 3 pacotes: Organização Inicial (R$497+), Atendimento Inteligente (R$1.497+) e Operação Completa (R$3.000+)
 - Atendemos pequenas e médias empresas em todo o Brasil
-- WhatsApp para diagnóstico: +55 34 99271-0008
+- WhatsApp para diagnóstico: +55 34 99923-8968
 
 Quando alguém quiser contratar ou tiver dúvida específica sobre a operação deles, incentive o contato pelo WhatsApp para o diagnóstico gratuito.`;
 
@@ -148,7 +148,7 @@ const QUICK_REPLIES_INITIAL = [
     if (!content || content.querySelector('.flux-cta-inline')) return;
     const a = document.createElement('a');
     a.className = 'flux-cta-inline';
-    a.href = 'https://wa.me/5534992710008?text=Quero%20fazer%20um%20diagn%C3%B3stico%20SmartFlux';
+    a.href = 'https://wa.me/5534999238968?text=Quero%20fazer%20um%20diagn%C3%B3stico%20SmartFlux';
     a.target = '_blank';
     a.rel = 'noopener';
     a.textContent = '→ Diagnóstico gratuito no WhatsApp';
