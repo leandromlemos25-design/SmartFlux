@@ -430,6 +430,9 @@ footer {
 .foot-grid ul { display: flex; flex-direction: column; gap: 8px }
 .foot-grid a { font-size: 14px; color: var(--ink-2); transition: color .2s }
 .foot-grid a:hover { color: var(--ink) }
+.foot-contact a { display: inline-flex; align-items: center; gap: 9px }
+.foot-ico { width: 18px; height: 18px; flex-shrink: 0; transition: transform .2s var(--ease) }
+.foot-contact a:hover .foot-ico { transform: scale(1.12) }
 .foot-grid p {
   font-size: 14px;
   color: var(--ink-3);

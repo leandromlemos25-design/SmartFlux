@@ -22,6 +22,7 @@
 .hero-trust-row {
   display: inline-flex;
   align-items: center;
+  vertical-align: middle;
   gap: 16px;
   flex-wrap: wrap;
   margin-bottom: 28px;
@@ -63,6 +64,7 @@
 .hero-tag {
   display: inline-flex;
   align-items: center;
+  vertical-align: middle;
   gap: 12px;
   padding: 7px 8px 7px 16px;
   border-radius: 99px;
@@ -71,7 +73,7 @@
   font-size: 13px;
   color: var(--ink-2);
   font-weight: 500;
-  margin-bottom: 32px;
+  margin-bottom: 28px;
 }
 .hero-tag .pill {
   padding: 4px 10px;
