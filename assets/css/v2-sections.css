@@ -107,6 +107,13 @@
 
 /* Actions */
 .actions { display: flex; gap: 14px; flex-wrap: wrap; align-items: center }
+.cta-reassure {
+  margin-top: 18px;
+  font-size: 13px;
+  color: var(--ink-3);
+  font-weight: 500;
+  letter-spacing: .01em;
+}
 .actions-trust {
   margin-top: 40px;
   display: flex; align-items: center; gap: 24px; flex-wrap: wrap;

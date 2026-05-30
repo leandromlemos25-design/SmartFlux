@@ -434,6 +434,7 @@ tbody tr:hover .tag { transform: scale(1.05) }
 .cta-final h2 { margin-bottom: 18px; max-width: 17ch; margin-inline: auto; text-wrap: balance }
 .cta-final p { max-width: 52ch; margin: 0 auto 36px; color: var(--ink-2); font-size: 17px; line-height: 1.6 }
 .cta-final .actions { justify-content: center }
+.cta-final .cta-reassure { margin: 22px auto 0; font-size: 13px; color: var(--ink-3) }
 
 /* ===== GRID-ITEM MIN-WIDTH FIX ===== */
 /* Prevent CSS grid items from expanding beyond their track width when a
