@@ -97,6 +97,29 @@
 /* Hero title */
 .hero h1 { max-width: 16ch }
 .hero h1 .word { display: inline-block; will-change: transform, opacity }
+
+/* Skeuomorphic engraved hero title — top-lit metallic relief.
+   Uses gradient fill + layered text-shadow only (no filter/transform),
+   so the .word reveal animation keeps working untouched. */
+.hero h1 .word:not(.gradient-text) {
+  background: linear-gradient(180deg, #ffffff 0%, #e3e8f1 40%, #a6b1c5 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  text-shadow:
+    0 -1px 0 rgba(255,255,255,.30),
+    0 1px 0 rgba(0,0,0,.42),
+    0 3px 5px rgba(0,0,0,.45),
+    0 10px 26px rgba(0,0,0,.55);
+}
+.hero h1 .gradient-text {
+  text-shadow:
+    0 -1px 0 rgba(255,255,255,.16),
+    0 1px 1px rgba(0,0,0,.40),
+    0 3px 12px color-mix(in oklab, var(--a2) 42%, transparent),
+    0 9px 28px color-mix(in oklab, var(--a1) 32%, transparent);
+}
 .hero-copy {
   margin: 32px 0 40px;
   max-width: 52ch;
