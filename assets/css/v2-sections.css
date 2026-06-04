@@ -133,28 +133,30 @@
    Uses gradient fill + layered text-shadow only (no filter/transform),
    so the .word reveal animation keeps working untouched. */
 .hero h1 .word:not(.gradient-text) {
-  background: linear-gradient(180deg, #ffffff 0%, #e3e8f1 38%, #9fabc0 100%);
+  background: linear-gradient(180deg, #ffffff 0%, #ffffff 46%, #d8e0ee 100%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
   color: transparent;
   text-shadow:
-    0 -1px 0 rgba(255,255,255,.38),
-    0 1px 0 rgba(0,0,0,.55),
-    0 2px 0 rgba(0,0,0,.45),
-    0 3px 0 rgba(0,0,0,.38),
-    0 4px 2px rgba(0,0,0,.4),
-    0 7px 10px rgba(0,0,0,.5),
-    0 15px 30px rgba(0,0,0,.6);
+    0 -1px 0 rgba(255,255,255,.5),
+    0 1px 0 rgba(0,0,0,.45),
+    0 2px 0 rgba(0,0,0,.32),
+    0 3px 1px rgba(0,0,0,.26),
+    0 5px 8px rgba(0,0,0,.4),
+    0 14px 28px rgba(0,0,0,.5);
 }
 .hero h1 .gradient-text {
+  /* Override only background-image so core's background-size/gradShift keep working */
+  background-image: linear-gradient(105deg,
+    color-mix(in oklab, var(--a1) 72%, #ecfff9) 0%,
+    color-mix(in oklab, var(--a2) 78%, #eafdff) 45%,
+    color-mix(in oklab, var(--a3) 78%, #f1ebff) 100%);
   text-shadow:
-    0 -1px 0 rgba(255,255,255,.22),
-    0 1px 0 rgba(0,0,0,.5),
-    0 2px 0 rgba(0,0,0,.42),
-    0 3px 1px rgba(0,0,0,.35),
-    0 5px 16px color-mix(in oklab, var(--a2) 48%, transparent),
-    0 12px 34px color-mix(in oklab, var(--a1) 36%, transparent);
+    0 1px 0 rgba(0,0,0,.3),
+    0 0 14px color-mix(in oklab, var(--a2) 80%, transparent),
+    0 4px 22px color-mix(in oklab, var(--a1) 65%, transparent),
+    0 10px 36px color-mix(in oklab, var(--a2) 48%, transparent);
 }
 .hero-copy {
   margin: 32px 0 40px;
