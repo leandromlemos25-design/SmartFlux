@@ -133,18 +133,28 @@
    Uses gradient fill + layered text-shadow only (no filter/transform),
    so the .word reveal animation keeps working untouched. */
 .hero h1 .word:not(.gradient-text) {
-  background: linear-gradient(180deg, #ffffff 0%, #f4fbff 50%, #d8edff 100%);
+  /* Face cromada: banda de reflexo no meio para dar brilho metálico */
+  background: linear-gradient(180deg,
+    #ffffff 0%,
+    #e6f0ff 32%,
+    #ffffff 50%,
+    #b7c9e6 66%,
+    #f0f6ff 100%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
   color: transparent;
-  /* Glow-forward (luminoso) — só um fiapo de sombra para o relevo */
+  /* Extrusão em aço (não preto, pra não apagar) + glow + sombra de apoio */
   text-shadow:
-    0 -1px 0 rgba(255,255,255,.65),
-    0 1px 0 rgba(0,0,0,.32),
-    0 0 16px rgba(150,212,255,.5),
-    0 0 36px rgba(90,170,255,.32),
-    0 4px 10px rgba(0,0,0,.3);
+    0 -1px 0 rgba(255,255,255,.7),
+    0 1px 0 #b3c1da,
+    0 2px 0 #9aaaca,
+    0 3px 0 #8597ba,
+    0 4px 0 #7184a6,
+    0 5px 1px rgba(0,0,0,.3),
+    0 0 22px rgba(150,212,255,.5),
+    0 7px 12px rgba(0,0,0,.42),
+    0 16px 30px rgba(0,0,0,.5);
 }
 .hero h1 .gradient-text {
   /* Neon vivo — tons puros levemente clareados + halo intenso.
@@ -677,10 +687,12 @@
   }
   .hero h1 .word:not(.gradient-text) {
     text-shadow:
-      0 -1px 0 rgba(255,255,255,.6),
-      0 1px 0 rgba(0,0,0,.3),
-      0 0 14px rgba(150,212,255,.45),
-      0 3px 8px rgba(0,0,0,.32);
+      0 -1px 0 rgba(255,255,255,.7),
+      0 1px 0 #aebcd6,
+      0 2px 0 #93a3c2,
+      0 3px 1px rgba(0,0,0,.3),
+      0 0 16px rgba(150,212,255,.5),
+      0 6px 12px rgba(0,0,0,.4);
   }
   .hero-copy { font-size: 16px; margin: 22px 0 28px; }
   .hero-trust-row { padding: 8px 14px; font-size: 11.5px; gap: 10px; margin-bottom: 20px; }
