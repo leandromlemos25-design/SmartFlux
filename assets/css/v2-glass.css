@@ -95,30 +95,33 @@
       rgba(255,255,255,.04) 60%,
       rgba(0,0,0,.3) 100%) !important;
 }
+/* Smoked (dark) liquid glass — keeps refraction but restores text contrast */
 .stage-inner {
-  background: var(--lg-fill) !important;
-  -webkit-backdrop-filter: var(--lg-blur) !important;
-  backdrop-filter: var(--lg-blur) !important;
+  background: linear-gradient(180deg, rgba(13,17,29,.66) 0%, rgba(8,11,20,.74) 100%) !important;
+  -webkit-backdrop-filter: blur(30px) saturate(150%) !important;
+  backdrop-filter: blur(30px) saturate(150%) !important;
   box-shadow: var(--lg-rim-strong) !important;
 }
 .stage-inner::before {
   background:
-    linear-gradient(135deg, rgba(255,255,255,.24) 0%, rgba(255,255,255,0) 30%),
-    radial-gradient(120% 60% at 82% -8%, rgba(255,255,255,.10), transparent 55%) !important;
+    linear-gradient(135deg, rgba(255,255,255,.18) 0%, rgba(255,255,255,0) 28%),
+    radial-gradient(120% 60% at 82% -8%, rgba(255,255,255,.08), transparent 55%) !important;
 }
 .stage-pane {
-  background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.015)) !important;
+  background: linear-gradient(180deg, rgba(255,255,255,.022), rgba(255,255,255,.008)) !important;
 }
 .stage-bar {
-  background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02)) !important;
+  background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.015)) !important;
   border-bottom: 1px solid var(--lg-border) !important;
 }
 .stage-bar .url {
-  background: var(--lg-fill) !important;
+  background: rgba(255,255,255,.06) !important;
   border: 1px solid var(--lg-border) !important;
   backdrop-filter: blur(10px) saturate(160%);
   -webkit-backdrop-filter: blur(10px) saturate(160%);
 }
+/* Tone the refraction blobs down a touch so the dark glass stays readable */
+.stage::before, .stage::after { opacity: .4 !important; }
 
 /* ====================== PROBLEM CARDS ====================== */
 .pain {
