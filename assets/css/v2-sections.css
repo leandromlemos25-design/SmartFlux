@@ -133,30 +133,32 @@
    Uses gradient fill + layered text-shadow only (no filter/transform),
    so the .word reveal animation keeps working untouched. */
 .hero h1 .word:not(.gradient-text) {
-  background: linear-gradient(180deg, #ffffff 0%, #ffffff 46%, #d8e0ee 100%);
+  background: linear-gradient(180deg, #ffffff 0%, #f4fbff 50%, #d8edff 100%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
   color: transparent;
+  /* Glow-forward (luminoso) — só um fiapo de sombra para o relevo */
   text-shadow:
-    0 -1px 0 rgba(255,255,255,.5),
-    0 1px 0 rgba(0,0,0,.45),
-    0 2px 0 rgba(0,0,0,.32),
-    0 3px 1px rgba(0,0,0,.26),
-    0 5px 8px rgba(0,0,0,.4),
-    0 14px 28px rgba(0,0,0,.5);
+    0 -1px 0 rgba(255,255,255,.65),
+    0 1px 0 rgba(0,0,0,.32),
+    0 0 16px rgba(150,212,255,.5),
+    0 0 36px rgba(90,170,255,.32),
+    0 4px 10px rgba(0,0,0,.3);
 }
 .hero h1 .gradient-text {
-  /* Override only background-image so core's background-size/gradShift keep working */
+  /* Neon vivo — tons puros levemente clareados + halo intenso.
+     Override only background-image so core's background-size/gradShift keep working. */
   background-image: linear-gradient(105deg,
-    color-mix(in oklab, var(--a1) 72%, #ecfff9) 0%,
-    color-mix(in oklab, var(--a2) 78%, #eafdff) 45%,
-    color-mix(in oklab, var(--a3) 78%, #f1ebff) 100%);
+    color-mix(in oklab, var(--a1) 88%, #ffffff) 0%,
+    color-mix(in oklab, var(--a2) 90%, #ffffff) 45%,
+    color-mix(in oklab, var(--a3) 88%, #ffffff) 100%);
   text-shadow:
-    0 1px 0 rgba(0,0,0,.3),
-    0 0 14px color-mix(in oklab, var(--a2) 80%, transparent),
-    0 4px 22px color-mix(in oklab, var(--a1) 65%, transparent),
-    0 10px 36px color-mix(in oklab, var(--a2) 48%, transparent);
+    0 0 8px color-mix(in oklab, var(--a2) 95%, transparent),
+    0 0 20px color-mix(in oklab, var(--a1) 88%, transparent),
+    0 0 44px color-mix(in oklab, var(--a2) 70%, transparent),
+    0 0 70px color-mix(in oklab, var(--a1) 45%, transparent),
+    0 1px 0 rgba(0,0,0,.2);
 }
 .hero-copy {
   margin: 32px 0 40px;
@@ -675,10 +677,10 @@
   }
   .hero h1 .word:not(.gradient-text) {
     text-shadow:
-      0 -1px 0 rgba(255,255,255,.32),
-      0 1px 0 rgba(0,0,0,.5),
-      0 2px 0 rgba(0,0,0,.4),
-      0 4px 8px rgba(0,0,0,.5);
+      0 -1px 0 rgba(255,255,255,.6),
+      0 1px 0 rgba(0,0,0,.3),
+      0 0 14px rgba(150,212,255,.45),
+      0 3px 8px rgba(0,0,0,.32);
   }
   .hero-copy { font-size: 16px; margin: 22px 0 28px; }
   .hero-trust-row { padding: 8px 14px; font-size: 11.5px; gap: 10px; margin-bottom: 20px; }
