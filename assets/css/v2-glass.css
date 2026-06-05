@@ -1,288 +1,250 @@
 /* =================================================================
-   SmartFlux — Liquid Glass (iOS-style) · v2
-   Refactor seguindo os 7 princípios:
-   1. Luz colorida ATRÁS do vidro (blobs por seção)
-   2. Fill com TINT (capta cor), não branco puro
-   3. Borda-LUZ direcional (gradiente no topo-esq que some no canto oposto)
-   4. Sheen diagonal (reflexo que "vende" o vidro)
-   5. Dois níveis de espessura (fino / strong)
-   6. Blur menor + brightness (mais nítido e leve)
-   7. Profundidade em camadas (rim specular + depth + drop shadow)
-
-   Técnica: borda-luz + tint + sheen são montados como CAMADAS de
-   `background` (padding-box/border-box) em vez de ::before/::after,
-   para NÃO colidir com os glows de hover já existentes nos cards.
+   SmartFlux — Liquid Glass v3 (drop-in replacement de v2-glass.css)
+   -----------------------------------------------------------------
+   Princípios da correção:
+   1. Vidro precisa de LUZ COLORIDA atrás para refratar (blobs mais vivos).
+   2. Fill capta um TINT, não é branco puro.
+   3. Borda-LUZ direcional (viva no topo-esq, some embaixo-dir) no lugar
+      do border uniforme.
+   4. SHEEN diagonal (mix-blend screen) = o reflexo que "vende" o vidro.
+   5. DOIS níveis de espessura (fino vs. strong) para criar hierarquia.
+   6. Blur menor (~20px) + brightness, em vez de blur(34px) caríssimo.
+   7. Profundidade: inner-shadow no topo E embaixo + drop em camadas.
    ================================================================= */
 
-:root {
-  /* 6 — blur menor + brightness */
+:root{
   --lg-blur:        blur(20px) saturate(190%) brightness(1.06);
-  --lg-blur-strong: blur(26px) saturate(195%) brightness(1.08);
-  --lg-blur-soft:   blur(16px) saturate(170%) brightness(1.05);
+  --lg-blur-strong: blur(26px) saturate(200%) brightness(1.09);
+  --lg-blur-light:  blur(14px) saturate(170%);
+  --lg-tint-h: 205;        /* matiz frio captado pelo vidro */
 
-  /* 2 — tint que capta cor no meio (não branco puro) */
-  --lg-tint:        linear-gradient(150deg, rgba(255,255,255,.13), hsla(205,70%,72%,.05) 44%, rgba(255,255,255,.03));
-  --lg-tint-strong: linear-gradient(150deg, rgba(255,255,255,.21), hsla(205,75%,74%,.08) 44%, rgba(255,255,255,.05));
-  --lg-tint-dark:   linear-gradient(150deg, rgba(22,28,44,.58), hsla(215,40%,30%,.28) 50%, rgba(8,11,20,.66));
+  /* Fill com tint no meio do gradiente (não branco chapado) */
+  --lg-fill: linear-gradient(150deg,
+              rgba(255,255,255,.13) 0%,
+              hsla(var(--lg-tint-h),70%,72%,.05) 44%,
+              rgba(255,255,255,.03) 100%);
+  --lg-fill-strong: linear-gradient(150deg,
+              rgba(255,255,255,.17) 0%,
+              hsla(var(--lg-tint-h),75%,74%,.08) 46%,
+              rgba(255,255,255,.05) 100%);
 
-  /* 3 — borda-luz direcional */
-  --lg-edge:        linear-gradient(145deg, rgba(255,255,255,.7), rgba(255,255,255,.14) 30%, transparent 56%, rgba(255,255,255,.16));
-  --lg-edge-strong: linear-gradient(145deg, rgba(255,255,255,.92), rgba(255,255,255,.22) 28%, transparent 55%, rgba(255,255,255,.28));
-
-  /* 4 — sheen diagonal (montado como camadas claras) */
-  --lg-sheen-a: linear-gradient(135deg, rgba(255,255,255,.20), transparent 30%);
-  --lg-sheen-b: radial-gradient(130% 70% at 84% -12%, rgba(255,255,255,.14), transparent 56%);
-
-  /* 7 — profundidade em camadas */
-  --lg-depth:        inset 0 1px .5px rgba(255,255,255,.6),  inset 0 -22px 36px -26px rgba(0,0,0,.7),  0 16px 44px -18px rgba(0,0,0,.62);
-  --lg-depth-strong: inset 0 1px .5px rgba(255,255,255,.78), inset 0 -26px 46px -28px rgba(0,0,0,.78), 0 26px 72px -22px rgba(0,0,0,.7);
-}
-
-/* ---------- Vidro FINO (cards comuns) ----------
-   background: sheen (topo) → tint (fill) em padding-box, borda-luz em border-box */
-.nav-mobile,
-.hero-trust-row,
-.hero-tag,
-.pain,
-.method-card,
-.table-card,
-.result-card,
-.cred-card,
-.cost-box,
-.price,
-.pro-card,
-.faq,
-.price-note-card,
-.user-matrix,
-.btn--ghost,
-.foot-social-btn,
-.stage-bar .url {
-  border: 1px solid transparent !important;
-  background:
-    var(--lg-sheen-a) padding-box,
-    var(--lg-sheen-b) padding-box,
-    var(--lg-tint) padding-box,
-    var(--lg-edge) border-box !important;
-  -webkit-backdrop-filter: var(--lg-blur);
-  backdrop-filter: var(--lg-blur);
-  box-shadow: var(--lg-depth) !important;
-  position: relative;
+  /* Sombras: rim specular no topo + profundidade embaixo + drop em camadas */
+  --lg-rim: inset 0 1px .5px rgba(255,255,255,.6),
+            inset 0 -22px 36px -26px rgba(0,0,0,.7),
+            0 16px 44px -18px rgba(0,0,0,.62),
+            0 2px 8px -4px rgba(0,0,0,.5);
+  --lg-rim-strong: inset 0 1.2px .5px rgba(255,255,255,.72),
+                   inset 0 -26px 46px -28px rgba(0,0,0,.74),
+                   0 26px 72px -22px rgba(0,0,0,.68);
 }
 
-/* Hover: clareia o fill e intensifica o rim, sem mexer nas camadas de glow */
-.pain:hover,
-.result-card:hover,
-.cred-card:hover,
-.pro-card:hover,
-.price:hover,
-.faq[open] {
-  background:
-    var(--lg-sheen-a) padding-box,
-    var(--lg-sheen-b) padding-box,
-    var(--lg-tint-strong) padding-box,
-    var(--lg-edge-strong) border-box !important;
-  box-shadow: var(--lg-depth-strong) !important;
-}
-
-/* ---------- Vidro STRONG (hierarquia: hero, plano destaque, CTA) ---------- */
-.hero h1,
-.price.featured,
-.cta-final {
-  border: 1px solid transparent !important;
-  -webkit-backdrop-filter: var(--lg-blur-strong) !important;
-  backdrop-filter: var(--lg-blur-strong) !important;
-  box-shadow: var(--lg-depth-strong) !important;
-  position: relative;
-}
-.hero h1 {
-  background:
-    var(--lg-sheen-a) padding-box,
-    var(--lg-sheen-b) padding-box,
-    var(--lg-tint-strong) padding-box,
-    var(--lg-edge-strong) border-box !important;
-}
-
-/* ---------- Superfícies ACCENT (tingem o vidro com --a1/--a2) ---------- */
-.price.featured {
-  background:
-    var(--lg-sheen-a) padding-box,
-    linear-gradient(150deg,
-      color-mix(in oklab, var(--a1) 16%, rgba(255,255,255,.16)),
-      color-mix(in oklab, var(--a2) 9%, rgba(255,255,255,.05)) 60%,
-      rgba(255,255,255,.04)) padding-box,
-    var(--lg-edge-strong) border-box !important;
-  box-shadow:
-    var(--lg-depth-strong),
-    0 30px 80px -26px color-mix(in oklab, var(--a1) 32%, transparent) !important;
-}
-.cost-box.accent {
-  background:
-    var(--lg-sheen-a) padding-box,
-    linear-gradient(150deg,
-      color-mix(in oklab, var(--a1) 15%, rgba(255,255,255,.15)),
-      color-mix(in oklab, var(--a1) 5%, rgba(255,255,255,.05)) 65%,
-      rgba(255,255,255,.04)) padding-box,
-    var(--lg-edge) border-box !important;
-  border-color: transparent !important;
-}
-.cta-final {
-  background:
-    radial-gradient(55% 55% at 18% -10%, color-mix(in oklab, var(--a2) 26%, transparent), transparent 55%) padding-box,
-    radial-gradient(50% 50% at 85% 110%, color-mix(in oklab, var(--a3) 22%, transparent), transparent 55%) padding-box,
-    var(--lg-sheen-a) padding-box,
-    color-mix(in oklab, var(--a1) 6%, rgba(255,255,255,.16)) padding-box,
-    var(--lg-edge-strong) border-box !important;
-}
-
-/* ---------- NAVBAR (somente border-bottom luz) ---------- */
-.nav {
-  background:
-    var(--lg-sheen-a) padding-box,
-    var(--lg-tint) padding-box !important;
-  -webkit-backdrop-filter: var(--lg-blur);
-  backdrop-filter: var(--lg-blur);
-  border: 0 !important;
-  border-bottom: 1px solid rgba(255,255,255,.16) !important;
-  box-shadow: inset 0 1px 0 rgba(255,255,255,.35);
-}
-.nav.scrolled {
-  background:
-    var(--lg-sheen-a) padding-box,
-    linear-gradient(150deg, rgba(255,255,255,.10), hsla(205,70%,72%,.04) 44%, rgba(255,255,255,.025)) padding-box !important;
-  box-shadow: inset 0 1px 0 rgba(255,255,255,.35), 0 12px 32px -16px rgba(0,0,0,.5);
-}
-
-/* ---------- BOTÃO PRIMÁRIO (mantém o gradiente accent, ganha rim/brilho) ---------- */
-.btn--primary {
-  -webkit-backdrop-filter: blur(12px) saturate(180%);
-  backdrop-filter: blur(12px) saturate(180%);
-  box-shadow:
-    inset 0 1px .5px rgba(255,255,255,.65),
-    inset 0 -1px 0 rgba(0,0,0,.2),
-    0 12px 30px -10px color-mix(in oklab, var(--a1) 60%, transparent) !important;
-}
-
-/* ---------- CONSOLE (vidro FUMÊ escuro p/ manter contraste do texto) ---------- */
-.stage-shell {
-  background:
-    linear-gradient(140deg,
-      rgba(255,255,255,.62) 0%, rgba(255,255,255,.12) 22%,
-      rgba(255,255,255,.04) 60%, rgba(0,0,0,.32) 100%) !important;
-}
-.stage-inner {
-  border: 1px solid transparent !important;
-  background:
-    var(--lg-sheen-a) padding-box,
-    var(--lg-sheen-b) padding-box,
-    var(--lg-tint-dark) padding-box,
-    var(--lg-edge) border-box !important;
-  -webkit-backdrop-filter: blur(26px) saturate(150%) brightness(1.04) !important;
-  backdrop-filter: blur(26px) saturate(150%) brightness(1.04) !important;
-  box-shadow: var(--lg-depth-strong) !important;
-}
-.stage-pane {
-  background: linear-gradient(180deg, rgba(255,255,255,.022), rgba(255,255,255,.008)) !important;
-}
-.stage-bar {
-  background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.015)) !important;
-  border-bottom: 1px solid rgba(255,255,255,.14) !important;
-}
-
-/* ---------- FOOTER ---------- */
-footer {
-  background:
-    var(--lg-sheen-a) padding-box,
-    linear-gradient(180deg, rgba(16,20,32,.5), rgba(8,11,20,.5)) padding-box;
-  -webkit-backdrop-filter: var(--lg-blur-soft);
-  backdrop-filter: var(--lg-blur-soft);
-  border-top: 1px solid rgba(255,255,255,.14);
-}
-
-/* =================================================================
-   1 — LUZ COLORIDA ATRÁS DO VIDRO (blobs por seção)
-   ================================================================= */
-.hero, #problema, #metodo, #planos, #pro, #contato {
+/* -----------------------------------------------------------------
+   .lg — aplique junto à classe do componente. Cria borda-luz + sheen
+   via ::before / ::after. (Os componentes abaixo já recebem isso.)
+   ----------------------------------------------------------------- */
+.nav, .hero h1, .hero-trust-row, .hero-tag, .stage-inner, .pain,
+.method-card, .table-card, .result-card, .cred-card, .cost-box,
+.price, .price-note-card, .user-matrix, .pro-card, .faq,
+.cta-final, .btn--ghost, .foot-social-btn{
   position: relative;
   isolation: isolate;
 }
-.hero::before, .hero::after,
-#problema::before, #problema::after,
-#metodo::before, #metodo::after,
-#planos::before, #planos::after,
-#pro::before, #pro::after,
-#contato::before, #contato::after {
-  content: "";
-  position: absolute;
-  width: 40vw; height: 40vw;
-  max-width: 640px; max-height: 640px;
-  border-radius: 50%;
-  pointer-events: none;
-  z-index: -1;
-  filter: blur(80px);
-  opacity: .5;
-  animation: lgFloat 18s ease-in-out infinite;
-}
-/* cor padrão dos blobs */
-.hero::before, #problema::before, #metodo::before, #planos::before, #pro::before, #contato::before {
-  background: radial-gradient(circle, color-mix(in oklab, var(--a2) 62%, transparent), transparent 70%);
-}
-.hero::after, #problema::after, #metodo::after, #planos::after, #pro::after, #contato::after {
-  background: radial-gradient(circle, color-mix(in oklab, var(--a3) 56%, transparent), transparent 70%);
-  animation-delay: -9s;
-}
-/* posições + alguns acentos em --a1 para variar */
-.hero::before     { top: -6%;  left: 54%; }
-.hero::after      { bottom: -12%; left: 6%; background: radial-gradient(circle, color-mix(in oklab, var(--a1) 55%, transparent), transparent 70%); }
-#problema::before { top: 8%;   left: -4%; }
-#problema::after  { bottom: 6%;  right: -2%; }
-#metodo::before   { top: 16%;  right: -4%; background: radial-gradient(circle, color-mix(in oklab, var(--a1) 52%, transparent), transparent 70%); }
-#metodo::after    { bottom: 0;  left: 4%; }
-#planos::before   { top: 6%;   left: -3%; }
-#planos::after    { bottom: 8%; right: 3%; background: radial-gradient(circle, color-mix(in oklab, var(--a1) 50%, transparent), transparent 70%); }
-#pro::before      { top: 12%;  right: -2%; }
-#pro::after       { bottom: 0;  left: 8%; }
-#contato::before  { top: -8%;  left: 28%; }
-#contato::after   { bottom: -6%; right: 18%; background: radial-gradient(circle, color-mix(in oklab, var(--a1) 58%, transparent), transparent 70%); }
 
-@keyframes lgFloat {
-  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
-  50%      { transform: translate3d(3%, -4%, 0) scale(1.12); }
+/* Borda-luz direcional — substitui o border:1px uniforme.
+   Viva no topo-esquerda (onde a luz bate), some no canto oposto. */
+.hero h1::after, .stage-inner::before, .pain::after, .method-card::after,
+.table-card::after, .result-card::after, .cred-card::after, .cost-box::after,
+.price::after, .price-note-card::after, .user-matrix::after, .pro-card::after,
+.faq::after, .cta-final::after{
+  content:""; position:absolute; inset:0; border-radius:inherit;
+  padding:1px; pointer-events:none; z-index:2;
+  background:linear-gradient(145deg,
+    rgba(255,255,255,.7) 0%, rgba(255,255,255,.14) 30%,
+    transparent 56%, rgba(255,255,255,.16) 100%);
+  -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;
+  mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask-composite:exclude;
+}
+
+/* ====================== NAVBAR ====================== */
+.nav{
+  background: rgba(12,15,24,.5) !important;
+  -webkit-backdrop-filter: var(--lg-blur-light); backdrop-filter: var(--lg-blur-light);
+  border-bottom: 1px solid rgba(255,255,255,.1) !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.18), 0 10px 30px -18px rgba(0,0,0,.6);
+}
+.nav.scrolled{ background: rgba(10,13,22,.66) !important; }
+
+/* ====================== HERO TITLE PLAQUE ====================== */
+.hero h1{
+  background: var(--lg-fill-strong) !important;
+  -webkit-backdrop-filter: var(--lg-blur-strong) !important; backdrop-filter: var(--lg-blur-strong) !important;
+  border: 1px solid transparent !important;
+  box-shadow: var(--lg-rim-strong) !important;
+}
+/* sheen no topo (o reflexo) */
+.hero h1::before{
+  content:""; position:absolute; inset:0; border-radius:inherit; pointer-events:none; z-index:1;
+  background:
+    linear-gradient(135deg, rgba(255,255,255,.22) 0%, transparent 30%),
+    radial-gradient(130% 70% at 84% -12%, rgba(255,255,255,.14), transparent 56%) !important;
+  mix-blend-mode: screen;
+}
+
+/* ====================== HERO TRUST ROW + TAG ====================== */
+.hero-trust-row, .hero-tag{
+  background: var(--lg-fill) !important;
+  -webkit-backdrop-filter: var(--lg-blur-light); backdrop-filter: var(--lg-blur-light);
+  border: 1px solid rgba(255,255,255,.12) !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.4), 0 8px 24px -14px rgba(0,0,0,.5);
+}
+
+/* ====================== STAGE CONSOLE (vidro fumê) ====================== */
+.stage-inner{
+  background: linear-gradient(180deg, rgba(13,17,29,.6) 0%, rgba(8,11,20,.72) 100%) !important;
+  -webkit-backdrop-filter: blur(26px) saturate(160%) !important; backdrop-filter: blur(26px) saturate(160%) !important;
+  box-shadow: var(--lg-rim-strong) !important;
+}
+.stage::before, .stage::after{ opacity:.5 !important; }   /* deixa a luz de trás aparecer mais */
+
+/* ====================== CARDS GENÉRICOS ====================== */
+.pain, .method-card, .table-card, .result-card, .cred-card,
+.cost-box, .price, .price-note-card, .user-matrix, .pro-card, .faq{
+  background: var(--lg-fill) !important;
+  -webkit-backdrop-filter: var(--lg-blur); backdrop-filter: var(--lg-blur);
+  border: 1px solid transparent !important;
+  box-shadow: var(--lg-rim);
+}
+/* sheen diagonal genérico */
+.pain::before, .method-card::before, .table-card::before, .result-card::before,
+.cred-card::before, .cost-box::before, .price::before, .pro-card::before, .faq::before{
+  content:""; position:absolute; inset:0; border-radius:inherit; pointer-events:none; z-index:1;
+  background:
+    linear-gradient(135deg, rgba(255,255,255,.16) 0%, transparent 28%),
+    radial-gradient(130% 70% at 84% -12%, rgba(255,255,255,.10), transparent 55%);
+  mix-blend-mode: screen;
+}
+.pain:hover, .result-card:hover, .cred-card:hover, .pro-card:hover{
+  background: var(--lg-fill-strong) !important;
+  box-shadow: var(--lg-rim-strong);
+  transform: translateY(-4px);
+}
+
+/* superfícies "strong" (mais espessas) */
+.price.featured, .cost-box.accent, .cta-final, .price-note-card, .user-matrix{
+  -webkit-backdrop-filter: var(--lg-blur-strong) !important; backdrop-filter: var(--lg-blur-strong) !important;
+  box-shadow: var(--lg-rim-strong) !important;
+}
+
+/* ====================== ACCENT GLASS (featured / accent) ====================== */
+.cost-box.accent{
+  background: linear-gradient(150deg,
+    color-mix(in oklab, var(--a1) 12%, rgba(255,255,255,.16)) 0%,
+    color-mix(in oklab, var(--a1) 5%,  rgba(255,255,255,.05)) 100%) !important;
+}
+.price.featured{
+  background: linear-gradient(150deg,
+    color-mix(in oklab, var(--a1) 16%, rgba(255,255,255,.16)) 0%,
+    color-mix(in oklab, var(--a3) 9%,  rgba(255,255,255,.05)) 100%) !important;
+}
+.price.featured::after{
+  background:linear-gradient(145deg,
+    color-mix(in oklab, var(--a1) 60%, #fff) 0%, rgba(255,255,255,.18) 32%,
+    transparent 56%, color-mix(in oklab, var(--a2) 40%, transparent) 100%) !important;
+}
+.cta-final{
+  background:
+    radial-gradient(55% 55% at 20% 0%,  color-mix(in oklab, var(--a2) 22%, transparent), transparent 50%),
+    radial-gradient(45% 45% at 80% 100%, color-mix(in oklab, var(--a3) 18%, transparent), transparent 50%),
+    var(--lg-fill-strong) !important;
+}
+
+/* ====================== FAQ ====================== */
+.faq{ -webkit-backdrop-filter: var(--lg-blur-light); backdrop-filter: var(--lg-blur-light); }
+.faq[open]{ background: var(--lg-fill-strong) !important; box-shadow: var(--lg-rim-strong); }
+
+/* ====================== BUTTONS ====================== */
+.btn--primary{
+  -webkit-backdrop-filter: blur(14px) saturate(180%); backdrop-filter: blur(14px) saturate(180%);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.55), inset 0 -1px 0 rgba(0,0,0,.22),
+    0 10px 28px -10px color-mix(in oklab, var(--a1) 60%, transparent);
+}
+.btn--ghost{
+  background: var(--lg-fill) !important;
+  -webkit-backdrop-filter: blur(16px) saturate(170%); backdrop-filter: blur(16px) saturate(170%);
+  border: 1px solid rgba(255,255,255,.16) !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.5), 0 8px 22px -12px rgba(0,0,0,.5);
+}
+.btn--ghost::after{
+  content:""; position:absolute; inset:0; border-radius:inherit; padding:1px; pointer-events:none;
+  background:linear-gradient(145deg, rgba(255,255,255,.5), transparent 55%);
+  -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor; mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); mask-composite:exclude;
+}
+
+/* ====================== FOOTER ====================== */
+footer{
+  background: rgba(10,13,22,.55);
+  -webkit-backdrop-filter: var(--lg-blur-light); backdrop-filter: var(--lg-blur-light);
+  border-top: 1px solid rgba(255,255,255,.1);
+}
+.foot-social-btn{
+  background: var(--lg-fill) !important;
+  -webkit-backdrop-filter: blur(14px) saturate(170%); backdrop-filter: blur(14px) saturate(170%);
+  border: 1px solid rgba(255,255,255,.14) !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.4);
 }
 
 /* =================================================================
-   MOBILE — blur menor, blobs desligados (custam fps)
+   LUZ COLORIDA ATRÁS DO VIDRO — o ajuste #1.
+   Blobs mais vivos e maiores, posicionados ATRÁS dos painéis.
+   Sem isto, o vidro continua parecendo placa cinza.
    ================================================================= */
-@media (max-width: 720px) {
-  :root {
-    --lg-blur:        blur(14px) saturate(170%) brightness(1.05);
-    --lg-blur-strong: blur(16px) saturate(175%) brightness(1.06);
-    --lg-blur-soft:   blur(12px) saturate(160%);
+.hero, #problema, #metodo, #planos, #pro, #contato{ position:relative; isolation:isolate; }
+.hero::before, #problema::before, #metodo::before,
+#planos::before, #pro::before, #contato::before{
+  content:""; position:absolute; width:46vw; height:46vw; border-radius:50%;
+  pointer-events:none; z-index:-1; filter:blur(80px); opacity:.55;   /* era .35 */
+  background:radial-gradient(circle, color-mix(in oklab, var(--a2) 70%, transparent), transparent 70%);
+}
+.hero::before     { top:6%;  left:58%; }
+#problema::before { top:14%; left:6%;  background:radial-gradient(circle, color-mix(in oklab, var(--a3) 65%, transparent), transparent 70%); }
+#metodo::before   { top:34%; right:4%; left:auto; background:radial-gradient(circle, color-mix(in oklab, var(--a1) 62%, transparent), transparent 70%); }
+#planos::before   { top:10%; left:2%;  background:radial-gradient(circle, color-mix(in oklab, var(--a2) 62%, transparent), transparent 70%); }
+#pro::before      { top:26%; right:6%; left:auto; background:radial-gradient(circle, color-mix(in oklab, var(--a3) 60%, transparent), transparent 70%); }
+#contato::before  { bottom:-4%; left:28%; background:radial-gradient(circle, color-mix(in oklab, var(--a1) 65%, transparent), transparent 70%); }
+
+/* segundo blob por seção, lado oposto — garante luz atrás de TODOS os cards */
+.hero::after, #problema::after, #metodo::after, #planos::after, #pro::after{
+  content:""; position:absolute; width:38vw; height:38vw; border-radius:50%;
+  pointer-events:none; z-index:-1; filter:blur(90px); opacity:.4;
+}
+.hero::after     { bottom:0; left:4%;  background:radial-gradient(circle, color-mix(in oklab, var(--a1) 55%, transparent), transparent 70%); }
+#problema::after { bottom:8%; right:6%; background:radial-gradient(circle, color-mix(in oklab, var(--a2) 50%, transparent), transparent 70%); }
+#metodo::after   { top:6%; left:8%;    background:radial-gradient(circle, color-mix(in oklab, var(--a3) 50%, transparent), transparent 70%); }
+#planos::after   { bottom:6%; right:4%; background:radial-gradient(circle, color-mix(in oklab, var(--a1) 50%, transparent), transparent 70%); }
+#pro::after      { bottom:4%; left:10%; background:radial-gradient(circle, color-mix(in oklab, var(--a2) 50%, transparent), transparent 70%); }
+
+/* ====================== MOBILE: mais leve ====================== */
+@media (max-width: 720px){
+  :root{
+    --lg-blur:        blur(14px) saturate(160%);
+    --lg-blur-strong: blur(16px) saturate(170%);
+    --lg-blur-light:  blur(10px) saturate(150%);
   }
-  .hero::before, .hero::after,
-  #problema::before, #problema::after,
-  #metodo::before, #metodo::after,
-  #planos::before, #planos::after,
-  #pro::before, #pro::after,
-  #contato::before, #contato::after { display: none; }
+  /* blobs custam caro no mobile — mantém só 1 por seção, opacidade menor */
+  .hero::after, #problema::after, #metodo::after, #planos::after, #pro::after{ display:none; }
+  .hero::before, #problema::before, #metodo::before,
+  #planos::before, #pro::before, #contato::before{ opacity:.4; filter:blur(60px); }
 }
 
-/* Respeita prefers-reduced-motion (sem animar blobs) */
-@media (prefers-reduced-motion: reduce) {
-  .hero::before, .hero::after,
-  #problema::before, #problema::after,
-  #metodo::before, #metodo::after,
-  #planos::before, #planos::after,
-  #pro::before, #pro::after,
-  #contato::before, #contato::after { animation: none !important; }
-}
-
-/* =================================================================
-   FALLBACK — navegadores sem backdrop-filter
-   ================================================================= */
-@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
-  .nav, .nav-mobile, .hero h1, .stage-inner, .pain, .method-card, .table-card,
-  .result-card, .cred-card, .cost-box, .price, .price-note-card, .user-matrix,
-  .pro-card, .faq, .cta-final, .btn--ghost, .foot-social-btn, footer {
+/* ====================== FALLBACK sem backdrop-filter ====================== */
+@supports not (backdrop-filter: blur(1px)){
+  .nav, .hero h1, .stage-inner, .pain, .method-card, .table-card,
+  .result-card, .cred-card, .cost-box, .price, .price-note-card,
+  .user-matrix, .pro-card, .faq, .cta-final, .foot-social-btn{
     background: rgba(20,24,36,.9) !important;
   }
 }
