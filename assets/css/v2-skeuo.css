@@ -175,6 +175,55 @@ footer{
   box-shadow:inset 0 1px 0 rgba(255,235,205,.22), 0 4px 8px -3px rgba(0,0,0,.5) !important;
 }
 
+/* ---------- COSTURA EM VOLTA DE TODOS OS BOTÕES ---------- */
+.btn{ position:relative; }
+.btn::after{
+  content:"" !important;
+  position:absolute; inset:5px;
+  border-radius:inherit;
+  border:1.4px dashed rgba(255,244,224,.5);
+  pointer-events:none;
+  /* sela a costura com um leve sulco escuro pra parecer furo */
+  filter:drop-shadow(0 1px 0 rgba(0,0,0,.4));
+}
+/* na cápsula de vidro ciano a costura fica branca; no couro, creme — ambos ok */
+.btn--primary::after{ border-color:rgba(255,255,255,.6); }
+
+/* ---------- CONSOLE: tela de vidro recuada dentro da moldura de metal ---------- */
+.stage-inner{
+  background:
+    radial-gradient(120% 80% at 50% -12%, rgba(60,110,140,.22), transparent 60%),
+    linear-gradient(180deg, #0b1018 0%, #070b12 60%, #05080e 100%) !important;
+  -webkit-backdrop-filter:none !important; backdrop-filter:none !important;
+  box-shadow:
+    inset 0 3px 8px rgba(0,0,0,.9),
+    inset 0 0 0 1px rgba(130,165,195,.22),
+    inset 0 0 40px rgba(0,0,0,.6),
+    var(--sk-rim-strong) !important;
+}
+/* painéis internos: leve recorte de "placa" sobre a tela */
+.stage-pane{
+  background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.008)) !important;
+}
+/* reforço de contraste do texto do console (escopado em .stage) */
+.stage .pane-head span,
+.stage .prompt-label,
+.stage .kpi b,
+.stage .pipeline-head{ color:#9cc2d4 !important; }
+.stage .kpi .sub,
+.stage .seal span,
+.stage .lead-stage{ color:#a6b6c4 !important; }
+.stage .chip{
+  color:#d7e7ef !important;
+  background:rgba(255,255,255,.06) !important;
+  border-color:rgba(150,185,205,.32) !important;
+}
+.stage .kpi .num,
+.stage .lead-name,
+.stage .pane-head .badge,
+.stage .seal b{ color:#eef5f9 !important; }
+.stage .prompt{ background:rgba(255,255,255,.04) !important; border-color:rgba(150,185,205,.22) !important; }
+
 /* desliga o fallback sólido do glass (já temos couro opaco) */
 @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))){
   .pain,.method-card,.table-card,.result-card,.cred-card,.cost-box,.price,
