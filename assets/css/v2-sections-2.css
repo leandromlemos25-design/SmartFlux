@@ -306,6 +306,10 @@ tbody tr:hover .tag { transform: scale(1.05) }
 
 /* Plan vs implantação split */
 .cost-split { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 4px 0 34px }
+.cost-split--3 { grid-template-columns: repeat(3, 1fr) }
+.cost-value { margin: 10px 0 12px; font-size: 13px; color: var(--ink-3); display: flex; flex-direction: column; gap: 2px }
+.cost-value strong { font-size: 28px; font-weight: 800; letter-spacing: -0.02em; color: var(--ink); line-height: 1 }
+.cost-box.accent .cost-value strong { color: color-mix(in oklab, var(--a1) 70%, #fff) }
 .cost-box {
   padding: 24px; border-radius: var(--r-xl);
   background: var(--surface); border: 1px solid var(--line);
@@ -492,7 +496,7 @@ tbody tr:hover .tag { transform: scale(1.05) }
   .pro-grid { grid-template-columns: 1fr }
   .terms { grid-template-columns: 1fr }
   .pricing-grid { grid-template-columns: 1fr }
-  .cost-split { grid-template-columns: 1fr }
+  .cost-split, .cost-split--3 { grid-template-columns: 1fr }
   .kommo-head, .partner-head { margin: 52px auto 28px }
   .cred-grid { grid-template-columns: 1fr; max-width: 420px }
   .results-grid { grid-template-columns: 1fr; max-width: 420px }
