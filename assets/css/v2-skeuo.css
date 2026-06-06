@@ -351,6 +351,11 @@ footer{
 .cl-label{ color:#cdb98e !important; }
 .cl-cta{ color:#f5e7c9 !important; }
 
+/* ---------- Tabelas com scroll horizontal: costura fixa (não rola junto) ----------
+   O ::after absoluto rolava com o conteúdo; vira borda tracejada real na .user-matrix. */
+.user-matrix{ border:1.6px dashed rgba(255,232,200,.30) !important; }
+.user-matrix::after{ display:none !important; }
+
 /* desliga o fallback sólido do glass (já temos couro opaco) */
 @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))){
   .pain,.method-card,.table-card,.result-card,.cred-card,.cost-box,.price,
