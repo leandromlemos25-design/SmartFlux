@@ -1,0 +1,184 @@
+/* =================================================================
+   SmartFlux — Skin Skeuomórfico (couro / metal / cromo / vidro)
+   Mantém o acento ciano da marca e TODAS as animações existentes.
+   Carregado por último: altera apenas MATERIAIS (background, border,
+   box-shadow, color). Nunca mexe em transform / transition / animation,
+   então reveals, tilt, sweep, entrada das palavras e marquee seguem iguais.
+   Texturas: assets/textures/*.png  (relativas a este arquivo: ../textures/)
+   ================================================================= */
+:root{
+  --sk-leather:   url(../textures/leather.png);
+  --sk-leather-d: url(../textures/leather-dark.png);
+  --sk-brushed:   url(../textures/brushed.png);
+  --sk-edge: rgba(0,0,0,.55);
+  --sk-cream:#d9c6a4;
+  --sk-rim:        inset 0 1px 0 rgba(255,238,210,.20), inset 0 -12px 24px rgba(0,0,0,.42), 0 12px 24px -10px rgba(0,0,0,.62);
+  --sk-rim-strong: inset 0 1px 0 rgba(255,238,210,.28), inset 0 -16px 30px rgba(0,0,0,.5),  0 22px 50px -14px rgba(0,0,0,.7);
+}
+
+/* ---------- Fundo de couro do site ---------- */
+body{
+  background-color:#160f09 !important;
+  background-image:
+    radial-gradient(120% 80% at 50% -10%, rgba(64,44,28,.6), transparent 60%),
+    var(--sk-leather-d) !important;
+  background-size:auto,300px 300px !important;
+  background-attachment:fixed,fixed !important;
+  background-blend-mode:normal,normal !important;
+}
+
+/* ---------- Painéis de couro (cards) ---------- */
+.pain,.method-card,.table-card,.result-card,.cred-card,.cost-box,.price,
+.pro-card,.faq,.price-note-card,.user-matrix{
+  background:
+    radial-gradient(130% 100% at 28% -6%, rgba(255,228,190,.13), transparent 55%),
+    radial-gradient(125% 130% at 82% 120%, rgba(0,0,0,.45), transparent 60%),
+    var(--sk-leather) !important;
+  background-size:auto,auto,256px 256px !important;
+  background-blend-mode:soft-light,multiply,normal !important;
+  -webkit-backdrop-filter:none !important; backdrop-filter:none !important;
+  border:1px solid var(--sk-edge) !important;
+  box-shadow:var(--sk-rim) !important;
+}
+/* Costura pontilhada (reaproveita o ::after que o glass criava) */
+.pain::after,.method-card::after,.table-card::after,.result-card::after,
+.cred-card::after,.cost-box::after,.price::after,.pro-card::after,
+.faq::after,.price-note-card::after,.user-matrix::after{
+  content:"" !important;position:absolute !important;inset:7px !important;
+  border-radius:inherit;padding:0 !important;pointer-events:none;z-index:2;
+  background:none !important;
+  border:1.5px dashed rgba(255,232,200,.22) !important;
+  box-shadow:inset 0 0 0 1px rgba(0,0,0,.28) !important;
+  -webkit-mask:none !important; mask:none !important;
+}
+/* Brilho de couro no topo (reaproveita o ::before do glass) */
+.pain::before,.method-card::before,.table-card::before,.result-card::before,
+.cred-card::before,.cost-box::before,.price::before,.pro-card::before,.faq::before{
+  background:linear-gradient(180deg, rgba(255,242,218,.12), transparent 26%) !important;
+  mix-blend-mode:soft-light !important;
+}
+.pain:hover,.result-card:hover,.cred-card:hover,.pro-card:hover{
+  box-shadow:var(--sk-rim-strong) !important;   /* mantém o translateY do tilt/hover */
+}
+
+/* ---------- Legibilidade do texto sobre couro ---------- */
+.pain p,.pro-card p,.price-desc,.faq-body,.cost-box p,.method-card p,
+.price-note-card p,.result-sub,.result-label,.price-from,.price-extra,
+.user-matrix td,.bk-entry-def{ color:var(--sk-cream) !important; }
+.pain h3,.cost-box b,.pro-card b,.price h3,.user-matrix th,.result-num{ color:#f4e4c6 !important; }
+h2{ color:#efe0c2 !important; }   /* spans .gradient-text mantêm o degradê ciano */
+
+/* ---------- Navbar de couro ---------- */
+.nav{
+  background:var(--sk-leather-d) !important; background-size:300px 300px !important;
+  -webkit-backdrop-filter:none !important; backdrop-filter:none !important;
+  border-bottom:1px solid rgba(0,0,0,.6) !important;
+  box-shadow:inset 0 1px 0 rgba(255,235,205,.16), 0 8px 18px -8px rgba(0,0,0,.6) !important;
+}
+.nav.scrolled{ background:var(--sk-leather-d) !important; }
+.nav-mobile{
+  background:#1a130d !important; background-image:var(--sk-leather-d) !important; background-size:300px !important;
+  -webkit-backdrop-filter:none !important; backdrop-filter:none !important;
+}
+
+/* ---------- Placa de couro do título (texto cromado já existe) ---------- */
+.hero h1{
+  background:
+    radial-gradient(130% 100% at 25% -8%, rgba(255,228,190,.15), transparent 55%),
+    var(--sk-leather) !important;
+  background-size:auto,256px 256px !important;
+  background-blend-mode:soft-light,normal !important;
+  -webkit-backdrop-filter:none !important; backdrop-filter:none !important;
+  border:1px solid var(--sk-edge) !important;
+  box-shadow:var(--sk-rim-strong) !important;
+}
+.hero h1::after{
+  content:"" !important;position:absolute !important;inset:8px !important;border-radius:inherit;
+  background:none !important;padding:0 !important;
+  border:1.6px dashed rgba(255,232,200,.22) !important;
+  -webkit-mask:none !important; mask:none !important;
+}
+
+/* ---------- Pílulas do hero ---------- */
+.hero-trust-row,.hero-tag{
+  background:var(--sk-leather) !important; background-size:256px 256px !important;
+  -webkit-backdrop-filter:none !important; backdrop-filter:none !important;
+  border:1px solid var(--sk-edge) !important;
+  box-shadow:inset 0 1px 0 rgba(255,235,205,.22), 0 6px 14px -8px rgba(0,0,0,.55) !important;
+}
+
+/* ---------- Console: moldura de metal escovado + tela de vidro ---------- */
+.stage-shell{
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.5), transparent 24%, rgba(0,0,0,.3) 100%),
+    var(--sk-brushed),
+    linear-gradient(180deg,#eef1f4 0%,#aeb4ba 50%,#7e848b 100%) !important;
+  background-size:auto,256px 64px,auto !important;
+  background-blend-mode:overlay,normal,normal !important;
+}
+/* .stage-inner permanece vidro fumê (cuidado pelo v2-glass) */
+
+/* ---------- Botões ---------- */
+.btn--primary{
+  background:
+    radial-gradient(60% 50% at 50% 16%, rgba(255,255,255,.7), transparent 60%),
+    linear-gradient(180deg,
+      color-mix(in oklab, var(--a2) 82%, #fff) 0%,
+      var(--a1) 52%,
+      color-mix(in oklab, var(--a1) 60%, #000) 100%) !important;
+  border:1px solid rgba(0,0,0,.4) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.8),
+    inset 0 -7px 12px rgba(0,30,30,.4),
+    0 8px 16px -5px rgba(0,0,0,.55) !important;
+}
+.btn--ghost{
+  background:var(--sk-leather) !important; background-size:256px 256px !important;
+  color:#f1e1c3 !important;
+  -webkit-backdrop-filter:none !important; backdrop-filter:none !important;
+  border:1px solid var(--sk-edge) !important;
+  box-shadow:inset 0 1px 0 rgba(255,235,205,.25), 0 5px 10px -4px rgba(0,0,0,.5) !important;
+}
+
+/* ---------- Superfícies accent: brilho ciano sobre o couro ---------- */
+.price.featured{
+  box-shadow:var(--sk-rim-strong),
+    0 0 0 1px color-mix(in oklab, var(--a1) 42%, transparent),
+    0 24px 52px -18px color-mix(in oklab, var(--a1) 30%, #000) !important;
+}
+.cost-box.accent{
+  box-shadow:var(--sk-rim), inset 0 0 0 1px color-mix(in oklab, var(--a1) 32%, transparent) !important;
+}
+
+/* ---------- CTA final em couro ---------- */
+.cta-final{
+  background:
+    radial-gradient(60% 60% at 18% -10%, color-mix(in oklab, var(--a2) 18%, transparent), transparent 55%),
+    radial-gradient(50% 50% at 85% 110%, color-mix(in oklab, var(--a1) 14%, transparent), transparent 55%),
+    var(--sk-leather) !important;
+  background-size:auto,auto,256px 256px !important;
+  background-blend-mode:screen,screen,normal !important;
+  -webkit-backdrop-filter:none !important; backdrop-filter:none !important;
+  border:1px solid var(--sk-edge) !important;
+  box-shadow:var(--sk-rim-strong) !important;
+}
+
+/* ---------- Rodapé ---------- */
+footer{
+  background:#160f09 !important; background-image:var(--sk-leather-d) !important; background-size:300px 300px !important;
+  -webkit-backdrop-filter:none !important; backdrop-filter:none !important;
+  border-top:1px solid rgba(0,0,0,.6) !important;
+}
+.foot-social-btn{
+  background:var(--sk-leather) !important; background-size:256px 256px !important;
+  border:1px solid var(--sk-edge) !important;
+  box-shadow:inset 0 1px 0 rgba(255,235,205,.22), 0 4px 8px -3px rgba(0,0,0,.5) !important;
+}
+
+/* desliga o fallback sólido do glass (já temos couro opaco) */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))){
+  .pain,.method-card,.table-card,.result-card,.cred-card,.cost-box,.price,
+  .pro-card,.faq,.price-note-card,.user-matrix,.nav,.cta-final,.btn--ghost,.foot-social-btn,footer{
+    background-image:var(--sk-leather) !important;
+  }
+}
