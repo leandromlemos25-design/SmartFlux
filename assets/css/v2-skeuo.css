@@ -224,6 +224,133 @@ footer{
 .stage .seal b{ color:#eef5f9 !important; }
 .stage .prompt{ background:rgba(255,255,255,.04) !important; border-color:rgba(150,185,205,.22) !important; }
 
+/* ---------- Botão primário em COURO (sem ciano), mais elevado p/ hierarquia ---------- */
+.btn--primary{
+  background:
+    radial-gradient(120% 100% at 30% -12%, rgba(255,234,198,.24), transparent 55%),
+    var(--sk-leather) !important;
+  background-size:auto,256px 256px !important;
+  background-blend-mode:soft-light,normal !important;
+  color:#f6e9cf !important;
+  text-shadow:0 1px 1px rgba(0,0,0,.55) !important;
+  border:1px solid var(--sk-edge) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,240,212,.45),
+    inset 0 -9px 16px rgba(0,0,0,.42),
+    0 9px 20px -6px rgba(0,0,0,.6) !important;
+}
+.btn--primary::before{ background:linear-gradient(135deg, rgba(255,240,215,.28), transparent 50%) !important; }
+.btn--primary .arrow{ color:#f6e9cf !important; }
+
+/* =================================================================
+   CHAT DO BOT (Flux) — skin skeuomórfico
+   ================================================================= */
+/* Botão flutuante: medalhão de couro com costura */
+.flux-btn{
+  background:
+    radial-gradient(60% 50% at 50% 18%, rgba(255,236,202,.30), transparent 60%),
+    var(--sk-leather) !important;
+  background-size:auto,256px 256px !important;
+  color:#f4e6c8 !important;
+  border:1px solid var(--sk-edge) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,236,206,.3),
+    inset 0 -9px 16px rgba(0,0,0,.42),
+    0 12px 26px -6px rgba(0,0,0,.6) !important;
+}
+.flux-btn::after{
+  content:"";position:absolute;inset:5px;border-radius:50%;
+  border:1.4px dashed rgba(255,244,224,.5);pointer-events:none;
+}
+.flux-btn svg{ color:#f4e6c8 !important; stroke:#f4e6c8 !important; }
+
+/* Janela do chat: painel de couro escuro */
+.flux-panel{
+  background:#160f09 !important;
+  background-image:var(--sk-leather-d) !important; background-size:300px 300px !important;
+  -webkit-backdrop-filter:none !important; backdrop-filter:none !important;
+  border:1px solid var(--sk-edge) !important;
+  box-shadow:var(--sk-rim-strong) !important;
+}
+/* Cabeçalho em couro mais claro */
+.flux-header{
+  background:var(--sk-leather) !important; background-size:256px 256px !important;
+  border-bottom:1px solid var(--sk-edge) !important;
+  box-shadow:inset 0 1px 0 rgba(255,235,205,.22) !important;
+}
+.flux-info-name{ color:#f5e7ca !important; }
+.flux-info-sub{ color:#cdb98e !important; }
+
+/* Área de mensagens: couro escuro */
+.flux-messages{
+  background:#140e08 !important;
+  background-image:var(--sk-leather-d) !important; background-size:300px 300px !important;
+}
+/* Bolha do bot: placa fosca; bolha do usuário: couro selado */
+.flux-msg.bot .flux-bubble{
+  background:rgba(255,245,225,.06) !important;
+  border:1px solid rgba(255,232,200,.16) !important;
+  color:#e9d9bc !important;
+}
+.flux-msg.user .flux-bubble{
+  background:linear-gradient(180deg, #6e4528, #482c18) !important;
+  border:1px solid var(--sk-edge) !important;
+  color:#f5e7c9 !important;
+  box-shadow:inset 0 1px 0 rgba(255,235,205,.22) !important;
+}
+.flux-bubble a{ color:#ffd9a0 !important; }
+.flux-typing-bubble{
+  background:rgba(255,245,225,.06) !important;
+  border:1px solid rgba(255,232,200,.16) !important;
+}
+
+/* CTA inline e quick replies: chips de couro */
+.flux-cta-inline,
+.flux-quick button{
+  background:var(--sk-leather) !important; background-size:256px 256px !important;
+  color:#f1e1c3 !important;
+  border:1px solid var(--sk-edge) !important;
+  box-shadow:inset 0 1px 0 rgba(255,235,205,.22), 0 3px 7px -3px rgba(0,0,0,.5) !important;
+}
+
+/* Área de input: barra de couro + campo recuado + botão metal */
+.flux-input-area{
+  background:var(--sk-leather) !important; background-size:256px 256px !important;
+  border-top:1px solid var(--sk-edge) !important;
+}
+.flux-textarea{
+  background:rgba(0,0,0,.32) !important;
+  border:1px solid rgba(0,0,0,.5) !important;
+  box-shadow:inset 0 2px 5px rgba(0,0,0,.5) !important;
+  color:#f3e7d2 !important;
+}
+.flux-textarea::placeholder{ color:rgba(245,230,205,.4) !important; }
+.flux-send-btn{
+  background:
+    radial-gradient(60% 50% at 50% 18%, rgba(255,236,202,.3), transparent 60%),
+    var(--sk-leather) !important;
+  background-size:auto,256px 256px !important;
+  color:#f4e6c8 !important;
+  border:1px solid var(--sk-edge) !important;
+  box-shadow:inset 0 1px 0 rgba(255,236,206,.3), 0 4px 9px -3px rgba(0,0,0,.55) !important;
+  position:relative;
+}
+.flux-send-btn::after{
+  content:"";position:absolute;inset:4px;border-radius:inherit;
+  border:1.3px dashed rgba(255,244,224,.45);pointer-events:none;
+}
+.flux-send-btn svg{ stroke:#f4e6c8 !important; }
+
+/* Callout "Fale com o Flux": etiqueta de couro */
+.flux-callout{
+  background:var(--sk-leather) !important; background-size:256px 256px !important;
+  border:1px solid var(--sk-edge) !important;
+  box-shadow:var(--sk-rim) !important;
+  color:#f1e1c3 !important;
+}
+.cl-label{ color:#cdb98e !important; }
+.cl-cta{ color:#f5e7c9 !important; }
+
 /* desliga o fallback sólido do glass (já temos couro opaco) */
 @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))){
   .pain,.method-card,.table-card,.result-card,.cred-card,.cost-box,.price,
