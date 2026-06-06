@@ -9,6 +9,7 @@
 (function () {
   var API = "https://economia.awesomeapi.com.br/last/USD-BRL";
   var FALLBACK = 5.40;                 // usado só se a API falhar
+  var SPREAD = 0.03;                   // custo de câmbio sobre o dólar comercial (3%)
   var KEY = "sf_usdbrl_v1";
   var els = Array.prototype.slice.call(document.querySelectorAll("[data-usd]"));
   if (!els.length) return;
@@ -16,21 +17,23 @@
   function brl(v) { return "R$" + Math.round(v).toLocaleString("pt-BR"); }
 
   function apply(rate, whenLabel, aprox) {
+    var eff = rate * (1 + SPREAD);     // cotação efetiva (comercial + spread)
     els.forEach(function (el) {
       var usd = parseFloat(el.getAttribute("data-usd"));
       if (!isNaN(usd)) {
-        el.textContent = brl(usd * rate);
-        el.setAttribute("title", "US$" + usd + " × R$" + rate.toFixed(2).replace(".", ","));
+        el.textContent = brl(usd * eff);
+        el.setAttribute("title", "US$" + usd + " × R$" + eff.toFixed(2).replace(".", ",") + " (comercial + " + Math.round(SPREAD * 100) + "%)");
       }
     });
     var note = document.getElementById("cotacao-note");
     if (note) {
       note.innerHTML =
-        "<strong>Cotação do dólar:</strong> R$" +
+        "<strong>Cotação do dólar comercial:</strong> R$" +
         rate.toFixed(2).replace(".", ",") +
         (aprox ? " (aproximada) · " : " · atualizado em ") +
         whenLabel +
-        ". A licença Kommo é em dólar — o valor em real acompanha a cotação.";
+        ". A licença Kommo é em dólar — o valor em real acompanha a cotação e já inclui o custo de câmbio (" +
+        Math.round(SPREAD * 100) + "%).";
     }
   }
 
