@@ -388,28 +388,6 @@
     addEventListener('scroll', function () { if (!pTick) { pTick = true; requestAnimationFrame(runP); } }, { passive: true });
   }
 
-  /* ===== Pricing simulator ===== */
-  var userBtns = document.querySelectorAll('[data-users]');
-  var priceCards = document.querySelectorAll('.price[data-base][data-extra]');
-  var brl = function (n) { return 'R$' + Math.round(n).toLocaleString('pt-BR'); };
-  var updatePrices = function (users) {
-    userBtns.forEach(function (btn) { btn.classList.toggle('on', Number(btn.dataset.users) === users); });
-    priceCards.forEach(function (card) {
-      var base = Number(card.dataset.base || 0);
-      var extra = Number(card.dataset.extra || 0);
-      var total = base + Math.max(0, users - 1) * extra;
-      var priceEl = card.querySelector('[data-price]');
-      var wrap = card.querySelector('[data-price-wrap]');
-      var line = card.querySelector('[data-user-line]');
-      if (wrap) wrap.classList.add('updating');
-      setTimeout(function () {
-        if (priceEl) priceEl.textContent = brl(total);
-        if (line) line.textContent = (card.dataset.plan === 'completa' ? 'projeto' : 'implantação') + ' · ' + users + (users === 1 ? ' usuário' : ' usuários') + (card.dataset.plan === 'completa' ? ' · escopo guiado' : ' · pagamento único');
-        if (wrap) wrap.classList.remove('updating');
-      }, 150);
-    });
-  };
-  userBtns.forEach(function (btn) {
-    btn.addEventListener('click', function () { updatePrices(Number(btn.dataset.users || 1)); });
-  });
+  /* Simulador de usuários: preço e destaque dos botões são tratados em
+     assets/js/cotacao.js (licença em dólar × nº de usuários). */
 })();
