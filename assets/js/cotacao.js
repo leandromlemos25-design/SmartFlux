@@ -57,9 +57,11 @@
   function setRate(r, w, a) { rate = r; whenLabel = w; aprox = a; render(); }
 
   // Simulador 1–5 usuários (multiplica só os cards de plano)
-  Array.prototype.slice.call(document.querySelectorAll("[data-users]")).forEach(function (btn) {
+  var userBtns = Array.prototype.slice.call(document.querySelectorAll("[data-users]"));
+  userBtns.forEach(function (btn) {
     btn.addEventListener("click", function () {
       users = Number(btn.getAttribute("data-users")) || 1;
+      userBtns.forEach(function (b) { b.classList.toggle("on", b === btn); });
       render();
     });
   });
