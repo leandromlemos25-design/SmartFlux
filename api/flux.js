@@ -1,9 +1,13 @@
-// api/flux.js — Vercel Serverless Function: proxy para a API Anthropic
+// api/flux.js — Vercel Serverless Function: proxy para a API DeepSeek
 //
 // SETUP:
 // 1. No painel do Vercel, vá em Settings > Environment Variables
-// 2. Adicione: ANTHROPIC_API_KEY = sua_chave_da_api_claude
-// 3. Faça redeploy — pronto, o Flux já funciona
+// 2. Adicione: DEEPSEEK_API_KEY = sua_chave (https://platform.deepseek.com → API Keys)
+// 3. Faça redeploy — pronto, o Flux já funciona com DeepSeek
+//
+// Aceita o body {system, messages, model?, max_tokens?} que o front-end já envia
+// e responde no formato {content:[{type:'text', text}]} (Anthropic-like) para o
+// flux-chat.js não precisar mudar a leitura da resposta.
 
 module.exports = async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -19,18 +23,38 @@ module.exports = async function handler(req, res) {
   }
 
   try {
-    const upstream = await fetch('https://api.anthropic.com/v1/messages', {
+    const { system, messages = [], model, max_tokens } = req.body || {};
+
+    // Monta no formato OpenAI/DeepSeek: o system vira a 1ª mensagem.
+    const chat = [];
+    if (system) chat.push({ role: 'system', content: system });
+    for (const m of messages) chat.push({ role: m.role, content: m.content });
+
+    const upstream = await fetch('https://api.deepseek.com/chat/completions', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'x-api-key': process.env.ANTHROPIC_API_KEY,
-        'anthropic-version': '2023-06-01',
+        'Authorization': `Bearer ${process.env.DEEPSEEK_API_KEY}`,
       },
-      body: JSON.stringify(req.body),
+      body: JSON.stringify({
+        model: model || 'deepseek-chat',
+        messages: chat,
+        max_tokens: max_tokens || 512,
+        stream: false,
+      }),
     });
 
     const data = await upstream.json();
-    return res.status(upstream.status).json(data);
+    if (!upstream.ok) {
+      return res.status(upstream.status).json({ error: 'deepseek_error', detail: data });
+    }
+
+    const text = (data && data.choices && data.choices[0] && data.choices[0].message)
+      ? data.choices[0].message.content
+      : '';
+
+    // Resposta no formato que o front-end já espera.
+    return res.status(200).json({ content: [{ type: 'text', text }] });
 
   } catch (err) {
     return res.status(500).json({ error: 'proxy_error', message: err.message });

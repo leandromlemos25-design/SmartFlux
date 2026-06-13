@@ -1,12 +1,15 @@
-// worker.js — Cloudflare Worker: proxy para a API Anthropic
+// worker.js — Cloudflare Worker: proxy para a API DeepSeek
+// (Alternativa ao api/flux.js da Vercel — use UM dos dois.)
 //
 // SETUP (5 minutos):
 // 1. Acesse https://workers.cloudflare.com e crie uma conta gratuita
 // 2. Crie um novo Worker e cole todo o conteúdo deste arquivo
 // 3. Em "Settings > Variables > Secrets", adicione:
-//    Nome: ANTHROPIC_API_KEY   Valor: sua chave da API Claude
+//    Nome: DEEPSEEK_API_KEY   Valor: sua chave (https://platform.deepseek.com)
 // 4. Clique em Deploy e copie a URL gerada (termina em .workers.dev)
-// 5. Cole essa URL em assets/js/flux-chat.js na constante FLUX_WORKER_URL
+// 5. Aponte FLUX_WORKER_URL em assets/js/flux-chat.js para essa URL
+//
+// Aceita {system, messages, model?, max_tokens?} e responde {content:[{text}]}.
 
 export default {
   async fetch(request, env) {
@@ -19,32 +22,49 @@ export default {
     }
 
     try {
-      const body = await request.json();
+      const { system, messages = [], model, max_tokens } = await request.json();
 
-      const upstream = await fetch('https://api.anthropic.com/v1/messages', {
+      const chat = [];
+      if (system) chat.push({ role: 'system', content: system });
+      for (const m of messages) chat.push({ role: m.role, content: m.content });
+
+      const upstream = await fetch('https://api.deepseek.com/chat/completions', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'x-api-key': env.ANTHROPIC_API_KEY,
-          'anthropic-version': '2023-06-01',
+          'Authorization': `Bearer ${env.DEEPSEEK_API_KEY}`,
         },
-        body: JSON.stringify(body),
+        body: JSON.stringify({
+          model: model || 'deepseek-chat',
+          messages: chat,
+          max_tokens: max_tokens || 512,
+          stream: false,
+        }),
       });
 
       const data = await upstream.json();
-      return new Response(JSON.stringify(data), {
-        status: upstream.status,
-        headers: { 'Content-Type': 'application/json', ...corsHeaders() },
-      });
+      if (!upstream.ok) {
+        return json({ error: 'deepseek_error', detail: data }, upstream.status);
+      }
+
+      const text = (data && data.choices && data.choices[0] && data.choices[0].message)
+        ? data.choices[0].message.content
+        : '';
+
+      return json({ content: [{ type: 'text', text }] }, 200);
 
     } catch (err) {
-      return new Response(
-        JSON.stringify({ error: 'worker_error', message: err.message }),
-        { status: 500, headers: { 'Content-Type': 'application/json', ...corsHeaders() } }
-      );
+      return json({ error: 'worker_error', message: err.message }, 500);
     }
   },
 };
+
+function json(obj, status) {
+  return new Response(JSON.stringify(obj), {
+    status,
+    headers: { 'Content-Type': 'application/json', ...corsHeaders() },
+  });
+}
 
 function corsHeaders() {
   return {
