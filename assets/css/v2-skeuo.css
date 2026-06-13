@@ -11,7 +11,7 @@
   --sk-leather-d: url(../textures/leather-dark.png);
   --sk-brushed:   url(../textures/brushed.png);
   --sk-edge: rgba(0,0,0,.55);
-  --sk-cream:#d9c6a4;
+  --sk-cream:#ecddc2;
   --sk-rim:        inset 0 1px 0 rgba(255,238,210,.20), inset 0 -12px 24px rgba(0,0,0,.42), 0 12px 24px -10px rgba(0,0,0,.62);
   --sk-rim-strong: inset 0 1px 0 rgba(255,238,210,.28), inset 0 -16px 30px rgba(0,0,0,.5),  0 22px 50px -14px rgba(0,0,0,.7);
 }
