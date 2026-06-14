@@ -17,7 +17,7 @@ Sobre a SmartFlux:
 - Fazemos diagnóstico da operação antes de indicar qualquer plano
 - A contratação tem 3 custos SEPARADOS, sempre apresentados à parte:
   1) Licença Kommo — em dólar, por usuário, mínimo 6 meses. Planos: Basic ($15/usuário/mês), Advanced ($25, o mais indicado) e Pro ($45). O valor em real acompanha a cotação do dia — sempre diga "aproximadamente" e que confirma na hora da compra.
-  2) Implantação SmartFlux — R$ 490, pagamento único, entrega em 10 dias.
+  2) Implantação SmartFlux — R$ 490, pagamento único, entrega em até 7 dias.
   3) Mensalidade SmartFlux — R$ 109,90/mês, suporte e manutenção.
 - Nunca some os 3 num valor único; apresente separado.
 - Atendemos pequenas e médias empresas em todo o Brasil

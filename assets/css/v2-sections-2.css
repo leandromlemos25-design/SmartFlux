@@ -434,6 +434,19 @@ tbody tr:hover .tag { transform: scale(1.05) }
 .cta-final h2 { margin-bottom: 18px; max-width: 17ch; margin-inline: auto; text-wrap: balance }
 .cta-final p { max-width: 52ch; margin: 0 auto 36px; color: var(--ink-2); font-size: 17px; line-height: 1.6 }
 .cta-final .actions { justify-content: center }
+/* Prova social real antes do CTA (UI/UX Pro Max — social proof before CTA) */
+.cta-trust {
+  display: flex; flex-wrap: wrap; justify-content: center;
+  gap: 10px 12px; margin: 6px auto 30px; max-width: 660px;
+}
+.cta-trust-item {
+  display: inline-flex; align-items: center; gap: 7px;
+  font-size: 13px; color: #f1e7d4;
+  padding: 8px 14px; border-radius: 99px;
+  background: rgba(0,0,0,.28); border: 1px solid rgba(255,255,255,.16);
+}
+.cta-trust-item b { color: var(--a1); font-family: var(--f-mono); font-weight: 700 }
+.cta-trust-badge { height: 18px; width: auto; border-radius: 4px; display: block }
 .cta-final .cta-reassure { margin: 22px auto 0; font-size: 13px; color: var(--ink-3) }
 
 /* ===== GRID-ITEM MIN-WIDTH FIX ===== */
