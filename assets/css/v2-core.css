@@ -4,25 +4,27 @@
    ================================================================ */
 
 :root {
-  /* Palette — refined dark */
-  --bg: #07090f;
-  --bg-2: #0c0f18;
-  --bg-3: #10141e;
-  --ink: #f0f2f8;
-  --ink-2: #b8c0d0;
-  --ink-3: #727d94;
-  --ink-4: #4a5468;
+  /* Palette — Dark Premium (navy slate + acento único esmeralda/teal).
+     Base navy da família slate-900 para ar mais "premium coeso". */
+  --bg: #080b13;
+  --bg-2: #0c111d;
+  --bg-3: #111827;
+  --ink: #f1f4fa;
+  --ink-2: #b6c0d4;
+  --ink-3: #71809b;
+  --ink-4: #47536b;
   --line: rgba(255,255,255,.06);
   --line-2: rgba(255,255,255,.12);
   --surface: rgba(255,255,255,.03);
   --surface-2: rgba(255,255,255,.055);
   --surface-3: rgba(255,255,255,.08);
 
-  /* Accent triad */
-  --a1: #00e5b8;
-  --a2: #37d3ff;
-  --a3: #7c5cff;
-  --accent-ink: #04221b;
+  /* Acento único, coeso na família esmeralda→teal (sem salto pro violeta).
+     a1 = âncora (botões/links), a2/a3 = variações próximas para gradientes. */
+  --a1: #10b981;
+  --a2: #16d1a3;
+  --a3: #2dd4bf;
+  --accent-ink: #03241b;
 
   /* Type */
   --f-sans: 'Geist', ui-sans-serif, system-ui, -apple-system, sans-serif;
