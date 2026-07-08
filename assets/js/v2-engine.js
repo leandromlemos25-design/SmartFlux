@@ -388,6 +388,19 @@
     addEventListener('scroll', function () { if (!pTick) { pTick = true; requestAnimationFrame(runP); } }, { passive: true });
   }
 
+  /* ===== Sticky mobile CTA ===== */
+  /* O bar fixo só aparece depois que o hero sai da tela, evitando que ele
+     cubra os botões do próprio hero na primeira dobra (UI/UX Pro Max §5). */
+  var mcta = document.querySelector('.mobile-cta');
+  var heroEl = document.querySelector('.hero');
+  if (mcta && heroEl && 'IntersectionObserver' in window) {
+    new IntersectionObserver(function (entries) {
+      mcta.classList.toggle('revealed', !entries[0].isIntersecting);
+    }, { rootMargin: '0px 0px -12% 0px' }).observe(heroEl);
+  } else if (mcta) {
+    mcta.classList.add('revealed');
+  }
+
   /* Simulador de usuários: preço e destaque dos botões são tratados em
      assets/js/cotacao.js (licença em dólar × nº de usuários). */
 })();
