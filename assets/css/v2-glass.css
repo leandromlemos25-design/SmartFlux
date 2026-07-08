@@ -16,7 +16,7 @@
   --lg-blur:        blur(20px) saturate(190%) brightness(1.06);
   --lg-blur-strong: blur(26px) saturate(200%) brightness(1.09);
   --lg-blur-light:  blur(14px) saturate(170%);
-  --lg-tint-h: 205;        /* matiz frio captado pelo vidro */
+  --lg-tint-h: 168;        /* matiz teal captado pelo vidro (coeso com o acento esmeralda) */
 
   /* Fill com tint no meio do gradiente (não branco chapado) */
   --lg-fill: linear-gradient(150deg,
