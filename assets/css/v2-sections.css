@@ -61,19 +61,20 @@
 @keyframes pulse { 0%, 100% { opacity: 1 } 50% { opacity: .35 } }
 
 /* Hero tag */
+/* Rótulo inline leve (sem pill boxeado) — evita competir com a hero-trust-row
+   e dá mais destaque ao H1 (UI/UX Pro Max §6 whitespace-balance). */
 .hero-tag {
   display: inline-flex;
   align-items: center;
   vertical-align: middle;
-  gap: 12px;
-  padding: 7px 8px 7px 16px;
-  border-radius: 99px;
-  background: var(--surface);
-  border: 1px solid var(--line);
+  gap: 10px;
+  padding: 0;
+  background: none;
+  border: 0;
   font-size: 13px;
   color: var(--ink-2);
   font-weight: 500;
-  margin-bottom: 28px;
+  margin-bottom: 22px;
 }
 .hero-tag .pill {
   padding: 4px 10px;
@@ -747,5 +748,5 @@
   .price { padding: 20px 16px; }
 
   /* Hero tag compact */
-  .hero-tag { padding: 5px 6px 5px 12px; font-size: 12px; margin-bottom: 20px; }
+  .hero-tag { padding: 0; font-size: 12px; margin-bottom: 18px; }
 }
