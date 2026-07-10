@@ -638,63 +638,89 @@
 }
 
 /* ================================================================
-   MOBILE (<=820px) — achatamento do flipbook 3D
-   O livro 3D de página dupla não funciona em telas estreitas (mostra
-   meia-página deslocada). Aqui ele vira um empilhado vertical de cards,
-   com TODAS as páginas (frente + verso de cada folha) em ordem de
-   leitura, centralizadas e legíveis. O livro 3D fica só no desktop.
+   MOBILE (<=820px) — COVERFLOW de cards
+   O livro 3D de página dupla não funciona em telas estreitas. Aqui cada
+   página vira um card de um carrossel "coverflow": o atual no centro,
+   nítido; o anterior e o próximo espiando dos lados em 3D (scale +
+   rotateY). Navegação por setas/swipe (JS). O livro 3D fica só no desktop.
    ================================================================ */
 @media (max-width: 820px) {
   .bk-stage {
-    perspective: none;
+    perspective: 1200px;
+    perspective-origin: center center;
     height: auto;
     display: block;
     padding: 0;
   }
   .bk-book {
+    position: relative;
     width: 100%;
-    height: auto;
+    height: 468px;
     min-height: 0;
     transform: none !important;
-    transform-style: flat;
+    transform-style: preserve-3d;
     cursor: default;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
+    overflow: visible;
   }
+  /* As folhas não geram caixa (display:contents) — assim TODAS as faces se
+     posicionam no mesmo espaço/perspectiva do .bk-book (senão cada folha
+     criaria seu próprio contexto 3D e os cards não alinhariam). */
   .bk-leaf,
   .bk-leaf-cover {
-    position: static;
-    width: 100%;
-    height: auto;
-    transform: none !important;
-    transform-style: flat;
-    transform-origin: center;
-    z-index: auto !important;
-    transition: none;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
+    display: contents;
   }
+  .bk-shadow { display: none; }
+  /* cada face = um slide do coverflow (escondido por padrão) */
   .bk-front,
   .bk-back {
-    position: static;
+    position: absolute;
     inset: auto;
-    transform: none !important;
+    top: 0;
+    left: 50%;
+    width: 76%;
+    height: 100%;
+    transform: translateX(-50%) scale(.78);
+    opacity: 0;
+    pointer-events: none;
     -webkit-backface-visibility: visible;
     backface-visibility: visible;
-    overflow: visible;
-    border-radius: 16px !important;
+    overflow: hidden;
+    border-radius: 20px !important;
+    transition: transform .6s cubic-bezier(.34,1.3,.4,1), opacity .5s ease;
+    will-change: transform, opacity;
+  }
+  .bk-front.bk-m-active,
+  .bk-back.bk-m-active {
+    transform: translateX(-50%) scale(1) rotateY(0deg);
+    opacity: 1;
+    z-index: 3;
+    pointer-events: auto;
+  }
+  .bk-front.bk-m-prev,
+  .bk-back.bk-m-prev {
+    transform: translateX(-96%) scale(.82) rotateY(20deg);
+    opacity: .5;
+    z-index: 2;
+  }
+  .bk-front.bk-m-next,
+  .bk-back.bk-m-next {
+    transform: translateX(-4%) scale(.82) rotateY(-20deg);
+    opacity: .5;
+    z-index: 2;
   }
   .bk-page {
-    height: auto;
+    height: 100%;
     min-height: 0;
-    overflow: visible;
-    border-radius: 16px;
+    overflow: hidden;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
   }
   .bk-content-page {
-    padding: 22px 20px !important;
-    gap: 10px !important;
+    padding: 26px 22px !important;
+    gap: 9px !important;
+    justify-content: center;
   }
   /* borda-guia sempre à esquerda (cards uniformes) */
   .bk-left,
@@ -703,17 +729,38 @@
     border-left: 4px solid rgba(0,229,255,.3) !important;
     border-right: 0 !important;
   }
-  /* reexibe conteúdo que o mini-book escondia — agora há espaço vertical */
-  .bk-entry-title { font-size: 1.35rem !important; line-height: 1.1 !important; }
-  .bk-entry-def { font-size: .9rem !important; line-height: 1.6 !important; margin-bottom: 6px !important; }
-  .bk-entry-def + .bk-entry-def { display: block !important; }
-  .bk-entry-analogy { display: block !important; }
+  /* conteúdo legível dentro do card */
+  .bk-entry-title { font-size: 1.5rem !important; line-height: 1.1 !important; }
+  .bk-entry-def { font-size: .9rem !important; line-height: 1.55 !important; margin-bottom: 6px !important; }
+  .bk-entry-def + .bk-entry-def { display: none; } /* 2º parágrafo: cabe melhor sem */
+  .bk-entry-analogy { display: block !important; font-size: .82rem !important; }
   .bk-entry-pills { display: flex !important; }
-  .bk-cover { min-height: 200px; padding: 30px 22px !important; }
-  .bk-cover h2 { font-size: 1.6rem !important; }
-  .bk-cover p { font-size: .9rem !important; max-width: none !important; }
-  /* controles de livro não fazem sentido num scroll vertical */
-  .bk-controls,
-  .bk-hint,
-  .bk-page-counter { display: none !important; }
+  /* blur-reveal palavra por palavra: só o card ativo anima (os vizinhos
+     mantêm o texto visível como contexto). */
+  .bk-word { display: inline-block; }
+  .bk-m-active .bk-word {
+    animation: bkWordReveal .45s both;
+    animation-delay: calc(var(--wi) * 25ms);
+  }
+  .bk-cover {
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    min-height: 0;
+    padding: 30px 24px !important;
+  }
+  .bk-cover h2 { font-size: 1.75rem !important; }
+  .bk-cover p { font-size: .92rem !important; max-width: none !important; }
+  /* nav: mantém setas + contador, esconde dots/som (10 cards) */
+  .bk-dots,
+  .bk-sound-btn { display: none !important; }
+  .bk-controls { gap: 40px; }
+  .bk-hint { display: none !important; }
+}
+@keyframes bkWordReveal {
+  from { filter: blur(8px); opacity: 0; transform: translateY(6px); }
+  to   { filter: blur(0);   opacity: 1; transform: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .bk-m-active .bk-word { animation: none; }
 }

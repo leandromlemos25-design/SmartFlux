@@ -907,29 +907,83 @@
       updateDots();
     }
 
-    prevBtn.addEventListener('click', () => goTo(currentPage - 1));
-    nextBtn.addEventListener('click', () => goTo(currentPage + 1));
+    /* ===== Mobile: coverflow de cards (um por vez, vizinhos espiando) =====
+       No mobile o livro 3D vira um carrossel; navegamos pelas FACES
+       individuais (cada página é um card), não pelos spreads de 2 páginas. */
+    const MQ_MOBILE = window.matchMedia('(max-width: 820px)');
+    const faces = Array.from(book.querySelectorAll('.bk-front, .bk-back'));
+    let mIdx = 0;
+    const isMobile = () => MQ_MOBILE.matches;
+
+    /* Envolve cada palavra do corpo em <span> p/ o blur-reveal escalonado
+       do card ativo no coverflow (o efeito só aparece no CSS mobile). */
+    function wrapWords(el) {
+      if (!el || el.dataset.bkWrapped) return;
+      const words = el.textContent.trim().split(/\s+/);
+      el.textContent = '';
+      words.forEach((w, i) => {
+        const s = document.createElement('span');
+        s.className = 'bk-word';
+        s.style.setProperty('--wi', i);
+        s.textContent = w;
+        el.appendChild(s);
+        el.appendChild(document.createTextNode(' '));
+      });
+      el.dataset.bkWrapped = '1';
+    }
+    book.querySelectorAll('.bk-entry-def, .bk-entry-analogy, .bk-cover p').forEach(wrapWords);
+
+    function renderMobile() {
+      faces.forEach((f, i) => {
+        f.classList.remove('bk-m-active', 'bk-m-prev', 'bk-m-next');
+        const rel = i - mIdx;
+        if (rel === 0) f.classList.add('bk-m-active');
+        else if (rel === -1) f.classList.add('bk-m-prev');
+        else if (rel === 1) f.classList.add('bk-m-next');
+      });
+      counter.textContent = (mIdx + 1) + ' / ' + faces.length;
+      prevBtn.disabled = mIdx === 0;
+      nextBtn.disabled = mIdx === faces.length - 1;
+    }
+
+    function forward()  { if (isMobile()) { if (mIdx < faces.length - 1) { mIdx++; playFlip(); renderMobile(); } } else goTo(currentPage + 1); }
+    function backward() { if (isMobile()) { if (mIdx > 0)               { mIdx--; playFlip(); renderMobile(); } } else goTo(currentPage - 1); }
+
+    function initMode() {
+      if (isMobile()) {
+        renderMobile();
+      } else {
+        faces.forEach(f => f.classList.remove('bk-m-active', 'bk-m-prev', 'bk-m-next'));
+        book.style.transform = '';
+        applyLeafStates();
+        counter.textContent = (currentPage + 1) + ' / ' + TOTAL_LEAVES;
+        prevBtn.disabled = currentPage === 0;
+        nextBtn.disabled = currentPage === TOTAL_LEAVES - 1;
+      }
+    }
+    MQ_MOBILE.addEventListener('change', initMode);
+
+    prevBtn.addEventListener('click', backward);
+    nextBtn.addEventListener('click', forward);
 
     document.addEventListener('keydown', e => {
-      if (e.key === 'ArrowRight' || e.key === 'ArrowDown') { e.preventDefault(); goTo(currentPage + 1); }
-      if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')   { e.preventDefault(); goTo(currentPage - 1); }
+      if (e.key === 'ArrowRight' || e.key === 'ArrowDown') { e.preventDefault(); forward(); }
+      if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')   { e.preventDefault(); backward(); }
     });
 
     let touchX = 0;
     book.addEventListener('touchstart', e => { touchX = e.touches[0].clientX; }, { passive: true });
     book.addEventListener('touchend', e => {
       const dx = e.changedTouches[0].clientX - touchX;
-      if (Math.abs(dx) > 40) goTo(currentPage + (dx < 0 ? 1 : -1));
+      if (Math.abs(dx) > 40) { if (dx < 0) forward(); else backward(); }
     });
 
-    /* Click left half → prev, right half → next (desktop + mobile tap) */
+    /* Tap: metade esquerda → anterior, direita → próximo (só desktop;
+       no mobile a navegação é por swipe/setas pra não trocar ao tocar no card). */
     book.addEventListener('click', e => {
+      if (isMobile()) return;
       const r = book.getBoundingClientRect();
-      if (e.clientX > r.left + r.width / 2) {
-        goTo(currentPage + 1);
-      } else {
-        goTo(currentPage - 1);
-      }
+      if (e.clientX > r.left + r.width / 2) forward(); else backward();
     });
 
     /* Parallax on desktop only — mousemove doesn't fire on touch */
@@ -1006,7 +1060,7 @@
     }
     requestAnimationFrame(drawParticles);
 
-    applyLeafStates();
+    initMode();
   })();
   </script>
 </section>
